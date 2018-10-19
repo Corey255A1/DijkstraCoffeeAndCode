@@ -1,0 +1,25 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:DijkstraCoffeeAndCode.Resourses">
+
+    <DrawingBrush x:Key="CoffeePot" Stretch="Uniform">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <DrawingGroup.Children>
+                    <GeometryDrawing Brush="#FF2A1F00" Geometry="F1 M 6.27083,33.8971L 1.64583,21.4596L 3.23778,9.21928L 40.2708,9.52213L 39.9583,21.2096L 36.8958,31.3971L 30.9583,36.8971L 11.7708,36.7096L 6.27083,33.8971 Z "/>
+                    <GeometryDrawing Geometry="F1 M 0.999997,1.47618C 4.01215,4.2521 3.56919,5.46286 3.56919,5.46286L 3.21482,8.5636C 3.21482,8.5636 2.91951,10.9261 1.97452,14.2335C 1.02953,17.541 1.63594,21.7219 2.15171,23.8902C 3.13063,28.0055 3.18717,29.43 5.34105,32.6608C 6.04979,33.724 7.55588,35.673 10.8338,36.3817C 15.7107,37.4362 25.7174,37.0314 29.9698,36.5589C 34.2223,36.0864 36.122,31.9622 37.4116,29.3829C 39.7151,24.7761 39.9808,18.2202 39.9808,18.2202C 39.9808,18.2202 40.1876,8.35688 40.4238,5.28566C 40.6601,2.21445 34.2223,1.83055 34.2223,1.83055C 34.2223,1.83055 17.4783,1.03321 12.5171,1.03322C 7.55586,1.03322 5.78401,0.796975 0.999997,1.47618 Z ">
+                        <GeometryDrawing.Pen>
+                            <Pen Thickness="2" LineJoin="Round" Brush="#FF000000"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Geometry="F1 M 40.6062,4.27959L 44.6815,4.98834L 46.3333,8.08462L 45.3958,22.5846L 42.4583,26.7096L 38.8958,27.5221L 40.4583,15.5221L 40.6062,4.27959 Z ">
+                        <GeometryDrawing.Pen>
+                            <Pen Thickness="2" LineJoin="Round" Brush="#FF000000"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                </DrawingGroup.Children>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+
+</ResourceDictionary>
