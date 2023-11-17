@@ -1,0 +1,13 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/DijkstraConsole/bin/Debug/net7.0
+/DijkstraConsole/obj
+/DijkstraCoffeeAndCode/bin
+/DijkstraCoffeeAndCode/obj/Debug
+/DijkstraCoffeeAndCode/obj/Release/TempPE
+/DijkstraCoffeeAndCode/obj/Release
+/DijkstraAlgorithm/bin/Debug/net7.0
+/DijkstraAlgorithm/obj
+/.vs/DijkstraCoffeeAndCode

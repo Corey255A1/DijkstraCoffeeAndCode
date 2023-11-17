@@ -1,18 +1,8 @@
 ﻿// WUNDERVISION 2018
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace DijkstraCoffeeAndCode
 {
@@ -33,7 +23,7 @@ namespace DijkstraCoffeeAndCode
             {
                 visited = value;
                 nodeEllipse.Fill = selected ? Brushes.Green :
-                                   visited ? Brushes.Blue :                              
+                                   visited ? Brushes.Blue :
                                    Brushes.White;
             }
         }
@@ -120,20 +110,20 @@ namespace DijkstraCoffeeAndCode
 
         private void NodeUpdatedCB(Node n, NodeProperties prop)
         {
-            if(prop == NodeProperties.HIGHLIGHT)
+            if (prop == NodeProperties.HIGHLIGHT)
             {
-                if(n.Highlight)
+                if (n.Highlight)
                 {
                     nodeEllipse.Fill = Brushes.YellowGreen;
                 }
                 else
                 {
                     nodeEllipse.Fill = selected ? Brushes.Green :
-                                       visited ? Brushes.Blue:
+                                       visited ? Brushes.Blue :
                                        Brushes.White;
                 }
             }
-            else if(prop == NodeProperties.VIZUALIZED)
+            else if (prop == NodeProperties.VIZUALIZED)
             {
                 if (n.Visualized)
                 {
@@ -146,13 +136,13 @@ namespace DijkstraCoffeeAndCode
                                        Brushes.White;
                 }
             }
-            else if(prop == NodeProperties.VISITED)
+            else if (prop == NodeProperties.VISITED)
             {
                 Visited = n.Visited;
             }
-            else if(prop == NodeProperties.SHORTESTDISTANCE)
+            else if (prop == NodeProperties.SHORTESTDISTANCE)
             {
-                if(n.ShortestDistance == int.MaxValue)
+                if (n.ShortestDistance == int.MaxValue)
                 {
                     ShortestDistanceText = "";
                 }
@@ -169,7 +159,7 @@ namespace DijkstraCoffeeAndCode
             {
                 var offset = e.GetPosition(this);
                 offset.X = (offset.X - (this.Width / 2)) + theNode.point.X;
-                offset.Y = (offset.Y - (this.Height / 2)) + theNode.point.Y;   
+                offset.Y = (offset.Y - (this.Height / 2)) + theNode.point.Y;
                 CanvasPosition = offset;
             }
         }

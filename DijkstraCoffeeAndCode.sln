@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2036
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34003.232
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DijkstraCoffeeAndCode", "DijkstraCoffeeAndCode\DijkstraCoffeeAndCode.csproj", "{016E493A-71ED-4A3A-89B7-954BFD8C178B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DijkstraAlgorithm", "DijkstraAlgorithm\DijkstraAlgorithm.csproj", "{9FB901D6-5F17-43F4-94C2-04EC89BAFAC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DijkstraConsole", "DijkstraConsole\DijkstraConsole.csproj", "{396A4AF0-6891-4305-BC5A-18C7C5C1C8BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{016E493A-71ED-4A3A-89B7-954BFD8C178B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{016E493A-71ED-4A3A-89B7-954BFD8C178B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{016E493A-71ED-4A3A-89B7-954BFD8C178B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FB901D6-5F17-43F4-94C2-04EC89BAFAC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FB901D6-5F17-43F4-94C2-04EC89BAFAC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FB901D6-5F17-43F4-94C2-04EC89BAFAC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FB901D6-5F17-43F4-94C2-04EC89BAFAC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{396A4AF0-6891-4305-BC5A-18C7C5C1C8BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{396A4AF0-6891-4305-BC5A-18C7C5C1C8BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{396A4AF0-6891-4305-BC5A-18C7C5C1C8BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{396A4AF0-6891-4305-BC5A-18C7C5C1C8BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

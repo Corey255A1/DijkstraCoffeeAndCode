@@ -8,12 +8,13 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>DijkstraCoffeeAndCode</RootNamespace>
     <AssemblyName>DijkstraCoffeeAndCode</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -63,8 +64,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DijkstraAlgo.cs" />
-    <Compile Include="Edge.cs" />
     <Compile Include="EdgeElement.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -80,7 +79,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Node.cs" />
     <Compile Include="NodeElement.xaml.cs">
       <DependentUpon>NodeElement.xaml</DependentUpon>
     </Compile>
@@ -111,6 +109,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resourses\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DijkstraAlgorithm\DijkstraAlgorithm.csproj">
+      <Project>{9fb901d6-5f17-43f4-94c2-04ec89bafac2}</Project>
+      <Name>DijkstraAlgorithm</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

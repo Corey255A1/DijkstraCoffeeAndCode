@@ -1,9 +1,4 @@
 ﻿// WUNDERVISION 2018
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
@@ -72,7 +67,7 @@ namespace DijkstraCoffeeAndCode
                 font, 16, Brushes.White);
 
             drawingContext.DrawLine(thePen, theEdge.N1, theEdge.N2);
-            drawingContext.DrawText(shadow, theEdge.GetMidPoint(1,1));
+            drawingContext.DrawText(shadow, theEdge.GetMidPoint(1, 1));
             drawingContext.DrawText(text, theEdge.GetMidPoint());
             base.OnRender(drawingContext);
         }

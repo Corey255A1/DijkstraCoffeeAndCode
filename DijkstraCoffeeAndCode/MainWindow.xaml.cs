@@ -1,18 +1,9 @@
 ﻿// WUNDERVISION 2018
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace DijkstraCoffeeAndCode
 {
@@ -64,22 +55,22 @@ namespace DijkstraCoffeeAndCode
             else
             {
                 var nelm = e.Source as NodeElement;
-                if (!nelm.Selected && SelectedNodes.Count<2)
+                if (!nelm.Selected && SelectedNodes.Count < 2)
                 {
                     SelectedNodes.Add(nelm);
                     nelm.Selected = true;
                 }
-                else if(nelm.Selected)
+                else if (nelm.Selected)
                 {
                     SelectedNodes.Remove(nelm);
                     nelm.Selected = false;
-                }                
+                }
             }
         }
 
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Enter && SelectedNodes.Count==2)
+            if (e.Key == Key.Enter && SelectedNodes.Count == 2)
             {
                 if (!EdgeElement.IsAnEdge(SelectedNodes[0], SelectedNodes[1]))
                 {
@@ -102,9 +93,9 @@ namespace DijkstraCoffeeAndCode
 
         private void solveBtn_Click(object sender, RoutedEventArgs e)
         {
-            if(SelectedNodes.Count>0)
+            if (SelectedNodes.Count > 0)
             {
-                if(ShortestPathClass.FindShortestPath(SelectedNodes[0].theNode, endNode.theNode))
+                if (ShortestPathClass.FindShortestPath(SelectedNodes[0].theNode, endNode.theNode))
                 {
                     infoBox.Text = String.Format("Shortest Distance Found {0}", endNode.theNode.ShortestDistance);
                 }
@@ -130,7 +121,7 @@ namespace DijkstraCoffeeAndCode
 
         private void stepBtn_Click(object sender, RoutedEventArgs e)
         {
-            if(!ShortestPathClass.StepInProgress)
+            if (!ShortestPathClass.StepInProgress)
             {
                 if (SelectedNodes.Count > 0)
                 {
@@ -142,7 +133,7 @@ namespace DijkstraCoffeeAndCode
             {
                 ShortestPathClass.TakeStep();
             }
-            if(ShortestPathClass.StepInProgress)
+            if (ShortestPathClass.StepInProgress)
             {
                 stepBtn.Content = "Next Step";
             }
