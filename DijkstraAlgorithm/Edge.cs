@@ -1,6 +1,8 @@
 ﻿// WUNDERVISION 2018
 // https://www.wundervisionengineering.com
-using System;
+
+// WunderVision Complete Refactor in 2023
+
 namespace DijkstraAlgorithm
 {
     public class Edge

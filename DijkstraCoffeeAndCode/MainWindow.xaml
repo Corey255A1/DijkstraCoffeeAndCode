@@ -16,7 +16,7 @@
     </Window.Resources>
     <Grid>
         <Canvas x:Name="graphCanvas" Background="#FFCBCBCB" MouseLeftButtonDown="graphCanvas_MouseLeftButtonDown" MouseRightButtonDown="graphCanvas_MouseRightButtonDown" Margin="0,0,0,38">
-            <local:NodeElement x:Name="endNode" Height="50" Canvas.Left="704" Canvas.Top="177" Width="50" Overlay="{DynamicResource CoffeePot}"/>
+            <!--<local:NodeElement x:Name="endNode" Height="50" Canvas.Left="704" Canvas.Top="177" Width="50" Overlay="{DynamicResource CoffeePot}"/>-->
         </Canvas>
         <Button x:Name="solveBtn" Content="Solve" Width="75" HorizontalAlignment="Left" VerticalAlignment="Bottom" Click="solveBtn_Click" Margin="10,0,0,10" Focusable="False" Height="23"/>
         <Button x:Name="stepBtn" Content="Begin Step" Width="75" HorizontalAlignment="Left" VerticalAlignment="Bottom" Click="stepBtn_Click" Margin="170,0,0,10" Focusable="False" Height="23"/>

@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Media;
 
-namespace DijkstraCoffeeAndCode
+namespace DijkstraCoffeeAndCode.Views
 {
     public delegate void EdgeElementUpdatedEvent(EdgeElement obj);
     public class EdgeElement : FrameworkElement

@@ -11,7 +11,7 @@ using static DijkstraAlgorithm.Dijkstra;
 namespace DijkstraAlgorithm
 {
 
-    public class Dijkstra
+    public static class Dijkstra
     {
         public class DijkstraState
         {

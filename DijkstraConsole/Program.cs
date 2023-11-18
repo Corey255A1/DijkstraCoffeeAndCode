@@ -5,8 +5,6 @@ using DijkstraAlgorithm;
 
 Console.WriteLine("Welcome to the Dijsktra Console");
 
-var dijkstraTest = new Dijkstra();
-
 var startNode = new DijkstraNode(0, 0);
 var endNode = new DijkstraNode(4, 0);
 
