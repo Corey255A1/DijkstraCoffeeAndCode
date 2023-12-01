@@ -5,10 +5,24 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DijkstraCoffeeAndCode.Views"
+             xmlns:vm="clr-namespace:DijkstraCoffeeAndCode.ViewModels"
              mc:Ignorable="d" 
              Width="50" Height="50">
+    <UserControl.Resources>
+        <Style TargetType="Ellipse" x:Key="node">
+            <Setter Property="Fill" Value="White"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsSelected}" Value="true">
+                    <Setter Property="Fill" Value="CadetBlue"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsHighlighted}" Value="true">
+                    <Setter Property="Fill" Value="Lime"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
     <Grid>
-        <Ellipse Fill="#FFF4F4F5" Height="Auto" Stroke="Black" Width="Auto" MouseDown="NodeMouseDown" MouseMove="NodeMouseMove" MouseUp="NodeMouseUp"/>
+        <Ellipse Style="{StaticResource ResourceKey=node}" Height="Auto" Stroke="Black" Width="Auto" MouseDown="NodeMouseDown" MouseMove="NodeMouseMove" MouseUp="NodeMouseUp"/>
         <Rectangle Margin="8,8,8,8" IsHitTestVisible="False"/>
         <Label IsHitTestVisible="False" Content="50000" Margin="5,15" Padding="0" HorizontalContentAlignment="Center" FontSize="14" FontWeight="Bold" Background="#BFFFFFFF" VerticalContentAlignment="Center"/>
     </Grid>

@@ -11,21 +11,21 @@ namespace DijkstraCoffeeAndCode.ViewModels
 {
     public class DijkstraViewModelStateToBrush : IValueConverter
     {
-        public Brush Base { get; set; }
-        public Brush Selected { get; set; }
-        public Brush Visited { get; set; }
-        public Brush CurrentlyVisiting { get; set; }
-        public Brush CurrentNeighbor { get; set; }
-        public Brush Highlighted { get; set; }
+        public Brush? Base { get; set; }
+        public Brush? Selected { get; set; }
+        public Brush? Visited { get; set; }
+        public Brush? CurrentlyVisiting { get; set; }
+        public Brush? CurrentNeighbor { get; set; }
+        public Brush? Highlighted { get; set; }
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is DijkstraNodeViewModel dijkstraViewModel)
             {
-                if (dijkstraViewModel.Selected)
+                if (dijkstraViewModel.IsSelected)
                 {
                     return Selected;
                 }
-                else if (dijkstraViewModel.Highlighted)
+                else if (dijkstraViewModel.IsHighlighted)
                 {
                     return Highlighted;
                 }

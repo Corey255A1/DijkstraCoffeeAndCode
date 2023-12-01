@@ -17,8 +17,6 @@ namespace DijkstraCoffeeAndCode.Views
 
         private DijkstraNodeViewModel? _viewModel;
 
-        private bool _mouseDown = false;
-
         public NodeElement()
         {
             InitializeComponent();
@@ -28,23 +26,26 @@ namespace DijkstraCoffeeAndCode.Views
         private void NodeElementDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             _viewModel = e.NewValue as DijkstraNodeViewModel;
-            if (_viewModel == null) { return; }
         }
 
         private void NodeMouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (_viewModel == null) { return; }
+
             ((UIElement)sender).CaptureMouse();
             e.Handled = true;
-            _mouseDown = true;
             _gripPoint = Mouse.GetPosition(this);
+            _viewModel.BeginInteraction();
+
         }
 
         private void NodeMouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (!_mouseDown) { return; }
+            if (_viewModel == null || !_viewModel.IsInteracting) { return; }
+
             ((UIElement)sender).ReleaseMouseCapture();
             e.Handled = true;
-            _mouseDown = false;
+            _viewModel.EndInteraction();
         }
 
         private Point GetMouseGripDeltaPosition(IInputElement element)
@@ -55,12 +56,13 @@ namespace DijkstraCoffeeAndCode.Views
 
         private void NodeMouseMove(object sender, MouseEventArgs e)
         {
-            if(!_mouseDown) { return; }
+            if (_viewModel == null || !_viewModel.IsInteracting) { return; }
+
             Point deltaPoint = GetMouseGripDeltaPosition((UIElement)sender);
-            _viewModel?.Move(deltaPoint.X, deltaPoint.Y);
+            _viewModel.Move(deltaPoint.X, deltaPoint.Y);
             e.Handled = true;
         }
 
-        
+
     }
 }

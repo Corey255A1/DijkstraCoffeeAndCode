@@ -8,42 +8,56 @@ using System.Threading.Tasks;
 
 namespace DijkstraCoffeeAndCode.ViewModels
 {
+    public enum UserInteractionState { Begin, Continue, End };
+    public class UserInteractionEventArgs : EventArgs
+    {
+        public UserInteractionState State { get; set; }
+    }
     public class DijkstraNodeViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public void Notify([CallerMemberName] string name = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
+        public event EventHandler<UserInteractionEventArgs>? UserInteraction;
+
         private DijkstraAlgorithm.DijkstraNode _node;
 
         public DijkstraAlgorithm.DijkstraNode Node => _node;
 
-        private bool _selected;
-
-        public bool Selected
+        private bool _isSelected;
+        public bool IsSelected
         {
-            get { return _selected; }
-            set { _selected = value; }
+            get { return _isSelected; }
+            set { _isSelected = value; Notify(); }
         }
 
-        private bool _highlighted;
-
-        public bool Highlighted
+        private bool _isHighlighted;
+        public bool IsHighlighted
         {
-            get { return _highlighted; }
-            set { _highlighted = value; }
+            get { return _isHighlighted; }
+            set { _isHighlighted = value; Notify(); }
         }
+
+        private bool _isInteracting;
+
+        public bool IsInteracting
+        {
+            get { return _isInteracting; }
+            set { _isInteracting = value; Notify(); }
+        }
+
 
         public double X
         {
             get => Node.Point.X;
-            set { Node.Point.X = value; }
+            set { Node.Point.X = value; Notify(); Notify(nameof(Left)); }
         }
 
         public double Y
         {
             get => Node.Point.Y;
-            set { Node.Point.Y = value; }
+            set { Node.Point.Y = value; Notify(); Notify(nameof(Top)); }
         }
 
         public double Left
@@ -75,8 +89,22 @@ namespace DijkstraCoffeeAndCode.ViewModels
         {
             X = x;
             Y = y;
-            Notify(nameof(Left));
-            Notify(nameof(Top));
+        }
+
+        private void RaiseUserInteraction(UserInteractionState state) {
+            UserInteraction?.Invoke(this, new UserInteractionEventArgs() { State = state });
+        }
+
+        public void BeginInteraction()
+        {
+            IsInteracting = true;
+            RaiseUserInteraction(UserInteractionState.Begin);
+        }
+
+        public void EndInteraction()
+        {
+            IsInteracting = false;
+            RaiseUserInteraction(UserInteractionState.End);
         }
     }
 }
