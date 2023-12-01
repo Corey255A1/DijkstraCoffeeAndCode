@@ -29,10 +29,8 @@ namespace DijkstraCoffeeAndCode
 
         private void CanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            DijkstraNodeViewModel node = new DijkstraNodeViewModel();
             Point clickPoint = e.GetPosition(sender as FrameworkElement);
-            node.SetCenterPosition(clickPoint.X, clickPoint.Y);
-            Graph.Nodes.Add(node);
+            Graph.AddNewNode(clickPoint.X, clickPoint.Y);
         }
 
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)

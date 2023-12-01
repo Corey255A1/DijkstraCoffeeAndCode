@@ -17,5 +17,10 @@ namespace DijkstraCoffeeAndCode.ViewModels
         ICommand UpdateNodeCommand { get; set; }
 
         public GraphViewModel() { }
+
+        public void AddNewNode(double x, double y)
+        {
+            Nodes.Add(new DijkstraNodeViewModel(x, y));
+        }
     }
 }

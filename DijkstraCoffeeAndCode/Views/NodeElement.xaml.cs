@@ -47,11 +47,16 @@ namespace DijkstraCoffeeAndCode.Views
             _mouseDown = false;
         }
 
+        private Point GetMouseGripDeltaPosition(IInputElement element)
+        {
+            Point currentPoint = Mouse.GetPosition(element);
+            return (Point)(currentPoint - _gripPoint);
+        }
+
         private void NodeMouseMove(object sender, MouseEventArgs e)
         {
             if(!_mouseDown) { return; }
-            Point currentPoint = Mouse.GetPosition(this);
-            Point deltaPoint = (Point)(currentPoint - _gripPoint);
+            Point deltaPoint = GetMouseGripDeltaPosition((UIElement)sender);
             _viewModel?.Move(deltaPoint.X, deltaPoint.Y);
             e.Handled = true;
         }
