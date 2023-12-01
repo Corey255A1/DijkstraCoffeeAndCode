@@ -1,6 +1,8 @@
 ﻿// WUNDERVISION 2018
+using DijkstraCoffeeAndCode.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -12,17 +14,25 @@ namespace DijkstraCoffeeAndCode
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        public GraphViewModel Graph { get; private set; }
         public MainWindow()
         {
+            Graph = new GraphViewModel();
+            DataContext = Graph;
             InitializeComponent();
         }
 
-        private void graphCanvas_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        private void CanvasMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
         }
 
-        private void graphCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void CanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            DijkstraNodeViewModel node = new DijkstraNodeViewModel();
+            Point clickPoint = e.GetPosition(sender as FrameworkElement);
+            node.SetCenterPosition(clickPoint.X, clickPoint.Y);
+            Graph.Nodes.Add(node);
         }
 
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)

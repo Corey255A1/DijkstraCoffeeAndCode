@@ -1,4 +1,6 @@
 ﻿// WUNDERVISION 2018
+using DijkstraCoffeeAndCode.ViewModels;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -11,34 +13,49 @@ namespace DijkstraCoffeeAndCode.Views
     /// </summary>
     public partial class NodeElement : UserControl
     {
-        //public Point CanvasPosition
-        //{
-        //    get
-        //    {
-        //        return theNode.point;
-        //    }
-        //    set
-        //    {
-        //        theNode.SetPoint(value.X, value.Y);
-        //        Canvas.SetLeft(this, value.X - this.Width / 2);
-        //        Canvas.SetTop(this, value.Y - this.Height / 2);
-        //    }
-        //}
-       
+        private Point _gripPoint;
+
+        private DijkstraNodeViewModel? _viewModel;
+
+        private bool _mouseDown = false;
+
         public NodeElement()
         {
-            //InitializeComponent();
+            InitializeComponent();
+            DataContextChanged += NodeElementDataContextChanged;
         }
 
-        //private void Grid_PreviewMouseMove(object sender, MouseEventArgs e)
-        //{
-        //    if (Mouse.LeftButton == MouseButtonState.Pressed)
-        //    {
-        //        var offset = e.GetPosition(this);
-        //        offset.X = (offset.X - (this.Width / 2)) + theNode.point.X;
-        //        offset.Y = (offset.Y - (this.Height / 2)) + theNode.point.Y;
-        //        CanvasPosition = offset;
-        //    }
-        //}
+        private void NodeElementDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            _viewModel = e.NewValue as DijkstraNodeViewModel;
+            if (_viewModel == null) { return; }
+        }
+
+        private void NodeMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            ((UIElement)sender).CaptureMouse();
+            e.Handled = true;
+            _mouseDown = true;
+            _gripPoint = Mouse.GetPosition(this);
+        }
+
+        private void NodeMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (!_mouseDown) { return; }
+            ((UIElement)sender).ReleaseMouseCapture();
+            e.Handled = true;
+            _mouseDown = false;
+        }
+
+        private void NodeMouseMove(object sender, MouseEventArgs e)
+        {
+            if(!_mouseDown) { return; }
+            Point currentPoint = Mouse.GetPosition(this);
+            Point deltaPoint = (Point)(currentPoint - _gripPoint);
+            _viewModel?.Move(deltaPoint.X, deltaPoint.Y);
+            e.Handled = true;
+        }
+
+        
     }
 }

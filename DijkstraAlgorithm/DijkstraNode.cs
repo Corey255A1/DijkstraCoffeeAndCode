@@ -6,56 +6,55 @@ using System.Threading.Tasks;
 
 namespace DijkstraAlgorithm
 {
-    public class DijkstraNode: Node, IComparable<DijkstraNode>
+    public class DijkstraNode : Node, IComparable<DijkstraNode>
     {
-		private bool _visited;
+        private bool _visited;
 
-		public bool Visited
-		{
-			get { return _visited; }
-			set { _visited = value; }
-		}
+        public bool Visited
+        {
+            get { return _visited; }
+            set { _visited = value; }
+        }
 
-		private double _shortesRouteDistance = double.MaxValue;
+        private double _shortesRouteDistance = double.MaxValue;
 
-		public double ShortestRouteDistance
-		{
-			get { return _shortesRouteDistance; }
-			set { _shortesRouteDistance = value; }
-		}
+        public double ShortestRouteDistance
+        {
+            get { return _shortesRouteDistance; }
+            set { _shortesRouteDistance = value; }
+        }
 
-		private DijkstraNode? _shortestRouteNode;
+        private DijkstraNode? _shortestRouteNode;
 
-		public DijkstraNode? ShortestRouteNode
-		{
-			get { return _shortestRouteNode; }
-			set { _shortestRouteNode = value; }
-		}
+        public DijkstraNode? ShortestRouteNode
+        {
+            get { return _shortestRouteNode; }
+            set { _shortestRouteNode = value; }
+        }
 
-		public IEnumerable<DijkstraNode> UnvisitedNodes => Nodes.Cast<DijkstraNode>().Where(node => !node.Visited);
+        public IEnumerable<DijkstraNode> UnvisitedNodes => Nodes.Cast<DijkstraNode>().Where(node => !node.Visited);
 
         public static bool operator <(DijkstraNode left, DijkstraNode right)
-		{
-			return left.ShortestRouteDistance < right.ShortestRouteDistance;
-		}
+        {
+            return left.ShortestRouteDistance < right.ShortestRouteDistance;
+        }
 
         public static bool operator >(DijkstraNode left, DijkstraNode right)
         {
             return left.ShortestRouteDistance > right.ShortestRouteDistance;
         }
 
-		public DijkstraNode(double x, double y) : base(x, y) { }
+        public DijkstraNode(double x, double y) : base(x, y) { }
 
         public int CompareTo(DijkstraNode? other)
         {
-			if (other == null) { throw new ArgumentNullException("other"); }
-			if (other == this) { return 0; }
-			return (int)(ShortestRouteDistance - other.ShortestRouteDistance);
-
+            if (other == null) { throw new ArgumentNullException("other"); }
+            if (other == this) { return 0; }
+            return (int)(ShortestRouteDistance - other.ShortestRouteDistance);
         }
 
-		public void UpdateShortestRoute(DijkstraNode node)
-		{
+        public void UpdateShortestRoute(DijkstraNode node)
+        {
             double nextRouteDistance = node.ShortestRouteDistance + Distance(node);
             if (nextRouteDistance >= ShortestRouteDistance)
             {
@@ -65,11 +64,11 @@ namespace DijkstraAlgorithm
             ShortestRouteDistance = nextRouteDistance;
         }
 
-		public void Reset()
-		{
+        public void Reset()
+        {
             ShortestRouteNode = null;
             ShortestRouteDistance = double.MaxValue;
-			Visited = false;
-		}
+            Visited = false;
+        }
     }
 }

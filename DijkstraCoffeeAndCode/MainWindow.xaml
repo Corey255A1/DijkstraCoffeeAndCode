@@ -4,7 +4,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DijkstraCoffeeAndCode"
+        xmlns:views="clr-namespace:DijkstraCoffeeAndCode.Views"
+        xmlns:vm="clr-namespace:DijkstraCoffeeAndCode.ViewModels"
         mc:Ignorable="d"
         Title="WunderVision - Dijkstra Coffee And Code" Height="452.406" Width="803.61" PreviewKeyDown="Window_PreviewKeyDown">
     <Window.Resources>
@@ -12,17 +13,44 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Graphics.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <vm:CoordinateOffsetConverter x:Key="coordinateOffsetConverter"/>
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
-        <Canvas x:Name="graphCanvas" Background="#FFCBCBCB" MouseLeftButtonDown="graphCanvas_MouseLeftButtonDown" MouseRightButtonDown="graphCanvas_MouseRightButtonDown" Margin="0,0,0,38">
-            <!--<local:NodeElement x:Name="endNode" Height="50" Canvas.Left="704" Canvas.Top="177" Width="50" Overlay="{DynamicResource CoffeePot}"/>-->
-        </Canvas>
-        <Button x:Name="solveBtn" Content="Solve" Width="75" HorizontalAlignment="Left" VerticalAlignment="Bottom" Click="solveBtn_Click" Margin="10,0,0,10" Focusable="False" Height="23"/>
-        <Button x:Name="stepBtn" Content="Begin Step" Width="75" HorizontalAlignment="Left" VerticalAlignment="Bottom" Click="stepBtn_Click" Margin="170,0,0,10" Focusable="False" Height="23"/>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="35"/>
+        </Grid.RowDefinitions>
+
+        <ItemsControl Background="AliceBlue" Grid.Row="0" ItemsSource="{Binding Path=Nodes}"  MouseRightButtonDown="CanvasMouseRightButtonDown" MouseLeftButtonDown="CanvasMouseLeftButtonDown">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemContainerStyle>
+                <Style TargetType="ContentPresenter">
+                    <Setter Property="Canvas.Left" Value="{Binding Left}"/>
+                    <Setter Property="Canvas.Top" Value="{Binding Top}"/>
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <views:NodeElement DataContext="{Binding }" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="1">
+            <Button x:Name="solveBtn" Margin="4" Content="Solve" Width="75" Click="solveBtn_Click" Focusable="False"/>
+            <Button x:Name="stepBtn" Margin="4" Content="Begin Step" Width="75" Click="stepBtn_Click" Focusable="False"/>
+
+            <Button x:Name="resetBtn" Margin="4" Content="Erase Nodes" Width="75" Click="resetBtn_Click" Focusable="False"/>
+            <Button x:Name="resetStep" Margin="4" Content="Reset" Width="75" Focusable="False" Click="resetStep_Click"/>
+            
+            <TextBox x:Name="infoBox" Width="400" VerticalContentAlignment="Center" TextWrapping="Wrap" Text="Welcome to WunderVision's Dijkstra Demo" IsReadOnly="True"/>
+            
+        </StackPanel>
         
-        <Button x:Name="resetBtn" Content="Erase Nodes" Width="75" HorizontalAlignment="Left" VerticalAlignment="Bottom" Click="resetBtn_Click" Margin="250,0,0,10" Focusable="False" Height="23"/>
-        <TextBox x:Name="infoBox" Height="23" Canvas.Left="192" TextWrapping="Wrap" Text="Welcome to WunderVision's Dijkstra Demo" Canvas.Top="386" Margin="347,0,10,10" IsReadOnly="True" VerticalAlignment="Bottom"/>
-        <Button x:Name="resetStep" Content="Reset" Width="75" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="90,0,0,10" Focusable="False" Height="23" Click="resetStep_Click"/>
     </Grid>
 </Window>

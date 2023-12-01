@@ -1,16 +1,15 @@
 ﻿<!-- WUNDERVISION 2018 -->
-<UserControl x:Class="DijkstraCoffeeAndCode.NodeElement"
+<UserControl x:Class="DijkstraCoffeeAndCode.Views.NodeElement"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DijkstraCoffeeAndCode.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="50" d:DesignWidth="50" Width="50" Height="50">
+             Width="50" Height="50">
     <Grid>
-        <Ellipse x:Name="nodeEllipse" Fill="#FFF4F4F5" Height="Auto" Stroke="Black" Width="Auto"/>
-        <Rectangle x:Name="overlayRect"  Margin="8,8,8,8"/>        
-        <Label x:Name="shortestDistanceLabel" Content="50000" Margin="5,15" Padding="0" HorizontalContentAlignment="Center" FontSize="14" FontWeight="Bold" Background="#BFFFFFFF" VerticalContentAlignment="Center"/>
-        
+        <Ellipse Fill="#FFF4F4F5" Height="Auto" Stroke="Black" Width="Auto" MouseDown="NodeMouseDown" MouseMove="NodeMouseMove" MouseUp="NodeMouseUp"/>
+        <Rectangle Margin="8,8,8,8" IsHitTestVisible="False"/>
+        <Label IsHitTestVisible="False" Content="50000" Margin="5,15" Padding="0" HorizontalContentAlignment="Center" FontSize="14" FontWeight="Bold" Background="#BFFFFFFF" VerticalContentAlignment="Center"/>
     </Grid>
 </UserControl>

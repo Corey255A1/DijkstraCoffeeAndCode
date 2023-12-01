@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DijkstraCoffeeAndCode.ViewModels
 {
-    internal class DijkstraEdgeViewModel
+    public class DijkstraEdgeViewModel
     {
         private bool _highlighted;
 
