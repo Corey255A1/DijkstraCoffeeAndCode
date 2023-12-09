@@ -9,11 +9,8 @@ using System.Threading.Tasks;
 
 namespace DijkstraCoffeeAndCode.ViewModels
 {
-    public class DijkstraEdgeViewModel : INotifyPropertyChanged
+    public class DijkstraEdgeViewModel : DijkstraObjectViewModel
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-        public void Notify([CallerMemberName] string name = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-
         private Edge _edge;
 
         private bool _highlighted;
@@ -26,6 +23,9 @@ namespace DijkstraCoffeeAndCode.ViewModels
                 Notify();
             }
         }
+
+        public double Left => 0;
+        public double Top => 0;
 
         public double X1
         {

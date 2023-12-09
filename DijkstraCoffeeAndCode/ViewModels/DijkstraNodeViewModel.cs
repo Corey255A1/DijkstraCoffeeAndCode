@@ -13,11 +13,8 @@ namespace DijkstraCoffeeAndCode.ViewModels
     {
         public UserInteractionState State { get; set; }
     }
-    public class DijkstraNodeViewModel : INotifyPropertyChanged
+    public class DijkstraNodeViewModel : DijkstraObjectViewModel
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-        public void Notify([CallerMemberName] string name = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-
         public event EventHandler<UserInteractionEventArgs>? UserInteraction;
 
         private DijkstraAlgorithm.DijkstraNode _node;

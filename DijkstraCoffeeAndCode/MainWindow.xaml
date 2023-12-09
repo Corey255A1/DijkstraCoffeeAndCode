@@ -22,7 +22,15 @@
             <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
 
-        <ItemsControl Background="AliceBlue" Grid.Row="0" ItemsSource="{Binding Path=Nodes}"  MouseRightButtonDown="CanvasMouseRightButtonDown" MouseLeftButtonDown="CanvasMouseLeftButtonDown">
+        <ItemsControl Background="AliceBlue" Grid.Row="0" ItemsSource="{Binding Path=DijkstraObjects}"  MouseRightButtonDown="CanvasMouseRightButtonDown" MouseLeftButtonDown="CanvasMouseLeftButtonDown">
+            <ItemsControl.Resources>
+                <DataTemplate DataType="{x:Type vm:DijkstraNodeViewModel}">
+                    <views:NodeElement DataContext="{Binding }" />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:DijkstraEdgeViewModel}">
+                    <Line X1="{Binding X1}" Y1="{Binding Y1}" Y2="{Binding Y2}" X2="{Binding X2}" Stroke="Black" StrokeThickness="20"/>
+                </DataTemplate>
+            </ItemsControl.Resources>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Canvas/>
@@ -34,11 +42,6 @@
                     <Setter Property="Canvas.Top" Value="{Binding Top}"/>
                 </Style>
             </ItemsControl.ItemContainerStyle>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <views:NodeElement DataContext="{Binding }" />
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
         </ItemsControl>
 
         <StackPanel Orientation="Horizontal" Grid.Row="1">

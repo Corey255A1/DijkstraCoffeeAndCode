@@ -10,8 +10,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
 {
     public class GraphViewModel
     {
-        public ObservableCollection<DijkstraNodeViewModel> Nodes { get; private set; } = new();
-        public ObservableCollection<DijkstraEdgeViewModel> Edges { get; private set; } = new();
+        public ObservableCollection<DijkstraObjectViewModel> DijkstraObjects { get; private set; } = new();
 
         public ObservableCollection<DijkstraNodeViewModel> SelectedNodes { get; private set; } = new();
         public const int MAX_SELECTED_NODES = 2;
@@ -26,7 +25,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
         {
             DijkstraNodeViewModel node = new(x, y);
             node.UserInteraction += NodeUserInteractionHandler;
-            Nodes.Add(node);
+            DijkstraObjects.Add(node);
         }
 
         public void CreateEdge(DijkstraNodeViewModel node1, DijkstraNodeViewModel node2)
@@ -34,7 +33,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             DijkstraEdgeViewModel? edge = node1.AddEdgeIfNew(node2);
             if(edge == null) { return; }
 
-            Edges.Add(edge);
+            DijkstraObjects.Add(edge);
         }
 
         public void CreateEdgesFromSelected()
@@ -48,7 +47,12 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public void AddSelectedNode(DijkstraNodeViewModel node)
         {
             if (SelectedNodes.Contains(node)) { return; }
-            if (SelectedNodes.Count >= MAX_SELECTED_NODES) { return; }
+            if (SelectedNodes.Count >= MAX_SELECTED_NODES) {
+                //Testing for now
+                CreateEdgesFromSelected();
+                SelectedNodes.Clear();
+                return; 
+            }
 
             node.IsSelected = true;
             SelectedNodes.Add(node);
