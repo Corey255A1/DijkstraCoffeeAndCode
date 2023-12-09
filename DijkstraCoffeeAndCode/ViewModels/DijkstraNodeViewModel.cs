@@ -16,13 +16,11 @@ namespace DijkstraCoffeeAndCode.ViewModels
     public class DijkstraNodeViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
-
         public void Notify([CallerMemberName] string name = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
         public event EventHandler<UserInteractionEventArgs>? UserInteraction;
 
         private DijkstraAlgorithm.DijkstraNode _node;
-
         public DijkstraAlgorithm.DijkstraNode Node => _node;
 
         private bool _isSelected;
@@ -40,24 +38,35 @@ namespace DijkstraCoffeeAndCode.ViewModels
         }
 
         private bool _isInteracting;
-
         public bool IsInteracting
         {
             get { return _isInteracting; }
             set { _isInteracting = value; Notify(); }
         }
 
+        public bool WasMovedWhileInteracting { get; private set; }
+
 
         public double X
         {
             get => Node.Point.X;
-            set { Node.Point.X = value; Notify(); Notify(nameof(Left)); }
+            set
+            {
+                Node.Point.X = value;
+                Notify();
+                Notify(nameof(Left));
+            }
         }
 
         public double Y
         {
             get => Node.Point.Y;
-            set { Node.Point.Y = value; Notify(); Notify(nameof(Top)); }
+            set
+            {
+                Node.Point.Y = value;
+                Notify();
+                Notify(nameof(Top));
+            }
         }
 
         public double Left
@@ -80,6 +89,15 @@ namespace DijkstraCoffeeAndCode.ViewModels
             _node = new DijkstraAlgorithm.DijkstraNode(0, 0);
         }
 
+        public DijkstraEdgeViewModel? AddEdgeIfNew(DijkstraNodeViewModel node)
+        {
+            if(Node.FindSharedEdge(node.Node) != null)
+            {
+                return null;
+            }
+            return new DijkstraEdgeViewModel(Node.AddEdge(node.Node));
+        }
+
         public void Move(double dX, double dY)
         {
             SetCenterPosition(X + dX, Y + dY);
@@ -89,15 +107,21 @@ namespace DijkstraCoffeeAndCode.ViewModels
         {
             X = x;
             Y = y;
+            if (IsInteracting)
+            {
+                WasMovedWhileInteracting = true;
+            }
         }
 
-        private void RaiseUserInteraction(UserInteractionState state) {
+        private void RaiseUserInteraction(UserInteractionState state)
+        {
             UserInteraction?.Invoke(this, new UserInteractionEventArgs() { State = state });
         }
 
         public void BeginInteraction()
         {
             IsInteracting = true;
+            WasMovedWhileInteracting = false;
             RaiseUserInteraction(UserInteractionState.Begin);
         }
 

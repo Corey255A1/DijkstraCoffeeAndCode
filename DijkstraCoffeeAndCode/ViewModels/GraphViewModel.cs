@@ -16,11 +16,8 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public ObservableCollection<DijkstraNodeViewModel> SelectedNodes { get; private set; } = new();
         public const int MAX_SELECTED_NODES = 2;
 
-        ICommand AddNodeCommand { get; set; }
-        ICommand UpdateNodeCommand { get; set; }
-
-
-
+        //ICommand AddNodeCommand { get; set; }
+        //ICommand UpdateNodeCommand { get; set; }
 
 
         public GraphViewModel() { }
@@ -28,37 +25,57 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public void AddNewNode(double x, double y)
         {
             DijkstraNodeViewModel node = new(x, y);
-            node.UserInteraction += NodeUserInteraction;
+            node.UserInteraction += NodeUserInteractionHandler;
             Nodes.Add(node);
         }
 
-        private void AddSelectedNode(DijkstraNodeViewModel node)
+        public void CreateEdge(DijkstraNodeViewModel node1, DijkstraNodeViewModel node2)
         {
-            if(SelectedNodes.Contains(node)) { return; }
-            if(SelectedNodes.Count >= MAX_SELECTED_NODES) { return; }
+            DijkstraEdgeViewModel? edge = node1.AddEdgeIfNew(node2);
+            if(edge == null) { return; }
+
+            Edges.Add(edge);
+        }
+
+        public void CreateEdgesFromSelected()
+        {
+            for (int nodeIndex = 1; nodeIndex < SelectedNodes.Count; ++nodeIndex)
+            {
+                CreateEdge(SelectedNodes[nodeIndex - 1], SelectedNodes[nodeIndex]);
+            }
+        }
+
+        public void AddSelectedNode(DijkstraNodeViewModel node)
+        {
+            if (SelectedNodes.Contains(node)) { return; }
+            if (SelectedNodes.Count >= MAX_SELECTED_NODES) { return; }
 
             node.IsSelected = true;
             SelectedNodes.Add(node);
         }
 
-        private void RemoveSelectedNode(DijkstraNodeViewModel node)
+        public void RemoveSelectedNode(DijkstraNodeViewModel node)
         {
             node.IsSelected = false;
             SelectedNodes.Remove(node);
         }
 
-        private void ToggleSelectedNode(DijkstraNodeViewModel node)
+        public void ToggleSelectedNode(DijkstraNodeViewModel node)
         {
             if (node.IsSelected) { RemoveSelectedNode(node); }
             else { AddSelectedNode(node); }
         }
 
-        private void NodeUserInteraction(object? sender, UserInteractionEventArgs e)
+        private void NodeUserInteractionHandler(object? sender, UserInteractionEventArgs e)
         {
-            if(!(sender is DijkstraNodeViewModel node)) { return; }
+            if (!(sender is DijkstraNodeViewModel node)) { return; }
 
-            if(e.State == UserInteractionState.Begin) {
-                ToggleSelectedNode(node);
+            if (e.State == UserInteractionState.End)
+            {
+                if (!node.WasMovedWhileInteracting)
+                {
+                    ToggleSelectedNode(node);
+                }
             }
         }
     }

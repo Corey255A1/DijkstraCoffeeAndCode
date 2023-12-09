@@ -2,7 +2,7 @@
 // https://www.wundervisionengineering.com
 
 // WunderVision Complete Refactor in 2023
-namespace DijkstraAlgorithm  
+namespace DijkstraAlgorithm
 {
     public class Node
     {
@@ -28,19 +28,43 @@ namespace DijkstraAlgorithm
             return _point.Distance(node._point);
         }
 
-        public void AddEdge(Edge edge) {
+        public Edge AddEdge(Node node)
+        {
+            Edge? edge = FindSharedEdge(node);
+            if (edge != null) { return edge; }
+
+            edge = new Edge(this, node);
+            AddEdge(edge);
+            node.AddEdge(edge);
+            return edge;
+        }
+
+        private void AddEdge(Edge edge)
+        {
             _edges.Add(edge);
         }
 
-        public void RemoveEdge(Edge edge) {
+        public void RemoveEdge(Node node)
+        {
+            Edge? edge = FindSharedEdge(node);
+            if (edge == null) { return; }
+
+            RemoveEdge(edge);
+            node.RemoveEdge(edge);
+        }
+
+        private void RemoveEdge(Edge edge)
+        {
             _edges.Remove(edge);
         }
 
-        public Edge FindSharedEdge(Node otherNode) {
+        public Edge? FindSharedEdge(Node otherNode)
+        {
             return _edges.Find(e => e.GetOtherNode(this) == otherNode);
         }
 
-        public void Delete() {
+        public void Delete()
+        {
             foreach (Edge edge in _edges)
             {
                 edge.GetOtherNode(this).RemoveEdge(edge);
