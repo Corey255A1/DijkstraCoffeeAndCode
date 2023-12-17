@@ -76,6 +76,11 @@ namespace DijkstraCoffeeAndCode.ViewModels
             get => Node.Point.Y - 25;
         }
 
+        public double ZIndex
+        {
+            get => 1.0;
+        }
+
         public DijkstraNodeViewModel(double x, double y)
         {
             _node = new DijkstraAlgorithm.DijkstraNode(x, y);

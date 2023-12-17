@@ -44,13 +44,22 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
         }
 
+        public void ClearSelectedNodes()
+        {
+            foreach(var node in SelectedNodes)
+            {
+                node.IsSelected = false;
+            }
+            SelectedNodes.Clear();
+        }
+
         public void AddSelectedNode(DijkstraNodeViewModel node)
         {
             if (SelectedNodes.Contains(node)) { return; }
             if (SelectedNodes.Count >= MAX_SELECTED_NODES) {
                 //Testing for now
                 CreateEdgesFromSelected();
-                SelectedNodes.Clear();
+                ClearSelectedNodes();
                 return; 
             }
 

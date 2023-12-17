@@ -1,11 +1,26 @@
 ﻿// WunderVision 2023
 // https://www.wundervisionengineering.com
+
 namespace DijkstraAlgorithm
 {
+    public delegate void VectorChangedEvent(Vector2D position);
     public class Vector2D
     {
-        public double X { get; set; }
-        public double Y { get; set; }
+        public event VectorChangedEvent? VectorChanged;
+
+        private double _x;
+        public double X
+        {
+            get { return _x; }
+            set { _x = value; VectorChanged?.Invoke(this); }
+        }
+
+        private double _y;
+        public double Y
+        {
+            get { return _y; }
+            set { _y = value; VectorChanged?.Invoke(this); }
+        }
 
         public static double Distance(Vector2D v1, Vector2D v2)
         {

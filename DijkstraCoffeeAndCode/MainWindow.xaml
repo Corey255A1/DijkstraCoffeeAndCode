@@ -28,7 +28,7 @@
                     <views:NodeElement DataContext="{Binding }" />
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:DijkstraEdgeViewModel}">
-                    <Line X1="{Binding X1}" Y1="{Binding Y1}" Y2="{Binding Y2}" X2="{Binding X2}" Stroke="Black" StrokeThickness="20"/>
+                    <views:EdgeElement DataContext="{Binding }" />
                 </DataTemplate>
             </ItemsControl.Resources>
             <ItemsControl.ItemsPanel>
@@ -40,6 +40,7 @@
                 <Style TargetType="ContentPresenter">
                     <Setter Property="Canvas.Left" Value="{Binding Left}"/>
                     <Setter Property="Canvas.Top" Value="{Binding Top}"/>
+                    <Setter Property="Canvas.ZIndex" Value="{Binding ZIndex}"/>
                 </Style>
             </ItemsControl.ItemContainerStyle>
         </ItemsControl>
