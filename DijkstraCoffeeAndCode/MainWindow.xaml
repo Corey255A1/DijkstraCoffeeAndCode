@@ -13,16 +13,20 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Graphics.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <vm:CoordinateOffsetConverter x:Key="coordinateOffsetConverter"/>
         </ResourceDictionary>
     </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding CreateEdges}" Key="E"/>
+        <KeyBinding Command="{Binding DeleteNodes}" Key="Delete"/>
+    </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
 
-        <ItemsControl Background="AliceBlue" Grid.Row="0" ItemsSource="{Binding Path=DijkstraObjects}"  MouseRightButtonDown="CanvasMouseRightButtonDown" MouseLeftButtonDown="CanvasMouseLeftButtonDown">
+        <ItemsControl Background="AliceBlue" Grid.Row="0" ItemsSource="{Binding Path=DijkstraObjects}" 
+                      MouseRightButtonDown="CanvasMouseRightButtonDown" MouseLeftButtonDown="CanvasMouseLeftButtonDown">
             <ItemsControl.Resources>
                 <DataTemplate DataType="{x:Type vm:DijkstraNodeViewModel}">
                     <views:NodeElement DataContext="{Binding }" />

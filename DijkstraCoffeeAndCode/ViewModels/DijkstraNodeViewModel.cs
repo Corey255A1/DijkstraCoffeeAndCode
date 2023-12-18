@@ -1,6 +1,8 @@
-﻿using System;
+﻿using DijkstraAlgorithm;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -19,6 +21,11 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
         private DijkstraAlgorithm.DijkstraNode _node;
         public DijkstraAlgorithm.DijkstraNode Node => _node;
+
+        public event EdgeEvent? EdgeEvent { 
+            add => _node.EdgeEvent += value; 
+            remove => _node.EdgeEvent -= value;
+        }
 
         private bool _isSelected;
         public bool IsSelected
@@ -83,21 +90,22 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
         public DijkstraNodeViewModel(double x, double y)
         {
-            _node = new DijkstraAlgorithm.DijkstraNode(x, y);
+            Construct(new DijkstraAlgorithm.DijkstraNode(x, y));
         }
 
         public DijkstraNodeViewModel()
         {
-            _node = new DijkstraAlgorithm.DijkstraNode(0, 0);
+            Construct(new DijkstraAlgorithm.DijkstraNode(0, 0));
         }
 
-        public DijkstraEdgeViewModel? AddEdgeIfNew(DijkstraNodeViewModel node)
+        private void Construct(DijkstraAlgorithm.DijkstraNode node)
         {
-            if(Node.FindSharedEdge(node.Node) != null)
-            {
-                return null;
-            }
-            return new DijkstraEdgeViewModel(Node.AddEdge(node.Node));
+            _node = node;
+        }
+
+        public void AddEdge(DijkstraNodeViewModel node)
+        {
+            Node.AddEdge(node.Node);
         }
 
         public void Move(double dX, double dY)
@@ -131,6 +139,11 @@ namespace DijkstraCoffeeAndCode.ViewModels
         {
             IsInteracting = false;
             RaiseUserInteraction(UserInteractionState.End);
+        }
+
+        public void RemoveAllEdges()
+        {
+            _node.RemoveAllEdges();
         }
     }
 }

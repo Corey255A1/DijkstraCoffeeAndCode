@@ -15,25 +15,59 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public ObservableCollection<DijkstraNodeViewModel> SelectedNodes { get; private set; } = new();
         public const int MAX_SELECTED_NODES = 2;
 
-        //ICommand AddNodeCommand { get; set; }
-        //ICommand UpdateNodeCommand { get; set; }
+        public ICommand CreateEdges { get; set; }
+        public ICommand DeleteNodes { get; set; }
 
-
-        public GraphViewModel() { }
+        public GraphViewModel() {
+            CreateEdges = new Commands.CreateEdgesCommand(this);
+            DeleteNodes = new Commands.DeleteNodesCommand(this);
+        }
 
         public void AddNewNode(double x, double y)
         {
             DijkstraNodeViewModel node = new(x, y);
             node.UserInteraction += NodeUserInteractionHandler;
+            node.EdgeEvent += NodeEdgeEvent;
             DijkstraObjects.Add(node);
+        }
+
+        private void NodeEdgeEvent(DijkstraAlgorithm.Edge edge, DijkstraAlgorithm.EdgeAction action)
+        {
+            switch(action) {
+                case DijkstraAlgorithm.EdgeAction.Created: AddEdge(edge); break;
+                case DijkstraAlgorithm.EdgeAction.Deleted: RemoveEdge(edge); break;
+            }
+        }
+
+        public void AddEdge(DijkstraAlgorithm.Edge edge)
+        {
+            int existingEdgeCount = DijkstraObjects
+                    .Where(dijkstraObject => dijkstraObject as DijkstraEdgeViewModel != null)
+                    .Cast<DijkstraEdgeViewModel>()
+                    .Count(dijkstraObject => dijkstraObject.Edge == edge);
+            if(existingEdgeCount > 0) { return; }
+
+            DijkstraObjects.Add(new DijkstraEdgeViewModel(edge));
+        }
+
+        public void RemoveEdge(DijkstraAlgorithm.Edge edge)
+        {
+            var edgesToRemove = DijkstraObjects
+                    .Where((dijkstraObject) =>
+                    {
+                        if (dijkstraObject is DijkstraEdgeViewModel dijkstraEdge) { 
+                            return dijkstraEdge.Edge == edge; 
+                        }
+                        return false;
+                    })
+                    .Cast<DijkstraEdgeViewModel>().ToList();
+
+            edgesToRemove.ForEach(dijkstraObject => DijkstraObjects.Remove(dijkstraObject));
         }
 
         public void CreateEdge(DijkstraNodeViewModel node1, DijkstraNodeViewModel node2)
         {
-            DijkstraEdgeViewModel? edge = node1.AddEdgeIfNew(node2);
-            if(edge == null) { return; }
-
-            DijkstraObjects.Add(edge);
+            node1.AddEdge(node2);            
         }
 
         public void CreateEdgesFromSelected()
@@ -56,12 +90,6 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public void AddSelectedNode(DijkstraNodeViewModel node)
         {
             if (SelectedNodes.Contains(node)) { return; }
-            if (SelectedNodes.Count >= MAX_SELECTED_NODES) {
-                //Testing for now
-                CreateEdgesFromSelected();
-                ClearSelectedNodes();
-                return; 
-            }
 
             node.IsSelected = true;
             SelectedNodes.Add(node);
@@ -77,6 +105,16 @@ namespace DijkstraCoffeeAndCode.ViewModels
         {
             if (node.IsSelected) { RemoveSelectedNode(node); }
             else { AddSelectedNode(node); }
+        }
+
+        public void DeleteSelectedNodes()
+        {
+            foreach (var node in SelectedNodes) {
+                node.RemoveAllEdges();
+                DijkstraObjects.Remove(node);
+            }
+            ClearSelectedNodes();
+
         }
 
         private void NodeUserInteractionHandler(object? sender, UserInteractionEventArgs e)

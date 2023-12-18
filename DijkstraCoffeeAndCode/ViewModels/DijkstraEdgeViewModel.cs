@@ -12,6 +12,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
     public class DijkstraEdgeViewModel : DijkstraObjectViewModel
     {
         private Edge _edge;
+        public Edge Edge => _edge;
 
         private bool _highlighted;
         public bool Highlighted
