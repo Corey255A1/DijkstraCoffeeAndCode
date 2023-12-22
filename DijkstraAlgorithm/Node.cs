@@ -2,20 +2,18 @@
 // https://www.wundervisionengineering.com
 
 // WunderVision Complete Refactor in 2023
+using System.Collections.ObjectModel;
+
 namespace DijkstraAlgorithm
 {
-    public enum EdgeAction { Created, Deleted }
-    public delegate void EdgeEvent(Edge edge, EdgeAction action);
     public class Node
     {
         private Vector2D _point;
         public Vector2D Point => _point;
 
-        private List<Edge> _edges = new List<Edge>();
-        public IEnumerable<Edge> Edges => _edges;
-        public IEnumerable<Node> Nodes => _edges.ConvertAll((edge) => edge.GetOtherNode(this));
-
-        public event EdgeEvent? EdgeEvent;
+        private ObservableCollection<Edge> _edges = new ObservableCollection<Edge>();
+        public ObservableCollection<Edge> Edges => _edges;
+        public IEnumerable<Node> Nodes => _edges.ToList().ConvertAll((edge) => edge.GetOtherNode(this));
 
         public Node()
         {
@@ -46,7 +44,6 @@ namespace DijkstraAlgorithm
         private void AddEdge(Edge edge)
         {
             _edges.Add(edge);
-            EdgeEvent?.Invoke(edge, EdgeAction.Created);
         }
 
         public void RemoveEdge(Node node)
@@ -61,12 +58,11 @@ namespace DijkstraAlgorithm
         private void RemoveEdge(Edge edge)
         {
             _edges.Remove(edge);
-            EdgeEvent?.Invoke(edge, EdgeAction.Deleted);
         }
 
         public Edge? FindSharedEdge(Node otherNode)
         {
-            return _edges.Find(e => e.GetOtherNode(this) == otherNode);
+            return _edges.ToList().Find(e => e.GetOtherNode(this) == otherNode);
         }
 
         public void RemoveAllEdges()

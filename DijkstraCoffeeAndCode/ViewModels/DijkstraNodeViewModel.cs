@@ -22,11 +22,6 @@ namespace DijkstraCoffeeAndCode.ViewModels
         private DijkstraAlgorithm.DijkstraNode _node;
         public DijkstraAlgorithm.DijkstraNode Node => _node;
 
-        public event EdgeEvent? EdgeEvent { 
-            add => _node.EdgeEvent += value; 
-            remove => _node.EdgeEvent -= value;
-        }
-
         private bool _isSelected;
         public bool IsSelected
         {
@@ -96,6 +91,11 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public DijkstraNodeViewModel()
         {
             Construct(new DijkstraAlgorithm.DijkstraNode(0, 0));
+        }
+
+        public DijkstraNodeViewModel(DijkstraAlgorithm.DijkstraNode node)
+        {
+            Construct(node);
         }
 
         private void Construct(DijkstraAlgorithm.DijkstraNode node)

@@ -26,12 +26,25 @@ namespace DijkstraAlgorithm
             get => Node1.Distance(Node2);
         }
 
+        public bool Contains(Node node)
+        {
+            if (Node1 == node) { return true; }
+            if (Node2 == node) { return true; }
+
+            return false;
+        }
+
         public Node GetOtherNode(Node node)
         {
             if(Node1 == node) { return Node2; }
             else if(Node2 == node) { return Node1; }
 
             throw new Exception("Node not part of this Edge");
+        }
+
+        public void Clear()
+        {
+            Node1.RemoveEdge(Node2);
         }
 
     }
