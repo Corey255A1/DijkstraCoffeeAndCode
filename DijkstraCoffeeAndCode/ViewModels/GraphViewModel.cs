@@ -21,6 +21,30 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public ICommand CreateEdges { get; set; }
         public ICommand DeleteNodes { get; set; }
 
+        private DijkstraNodeViewModel? _startNode = null;
+        private DijkstraNodeViewModel? _endNode = null;
+        public DijkstraNodeViewModel? StartNode
+        {
+            get => _startNode;
+            set
+            {
+                if (_startNode != null) { _startNode.IsStartNode = false; }
+                _startNode = value;
+                if (_startNode != null) { _startNode.IsStartNode = true; }
+            }
+        }
+
+        public DijkstraNodeViewModel? EndNode
+        {
+            get => _endNode;
+            set
+            {
+                if (_endNode != null) { _endNode.IsStartNode = false; }
+                _endNode = value;
+                if (_endNode != null) { _endNode.IsStartNode = true; }
+            }
+        }
+
         public GraphViewModel()
         {
             CreateEdges = new Commands.CreateEdgesCommand(this);
@@ -51,7 +75,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
         private void GraphNodesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            if(e.NewItems == null || e.NewItems.Count == 0) { return; }
+            if (e.NewItems == null || e.NewItems.Count == 0) { return; }
 
             if (!(e.NewItems[0] is DijkstraNode node)) { return; }
 
@@ -127,8 +151,8 @@ namespace DijkstraCoffeeAndCode.ViewModels
                 }
                 return false;
             }) as DijkstraEdgeViewModel;
-            
-            if(edgeToRemove == null) { return; }
+
+            if (edgeToRemove == null) { return; }
 
             DijkstraObjects.Remove(edgeToRemove);
         }

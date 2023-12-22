@@ -59,15 +59,15 @@ namespace DijkstraAlgorithm
             _currentNodeNeighbors = new Queue<DijkstraNode>(CurrentNode.UnvisitedNodes);
         }
 
-        public List<Node> GenerateShortestPathList()
+        public List<DijkstraNode> GenerateShortestPathList()
         {
-            List<Node> shortestPath = new List<Node>();
-            shortestPath.Add(EndNode);
+            List<DijkstraNode> shortestPath = new List<DijkstraNode>() { EndNode };
             DijkstraNode currentNode = EndNode;
 
             while (currentNode != null && currentNode != StartNode)
             {
-                currentNode = currentNode.ShortestRouteNode;
+                if (currentNode.ShortestRouteNode == null) { throw new Exception("Invalid Graph"); }
+                currentNode = currentNode.ShortestRouteNode;                
                 shortestPath.Add(currentNode);
             }
 

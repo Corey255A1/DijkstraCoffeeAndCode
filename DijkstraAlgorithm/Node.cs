@@ -13,7 +13,7 @@ namespace DijkstraAlgorithm
 
         private ObservableCollection<Edge> _edges = new ObservableCollection<Edge>();
         public ObservableCollection<Edge> Edges => _edges;
-        public IEnumerable<Node> Nodes => _edges.ToList().ConvertAll((edge) => edge.GetOtherNode(this));
+        public IEnumerable<Node> Neighbors => _edges.ToList().ConvertAll((edge) => edge.GetOtherNode(this));
 
         public Node()
         {

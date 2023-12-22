@@ -22,6 +22,30 @@ namespace DijkstraCoffeeAndCode.ViewModels
         private DijkstraAlgorithm.DijkstraNode _node;
         public DijkstraAlgorithm.DijkstraNode Node => _node;
 
+        private bool _isStartNode = false;
+        public bool IsStartNode
+        {
+            get { return _isStartNode; }
+            set { 
+                _isStartNode = value;
+                IsEndNode = false;
+                Notify();
+            }
+        }
+
+        private bool _isEndNode = false;
+        public bool IsEndNode
+        {   
+            get { return _isEndNode; }
+            set { 
+                _isEndNode = value;
+                IsStartNode = false;
+                Notify();
+            }
+        }
+
+
+
         private bool _isSelected;
         public bool IsSelected
         {

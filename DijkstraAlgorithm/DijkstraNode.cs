@@ -32,7 +32,7 @@ namespace DijkstraAlgorithm
             set { _shortestRouteNode = value; }
         }
 
-        public IEnumerable<DijkstraNode> UnvisitedNodes => Nodes.Cast<DijkstraNode>().Where(node => !node.Visited);
+        public IEnumerable<DijkstraNode> UnvisitedNodes => Neighbors.Cast<DijkstraNode>().Where(node => !node.Visited);
 
         public static bool operator <(DijkstraNode left, DijkstraNode right)
         {
