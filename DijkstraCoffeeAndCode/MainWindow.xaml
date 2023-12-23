@@ -16,8 +16,8 @@
         </ResourceDictionary>
     </Window.Resources>
     <Window.InputBindings>
-        <KeyBinding Command="{Binding CreateEdges}" Key="E"/>
-        <KeyBinding Command="{Binding DeleteNodes}" Key="Delete"/>
+        <KeyBinding Command="{Binding CreateEdgesCommand}" Key="E"/>
+        <KeyBinding Command="{Binding DeleteNodesCommand}" Key="Delete"/>
     </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
@@ -50,7 +50,7 @@
         </ItemsControl>
 
         <StackPanel Orientation="Horizontal" Grid.Row="1">
-            <Button x:Name="solveBtn" Margin="4" Content="Solve" Width="75" Click="solveBtn_Click" Focusable="False"/>
+            <Button Margin="4" Content="Solve" Width="75" Command="{Binding RunDijkstraAlgorithmCommand}"/>
             <Button x:Name="stepBtn" Margin="4" Content="Begin Step" Width="75" Click="stepBtn_Click" Focusable="False"/>
 
             <Button x:Name="resetBtn" Margin="4" Content="Erase Nodes" Width="75" Click="resetBtn_Click" Focusable="False"/>

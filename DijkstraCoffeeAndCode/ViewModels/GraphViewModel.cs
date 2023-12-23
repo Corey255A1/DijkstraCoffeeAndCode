@@ -1,16 +1,20 @@
 ﻿using DijkstraAlgorithm;
+using DijkstraCoffeeAndCode.ViewModels.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.ViewModels
 {
-    public class GraphViewModel
+    public class GraphViewModel : INotifyPropertyChanged
     {
         private DijkstraGraph _dijkstraGraph = new DijkstraGraph();
         public ObservableCollection<DijkstraObjectViewModel> DijkstraObjects { get; private set; } = new();
@@ -18,11 +22,16 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public ObservableCollection<DijkstraNodeViewModel> SelectedNodes { get; private set; } = new();
         public const int MAX_SELECTED_NODES = 2;
 
-        public ICommand CreateEdges { get; set; }
-        public ICommand DeleteNodes { get; set; }
+        public ICommand CreateEdgesCommand { get; set; }
+        public ICommand DeleteNodesCommand { get; set; }
+        public ICommand RunDijkstraAlgorithmCommand { get; set; }
 
         private DijkstraNodeViewModel? _startNode = null;
         private DijkstraNodeViewModel? _endNode = null;
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private void Notify([CallerMemberName]string name="")=>PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); 
+
         public DijkstraNodeViewModel? StartNode
         {
             get => _startNode;
@@ -31,6 +40,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
                 if (_startNode != null) { _startNode.IsStartNode = false; }
                 _startNode = value;
                 if (_startNode != null) { _startNode.IsStartNode = true; }
+                Notify();
             }
         }
 
@@ -42,13 +52,16 @@ namespace DijkstraCoffeeAndCode.ViewModels
                 if (_endNode != null) { _endNode.IsEndNode = false; }
                 _endNode = value;
                 if (_endNode != null) { _endNode.IsEndNode = true; }
+                Notify();
             }
         }
 
         public GraphViewModel()
         {
-            CreateEdges = new Commands.CreateEdgesCommand(this);
-            DeleteNodes = new Commands.DeleteNodesCommand(this);
+            CreateEdgesCommand = new Commands.CreateEdgesCommand(this);
+            DeleteNodesCommand = new Commands.DeleteNodesCommand(this);
+            RunDijkstraAlgorithmCommand = new Commands.RunDijkstraAlgorithmCommand(this);
+
             _dijkstraGraph.Nodes.CollectionChanged += GraphNodesCollectionChanged;
             _dijkstraGraph.Edges.CollectionChanged += GraphEdgesCollectionChanged;
         }
@@ -63,6 +76,8 @@ namespace DijkstraCoffeeAndCode.ViewModels
         {
             _dijkstraGraph.RemoveNode(node.Node);
             RemoveSelectedNode(node);
+            if(node == StartNode) { StartNode = null; }
+            if(node == EndNode) { EndNode = null; }
         }
 
         public void DeleteSelectedNodes()
@@ -221,6 +236,24 @@ namespace DijkstraCoffeeAndCode.ViewModels
                 case UserInteractionState.SetAsEnd: EndNode = node; break;
                 case UserInteractionState.Delete: DeleteNode(node); break;
             }
+        }
+
+
+        public void RunDijkstraAlgorithm()
+        {
+            if(StartNode == null || EndNode == null) { return; }
+
+            try
+            {
+                foreach (var node in Dijkstra.FindShortestPath(StartNode.Node, EndNode.Node))
+                {
+                    Debug.WriteLine(node.ShortestRouteDistance);
+                }
+            }catch(Exception e)
+            {
+                Debug.WriteLine(e.ToString());
+            }
+
         }
     }
 }
