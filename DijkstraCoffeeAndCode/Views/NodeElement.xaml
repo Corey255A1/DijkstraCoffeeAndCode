@@ -20,10 +20,28 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
+        <Style TargetType="Rectangle" x:Key="thumb">
+            <Setter Property="Fill" Value="Transparent"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsStartNode}" Value="true">
+                    <Setter Property="Fill" Value="DarkBlue"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsEndNode}" Value="true">
+                    <Setter Property="Fill" Value="DarkRed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
     <Grid>
-        <Ellipse Style="{StaticResource ResourceKey=node}" Height="Auto" Stroke="Black" Width="Auto" MouseDown="NodeMouseDown" MouseMove="NodeMouseMove" MouseUp="NodeMouseUp"/>
-        <Rectangle Margin="8,8,8,8" IsHitTestVisible="False"/>
+        <Grid.ContextMenu>
+            <ContextMenu>
+                <MenuItem Header="Start Node" Command="{Binding SetAsStart}"></MenuItem>
+                <MenuItem Header="End Node" Command="{Binding SetAsEnd}"></MenuItem>
+                <MenuItem Header="Delete" Command="{Binding Delete}"></MenuItem>
+            </ContextMenu>
+        </Grid.ContextMenu>
+        <Ellipse Style="{StaticResource ResourceKey=node}" Height="Auto" Stroke="Black" Width="Auto" MouseMove="NodeMouseMove" MouseLeftButtonDown="NodeMouseDown" MouseLeftButtonUp="NodeMouseUp"/>
+        <Rectangle Style="{StaticResource ResourceKey=thumb}" Margin="8,8,8,8" IsHitTestVisible="False"/>
         <Label IsHitTestVisible="False" Content="50000" Margin="5,15" Padding="0" HorizontalContentAlignment="Center" FontSize="14" FontWeight="Bold" Background="#BFFFFFFF" VerticalContentAlignment="Center"/>
     </Grid>
 </UserControl>

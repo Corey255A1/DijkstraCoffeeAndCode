@@ -39,9 +39,9 @@ namespace DijkstraCoffeeAndCode.ViewModels
             get => _endNode;
             set
             {
-                if (_endNode != null) { _endNode.IsStartNode = false; }
+                if (_endNode != null) { _endNode.IsEndNode = false; }
                 _endNode = value;
-                if (_endNode != null) { _endNode.IsStartNode = true; }
+                if (_endNode != null) { _endNode.IsEndNode = true; }
             }
         }
 
@@ -62,27 +62,36 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public void DeleteNode(DijkstraNodeViewModel node)
         {
             _dijkstraGraph.RemoveNode(node.Node);
+            RemoveSelectedNode(node);
         }
 
         public void DeleteSelectedNodes()
         {
-            foreach (var node in SelectedNodes)
+            foreach (var node in SelectedNodes.ToList())
             {
                 DeleteNode(node);
             }
-            ClearSelectedNodes();
         }
 
         private void GraphNodesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.NewItems == null || e.NewItems.Count == 0) { return; }
-
-            if (!(e.NewItems[0] is DijkstraNode node)) { return; }
-
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add: AddNewNodeViewModel(node); break;
-                case NotifyCollectionChangedAction.Remove: RemoveNodeViewModel(node); break;
+                case NotifyCollectionChangedAction.Add:
+                    {
+                        if (e.NewItems == null || e.NewItems.Count == 0) { return; }
+                        if (!(e.NewItems[0] is DijkstraNode node)) { return; }
+                        AddNewNodeViewModel(node);
+                    }
+                    break;
+
+                case NotifyCollectionChangedAction.Remove:
+                    {
+                        if (e.OldItems == null || e.OldItems.Count == 0) { return; }
+                        if (!(e.OldItems[0] is DijkstraNode node)) { return; }
+                        RemoveNodeViewModel(node);
+                    }
+                    break;
             }
         }
 
@@ -125,14 +134,22 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
         private void GraphEdgesCollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            if (e.NewItems == null || e.NewItems.Count == 0) { return; }
-
-            if (!(e.NewItems[0] is Edge edge)) { return; }
-
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add: AddEdgeViewModel(edge); break;
-                case NotifyCollectionChangedAction.Remove: RemoveEdgeViewModel(edge); break;
+                case NotifyCollectionChangedAction.Add:
+                    {
+                        if (e.NewItems == null || e.NewItems.Count == 0) { return; }
+                        if (!(e.NewItems[0] is Edge edge)) { return; }
+                        AddEdgeViewModel(edge);
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    {
+                        if (e.OldItems == null || e.OldItems.Count == 0) { return; }
+                        if (!(e.OldItems[0] is Edge edge)) { return; }
+                        RemoveEdgeViewModel(edge);
+                    }
+                    break;
             }
         }
 
@@ -192,12 +209,17 @@ namespace DijkstraCoffeeAndCode.ViewModels
         {
             if (!(sender is DijkstraNodeViewModel node)) { return; }
 
-            if (e.State == UserInteractionState.End)
+            switch (e.State)
             {
-                if (!node.WasMovedWhileInteracting)
-                {
-                    ToggleSelectedNode(node);
-                }
+                case UserInteractionState.EndDrag:
+                    if (!node.WasMovedWhileInteracting)
+                    {
+                        ToggleSelectedNode(node);
+                    }
+                    break;
+                case UserInteractionState.SetAsStart: StartNode = node; break;
+                case UserInteractionState.SetAsEnd: EndNode = node; break;
+                case UserInteractionState.Delete: DeleteNode(node); break;
             }
         }
     }

@@ -38,9 +38,9 @@ namespace DijkstraAlgorithm
 
         public void AddEdge(DijkstraNode node1, DijkstraNode node2)
         {
-            if (node1.FindSharedEdge(node2) != null) { return; }
+            Edge? edge = node1.AddEdge(node2);
+            if(edge == null) { return; }
 
-            Edge edge = new(node1, node2);
             _edges.Add(edge);
         }
 

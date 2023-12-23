@@ -1,4 +1,5 @@
 ﻿using DijkstraAlgorithm;
+using DijkstraCoffeeAndCode.ViewModels.Commands;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,10 +8,11 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.ViewModels
 {
-    public enum UserInteractionState { Begin, Continue, End };
+    public enum UserInteractionState { BeginDrag, Continue, EndDrag, Delete, SetAsStart, SetAsEnd };
     public class UserInteractionEventArgs : EventArgs
     {
         public UserInteractionState State { get; set; }
@@ -26,10 +28,11 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public bool IsStartNode
         {
             get { return _isStartNode; }
-            set { 
-                _isStartNode = value;
-                IsEndNode = false;
+            set {
+                _isStartNode = value;                
                 Notify();
+                _isEndNode = false;
+                Notify(nameof(IsEndNode));
             }
         }
 
@@ -39,28 +42,27 @@ namespace DijkstraCoffeeAndCode.ViewModels
             get { return _isEndNode; }
             set { 
                 _isEndNode = value;
-                IsStartNode = false;
                 Notify();
+                _isStartNode = false;
+                Notify(nameof(IsStartNode));
             }
         }
 
-
-
-        private bool _isSelected;
+        private bool _isSelected = false;
         public bool IsSelected
         {
             get { return _isSelected; }
             set { _isSelected = value; Notify(); }
         }
 
-        private bool _isHighlighted;
+        private bool _isHighlighted = false;
         public bool IsHighlighted
         {
             get { return _isHighlighted; }
             set { _isHighlighted = value; Notify(); }
         }
 
-        private bool _isInteracting;
+        private bool _isInteracting = false;
         public bool IsInteracting
         {
             get { return _isInteracting; }
@@ -68,7 +70,6 @@ namespace DijkstraCoffeeAndCode.ViewModels
         }
 
         public bool WasMovedWhileInteracting { get; private set; }
-
 
         public double X
         {
@@ -107,6 +108,11 @@ namespace DijkstraCoffeeAndCode.ViewModels
             get => 1.0;
         }
 
+
+        public ICommand SetAsStart { get; set; }
+        public ICommand SetAsEnd { get; set; }
+        public ICommand Delete { get; set; }
+
         public DijkstraNodeViewModel(double x, double y)
         {
             Construct(new DijkstraAlgorithm.DijkstraNode(x, y));
@@ -125,11 +131,9 @@ namespace DijkstraCoffeeAndCode.ViewModels
         private void Construct(DijkstraAlgorithm.DijkstraNode node)
         {
             _node = node;
-        }
-
-        public void AddEdge(DijkstraNodeViewModel node)
-        {
-            Node.AddEdge(node.Node);
+            SetAsStart = new SetNodeAsStartCommand(this);
+            SetAsEnd = new SetNodeAsEndCommand(this);
+            Delete = new DeleteNodeViewCommand(this);
         }
 
         public void Move(double dX, double dY)
@@ -156,18 +160,28 @@ namespace DijkstraCoffeeAndCode.ViewModels
         {
             IsInteracting = true;
             WasMovedWhileInteracting = false;
-            RaiseUserInteraction(UserInteractionState.Begin);
+            RaiseUserInteraction(UserInteractionState.BeginDrag);
         }
 
         public void EndInteraction()
         {
             IsInteracting = false;
-            RaiseUserInteraction(UserInteractionState.End);
+            RaiseUserInteraction(UserInteractionState.EndDrag);
         }
 
-        public void RemoveAllEdges()
+        public void UserCommandSetStart()
         {
-            _node.RemoveAllEdges();
+            RaiseUserInteraction(UserInteractionState.SetAsStart);
+        }
+
+        public void UserCommandSetEnd()
+        {
+            RaiseUserInteraction(UserInteractionState.SetAsEnd);
+        }
+
+        public void UserCommandDelete()
+        {
+            RaiseUserInteraction(UserInteractionState.Delete);
         }
     }
 }
