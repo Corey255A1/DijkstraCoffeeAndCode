@@ -16,7 +16,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
 {
     public class GraphViewModel : INotifyPropertyChanged
     {
-        private DijkstraGraph _dijkstraGraph = new DijkstraGraph();
+        private Graph _dijkstraGraph = new Graph();
         public ObservableCollection<DijkstraObjectViewModel> DijkstraObjects { get; private set; } = new();
 
         public ObservableCollection<DijkstraNodeViewModel> SelectedNodes { get; private set; } = new();

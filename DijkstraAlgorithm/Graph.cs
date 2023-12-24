@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DijkstraAlgorithm
 {
-    public class DijkstraGraph
+    public class Graph
     {
         private ObservableCollection<Node> _nodes;
         public ObservableCollection<Node> Nodes { get { return _nodes; } }
@@ -15,7 +15,7 @@ namespace DijkstraAlgorithm
         private ObservableCollection<Edge> _edges;
         public ObservableCollection<Edge> Edges { get { return _edges; } }
 
-        public DijkstraGraph()
+        public Graph()
         {
             _nodes = new ObservableCollection<Node>();
             _edges = new ObservableCollection<Edge>();
