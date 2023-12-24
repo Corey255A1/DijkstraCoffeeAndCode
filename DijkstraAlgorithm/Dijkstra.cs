@@ -23,8 +23,6 @@ namespace DijkstraAlgorithm
                 }
                 dijkstraState.VisitNextNode();
             }
-            Console.WriteLine(dijkstraState.EndNode.ShortestRouteDistance);
-
             return dijkstraState.GenerateShortestPathList();
         }
 

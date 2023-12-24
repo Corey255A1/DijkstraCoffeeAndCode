@@ -30,7 +30,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
         private DijkstraNodeViewModel? _endNode = null;
 
         public event PropertyChangedEventHandler? PropertyChanged;
-        private void Notify([CallerMemberName]string name="")=>PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); 
+        private void Notify([CallerMemberName] string name = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
         public DijkstraNodeViewModel? StartNode
         {
@@ -76,8 +76,8 @@ namespace DijkstraCoffeeAndCode.ViewModels
         {
             _dijkstraGraph.RemoveNode(node.Node);
             RemoveSelectedNode(node);
-            if(node == StartNode) { StartNode = null; }
-            if(node == EndNode) { EndNode = null; }
+            if (node == StartNode) { StartNode = null; }
+            if (node == EndNode) { EndNode = null; }
         }
 
         public void DeleteSelectedNodes()
@@ -241,7 +241,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
         public void RunDijkstraAlgorithm()
         {
-            if(StartNode == null || EndNode == null) { return; }
+            if (StartNode == null || EndNode == null) { return; }
 
             try
             {
@@ -249,7 +249,8 @@ namespace DijkstraCoffeeAndCode.ViewModels
                 {
                     Debug.WriteLine(node.ShortestRouteDistance);
                 }
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 Debug.WriteLine(e.ToString());
             }
