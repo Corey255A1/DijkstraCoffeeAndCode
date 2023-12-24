@@ -5,31 +5,29 @@ using DijkstraAlgorithm;
 
 Console.WriteLine("Welcome to the Dijsktra Console");
 
-var startNode = new DijkstraNode(0, 0);
-var endNode = new DijkstraNode(4, 0);
+var startNode = new Node(0, 0);
+var endNode = new Node(4, 0);
 
-var nodeList = new List<DijkstraNode>()
+var nodeList = new List<Node>()
 {
     startNode,
-    new DijkstraNode(2, -1),
-    new DijkstraNode(2, -3),
-    new DijkstraNode(1, 1),
-    new DijkstraNode(2, 1),
+    new Node(2, -1),
+    new Node(2, -3),
+    new Node(1, 1),
+    new Node(2, 1),
     endNode
 };
 
-var edgeList = new List<Edge>() {
-    new Edge(startNode, nodeList[1]),
-    new Edge(startNode, nodeList[2]),
-    new Edge(startNode, nodeList[3]),
-    new Edge(nodeList[3], nodeList[4]),
-    new Edge(nodeList[1], nodeList[4]),
-    new Edge(endNode, nodeList[1]),
-    new Edge(endNode, nodeList[2]),
-    new Edge(endNode, nodeList[4]),
-};
+startNode.AddEdge(nodeList[1]);
+nodeList[1].AddEdge(nodeList[2]);
+nodeList[2].AddEdge(endNode);
+startNode.AddEdge(nodeList[3]);
+nodeList[3].AddEdge(nodeList[4]);
+nodeList[4].AddEdge(endNode);
 
-foreach(var node in Dijkstra.FindShortestPath(startNode, endNode))
+nodeList[2].AddEdge(nodeList[3]);
+
+foreach (var node in Dijkstra.FindShortestPath(startNode, endNode))
 {
-    Console.WriteLine($"{node.Point.X}, {node.Point.Y}");
+    Console.WriteLine($"{node.Node.Point.X}, {node.Node.Point.Y}");
 }

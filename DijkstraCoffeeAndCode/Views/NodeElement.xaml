@@ -31,17 +31,31 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
+        <Style TargetType="Ellipse" x:Key="ringIndicator">
+            <Setter Property="StrokeThickness" Value="6"/>
+            <Setter Property="Stroke" Value="Transparent"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsStartNode}" Value="true">
+                    <Setter Property="Stroke" Value="DarkBlue"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsEndNode}" Value="true">
+                    <Setter Property="Stroke" Value="DarkRed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.ContextMenu>
             <ContextMenu>
-                <MenuItem Header="Start Node" Command="{Binding SetAsStart}"></MenuItem>
-                <MenuItem Header="End Node" Command="{Binding SetAsEnd}"></MenuItem>
-                <MenuItem Header="Delete" Command="{Binding Delete}"></MenuItem>
+                <MenuItem Header="Start Node" Command="{Binding SetAsStartCommand}"></MenuItem>
+                <MenuItem Header="End Node" Command="{Binding SetAsEndCommand}"></MenuItem>
+                <MenuItem Header="Delete" Command="{Binding DeleteCommand}"></MenuItem>
             </ContextMenu>
         </Grid.ContextMenu>
-        <Ellipse Style="{StaticResource ResourceKey=node}" Height="Auto" Stroke="Black" Width="Auto" MouseMove="NodeMouseMove" MouseLeftButtonDown="NodeMouseDown" MouseLeftButtonUp="NodeMouseUp"/>
+
+        <Ellipse Style="{StaticResource ResourceKey=node}" Margin="2" Height="Auto" Width="Auto" Stroke="Black"  MouseMove="NodeMouseMove" MouseLeftButtonDown="NodeMouseDown" MouseLeftButtonUp="NodeMouseUp"/>
         <Rectangle Style="{StaticResource ResourceKey=thumb}" Margin="8,8,8,8" IsHitTestVisible="False"/>
         <Label IsHitTestVisible="False" Content="50000" Margin="5,15" Padding="0" HorizontalContentAlignment="Center" FontSize="14" FontWeight="Bold" Background="#BFFFFFFF" VerticalContentAlignment="Center"/>
+        <Ellipse IsHitTestVisible="False" Style="{StaticResource ResourceKey=ringIndicator}" Height="Auto" Width="Auto"/>
     </Grid>
 </UserControl>

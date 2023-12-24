@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace DijkstraAlgorithm
 {
@@ -19,17 +20,60 @@ namespace DijkstraAlgorithm
         public bool HasNodeNeighbors => _currentNodeNeighbors.Count > 0;
 
         private HashSet<DijkstraNode> _nodesToVisit = new();
-
+        private Dictionary<Node, DijkstraNode> _dijkstraNodes = new();
         public bool IsFinished => CurrentNode == null || CurrentNode == EndNode || CurrentNode.Visited;
 
+        public DijkstraState(Node startNode, Node endNode)
+        {
+            DijkstraNode dijkstraStartNode = new(startNode);
+            DijkstraNode dijkstraEndNode = new(endNode);
+            Construct(dijkstraStartNode, dijkstraEndNode);
+        }
         public DijkstraState(DijkstraNode startNode, DijkstraNode endNode)
+        {
+            Construct(startNode, endNode);
+        }
+
+
+
+        private void Construct(DijkstraNode startNode, DijkstraNode endNode)
         {
             StartNode = startNode;
             EndNode = endNode;
+            _dijkstraNodes[startNode.Node] = startNode;
+            _dijkstraNodes[endNode.Node] = endNode;
+
             CurrentNode = startNode;
             CurrentNode.ShortestRouteDistance = 0;
             LastCheckedNeighbor = null;
-            _currentNodeNeighbors = new Queue<DijkstraNode>(CurrentNode.UnvisitedNodes);
+            _currentNodeNeighbors = new Queue<DijkstraNode>(GetOrCreateDijkstraNode(CurrentNode.Node.Neighbors));
+        }
+
+        private DijkstraNode GetOrCreateDijkstraNode(Node node)
+        {
+            if (!_dijkstraNodes.ContainsKey(node))
+            {
+                _dijkstraNodes[node] = new DijkstraNode(node);
+            }
+            return _dijkstraNodes[node];
+        }
+
+        private IEnumerable<DijkstraNode> GetOrCreateDijkstraNode(IEnumerable<Node> nodes)
+        {
+            foreach (var node in nodes)
+            {
+                yield return GetOrCreateDijkstraNode(node);
+            }
+        }
+
+        private IEnumerable<DijkstraNode> GetUnvisitedNeighborNodes(DijkstraNode node)
+        {
+            return GetOrCreateDijkstraNode(node.Node.Neighbors.Where(
+               (baseNode) =>
+               {
+                   if (!_dijkstraNodes.ContainsKey(baseNode)) { return true; }
+                   return !_dijkstraNodes[baseNode].Visited;
+               }));
         }
 
         public void AddNodeToVisit(DijkstraNode node)
@@ -47,8 +91,8 @@ namespace DijkstraAlgorithm
             if (CurrentNode == null) { return; }
 
             LastCheckedNeighbor = GetNextNodeNeighbor();
-            if(LastCheckedNeighbor == null) { return; }
-            
+            if (LastCheckedNeighbor == null) { return; }
+
 
             LastCheckedNeighbor.UpdateShortestRoute(CurrentNode);
             AddNodeToVisit(LastCheckedNeighbor);
@@ -60,10 +104,10 @@ namespace DijkstraAlgorithm
 
             CurrentNode.Visited = true;
             CurrentNode = _nodesToVisit.Min((node) => node);
-            if(CurrentNode == null) { return; }
+            if (CurrentNode == null) { return; }
 
             _nodesToVisit.Remove(CurrentNode);
-            _currentNodeNeighbors = new Queue<DijkstraNode>(CurrentNode.UnvisitedNodes);
+            _currentNodeNeighbors = new Queue<DijkstraNode>(GetUnvisitedNeighborNodes(CurrentNode));
         }
 
         public List<DijkstraNode> GenerateShortestPathList()
@@ -74,7 +118,7 @@ namespace DijkstraAlgorithm
             while (currentNode != null && currentNode != StartNode)
             {
                 if (currentNode.ShortestRouteNode == null) { throw new Exception("Invalid Graph"); }
-                currentNode = currentNode.ShortestRouteNode;                
+                currentNode = currentNode.ShortestRouteNode;
                 shortestPath.Add(currentNode);
             }
 

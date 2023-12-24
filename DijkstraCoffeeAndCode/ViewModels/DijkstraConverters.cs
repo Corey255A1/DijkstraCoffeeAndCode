@@ -29,10 +29,10 @@ namespace DijkstraCoffeeAndCode.ViewModels
                 {
                     return Highlighted;
                 }
-                else if (dijkstraViewModel.Node.Visited)
-                {
-                    return Visited;
-                }
+                //else if (dijkstraViewModel.Node.Visited)
+                //{
+                //    return Visited;
+                //}
             }
             return Base;
         }

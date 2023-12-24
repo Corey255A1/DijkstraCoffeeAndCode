@@ -64,10 +64,10 @@ namespace DijkstraCoffeeAndCode.ViewModels
             get => _edge.Distance;
         }
 
-        public double CurrentShortestDistance
-        {
-            get => ((DijkstraNode)_edge.Node2).ShortestRouteDistance;
-        }
+        //public double CurrentShortestDistance
+        //{
+        //    get => ((DijkstraNode)_edge.Node2).ShortestRouteDistance;
+        //}
 
         public DijkstraEdgeViewModel(Edge edge)
         {

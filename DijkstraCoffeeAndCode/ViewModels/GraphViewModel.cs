@@ -95,7 +95,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
                 case NotifyCollectionChangedAction.Add:
                     {
                         if (e.NewItems == null || e.NewItems.Count == 0) { return; }
-                        if (!(e.NewItems[0] is DijkstraNode node)) { return; }
+                        if (!(e.NewItems[0] is Node node)) { return; }
                         AddNewNodeViewModel(node);
                     }
                     break;
@@ -103,21 +103,21 @@ namespace DijkstraCoffeeAndCode.ViewModels
                 case NotifyCollectionChangedAction.Remove:
                     {
                         if (e.OldItems == null || e.OldItems.Count == 0) { return; }
-                        if (!(e.OldItems[0] is DijkstraNode node)) { return; }
+                        if (!(e.OldItems[0] is Node node)) { return; }
                         RemoveNodeViewModel(node);
                     }
                     break;
             }
         }
 
-        private void AddNewNodeViewModel(DijkstraNode node)
+        private void AddNewNodeViewModel(Node node)
         {
             DijkstraNodeViewModel nodeViewModel = new(node);
             nodeViewModel.UserInteraction += NodeUserInteractionHandler;
             DijkstraObjects.Add(nodeViewModel);
         }
 
-        private void RemoveNodeViewModel(DijkstraNode node)
+        private void RemoveNodeViewModel(Node node)
         {
             DijkstraNodeViewModel? nodeToRemove = DijkstraObjects.FirstOrDefault(dijkstraObject =>
             {
@@ -147,7 +147,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
         }
 
-        private void GraphEdgesCollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void GraphEdgesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {

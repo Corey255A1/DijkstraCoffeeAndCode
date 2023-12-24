@@ -21,8 +21,8 @@ namespace DijkstraCoffeeAndCode.ViewModels
     {
         public event EventHandler<UserInteractionEventArgs>? UserInteraction;
 
-        private DijkstraAlgorithm.DijkstraNode _node;
-        public DijkstraAlgorithm.DijkstraNode Node => _node;
+        private DijkstraAlgorithm.Node _node;
+        public DijkstraAlgorithm.Node Node => _node;
 
         private bool _isStartNode = false;
         public bool IsStartNode
@@ -109,31 +109,31 @@ namespace DijkstraCoffeeAndCode.ViewModels
         }
 
 
-        public ICommand SetAsStart { get; set; }
-        public ICommand SetAsEnd { get; set; }
-        public ICommand Delete { get; set; }
+        public ICommand SetAsStartCommand { get; set; }
+        public ICommand SetAsEndCommand { get; set; }
+        public ICommand DeleteCommand { get; set; }
 
         public DijkstraNodeViewModel(double x, double y)
         {
-            Construct(new DijkstraAlgorithm.DijkstraNode(x, y));
+            Construct(new DijkstraAlgorithm.Node(x, y));
         }
 
         public DijkstraNodeViewModel()
         {
-            Construct(new DijkstraAlgorithm.DijkstraNode(0, 0));
+            Construct(new DijkstraAlgorithm.Node(0, 0));
         }
 
-        public DijkstraNodeViewModel(DijkstraAlgorithm.DijkstraNode node)
+        public DijkstraNodeViewModel(DijkstraAlgorithm.Node node)
         {
             Construct(node);
         }
 
-        private void Construct(DijkstraAlgorithm.DijkstraNode node)
+        private void Construct(DijkstraAlgorithm.Node node)
         {
             _node = node;
-            SetAsStart = new SetNodeAsStartCommand(this);
-            SetAsEnd = new SetNodeAsEndCommand(this);
-            Delete = new DeleteNodeViewCommand(this);
+            SetAsStartCommand = new SetNodeAsStartCommand(this);
+            SetAsEndCommand = new SetNodeAsEndCommand(this);
+            DeleteCommand = new DeleteNodeViewCommand(this);
         }
 
         public void Move(double dX, double dY)

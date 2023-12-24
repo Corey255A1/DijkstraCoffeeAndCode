@@ -15,6 +15,15 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
         public SetNodeAsStartCommand(DijkstraNodeViewModel viewModel)
         {
             _viewModel = viewModel;
+            _viewModel.PropertyChanged += ViewModelPropertyChanged;
+        }
+
+        private void ViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(_viewModel.IsStartNode))
+            {
+                CanExecuteChanged?.Invoke(this, new EventArgs());
+            }
         }
 
         public bool CanExecute(object? parameter)

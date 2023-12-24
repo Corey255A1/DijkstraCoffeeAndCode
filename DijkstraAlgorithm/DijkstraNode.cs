@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DijkstraAlgorithm
 {
-    public class DijkstraNode : Node, IComparable<DijkstraNode>
+    public class DijkstraNode : IComparable<DijkstraNode>
     {
         private bool _visited;
 
@@ -32,7 +32,18 @@ namespace DijkstraAlgorithm
             set { _shortestRouteNode = value; }
         }
 
-        public IEnumerable<DijkstraNode> UnvisitedNodes => Neighbors.Cast<DijkstraNode>().Where(node => !node.Visited);
+        private Node _node;
+        public Node Node { get { return _node; } }
+
+        public DijkstraNode(double x, double y)
+        {
+            _node = new Node(x, y);
+        }
+
+        public DijkstraNode(Node node)
+        {
+            _node = node;
+        }
 
         public static bool operator <(DijkstraNode left, DijkstraNode right)
         {
@@ -44,7 +55,7 @@ namespace DijkstraAlgorithm
             return left.ShortestRouteDistance > right.ShortestRouteDistance;
         }
 
-        public DijkstraNode(double x, double y) : base(x, y) { }
+
 
         public int CompareTo(DijkstraNode? other)
         {
@@ -55,7 +66,7 @@ namespace DijkstraAlgorithm
 
         public void UpdateShortestRoute(DijkstraNode node)
         {
-            double nextRouteDistance = node.ShortestRouteDistance + Distance(node);
+            double nextRouteDistance = node.ShortestRouteDistance + _node.Distance(node.Node);
             if (nextRouteDistance >= ShortestRouteDistance)
             {
                 return;

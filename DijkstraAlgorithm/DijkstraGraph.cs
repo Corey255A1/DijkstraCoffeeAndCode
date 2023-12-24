@@ -9,25 +9,25 @@ namespace DijkstraAlgorithm
 {
     public class DijkstraGraph
     {
-        private ObservableCollection<DijkstraNode> _nodes;
-        public ObservableCollection<DijkstraNode> Nodes { get { return _nodes; } }
+        private ObservableCollection<Node> _nodes;
+        public ObservableCollection<Node> Nodes { get { return _nodes; } }
 
         private ObservableCollection<Edge> _edges;
         public ObservableCollection<Edge> Edges { get { return _edges; } }
 
         public DijkstraGraph()
         {
-            _nodes = new ObservableCollection<DijkstraNode>();
+            _nodes = new ObservableCollection<Node>();
             _edges = new ObservableCollection<Edge>();
         }
 
         public void AddNode(double x, double y)
         {
-            DijkstraNode node = new(x, y);
+            Node node = new(x, y);
             _nodes.Add(node);
         }
 
-        public void RemoveNode(DijkstraNode node)
+        public void RemoveNode(Node node)
         {
             _nodes.Remove(node);
             foreach (var edge in _edges.Where(edge => edge.Contains(node)).ToList())
@@ -36,7 +36,7 @@ namespace DijkstraAlgorithm
             }
         }
 
-        public void AddEdge(DijkstraNode node1, DijkstraNode node2)
+        public void AddEdge(Node node1, Node node2)
         {
             Edge? edge = node1.AddEdge(node2);
             if(edge == null) { return; }
