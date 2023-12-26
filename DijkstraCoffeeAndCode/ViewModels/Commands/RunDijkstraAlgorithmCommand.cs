@@ -20,7 +20,9 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
 
         private void ViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == nameof(_viewModel.StartNode) || e.PropertyName == nameof(_viewModel.EndNode))
+            if(e.PropertyName == nameof(_viewModel.StartNode) || 
+                e.PropertyName == nameof(_viewModel.EndNode) ||
+                e.PropertyName == nameof(_viewModel.SelectedExecutionMode))
             {
                 CanExecuteChanged?.Invoke(this, new EventArgs());
             }
@@ -33,7 +35,9 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
 
         public bool CanExecute(object? parameter)
         {
-            return _viewModel.StartNode != null && _viewModel.EndNode != null;
+            return _viewModel.StartNode != null && 
+                _viewModel.EndNode != null && 
+                _viewModel.SelectedExecutionMode == AlgorithmExecutionModeEnum.Manual;
         }
 
         public void Execute(object? parameter)

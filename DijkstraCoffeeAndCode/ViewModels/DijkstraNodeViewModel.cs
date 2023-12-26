@@ -157,6 +157,10 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public void Move(double dX, double dY)
         {
             SetCenterPosition(X + dX, Y + dY);
+            if (WasMovedWhileInteracting)
+            {
+                RaiseUserInteraction(UserInteractionState.ContinueDrag);
+            }
         }
 
         public void SetCenterPosition(double x, double y)

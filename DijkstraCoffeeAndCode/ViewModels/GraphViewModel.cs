@@ -15,6 +15,7 @@ using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.ViewModels
 {
+    public enum AlgorithmExecutionModeEnum { Manual, OnEnd, Continuous };
     public class GraphViewModel : INotifyPropertyChanged
     {
         public const int MAX_SELECTED_NODES = 2;
@@ -48,6 +49,27 @@ namespace DijkstraCoffeeAndCode.ViewModels
                 if (_endNode != null) { _endNode.IsEndNode = true; }
                 Notify();
             }
+        }
+
+        private AlgorithmExecutionModeEnum _selectedExecutionMode = AlgorithmExecutionModeEnum.Manual;
+        public AlgorithmExecutionModeEnum SelectedExecutionMode
+        {
+            get { return _selectedExecutionMode; }
+            set {
+                if(_selectedExecutionMode == value) { return; }
+                _selectedExecutionMode = value;
+                Notify();
+                if (_selectedExecutionMode != AlgorithmExecutionModeEnum.Manual)
+                {
+                    RunDijkstraAlgorithm();
+                }
+            }
+        }
+
+
+        public IEnumerable<AlgorithmExecutionModeEnum> AlgorithmExecutionModes
+        {
+            get=>Enum.GetValues(typeof(AlgorithmExecutionModeEnum)).Cast<AlgorithmExecutionModeEnum>();
         }
 
         public DijkstraObjectViewCollection<Node, DijkstraNodeViewModel> _nodeViewCollection;
@@ -90,7 +112,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             {
                 DeleteNode(node);
             }
-        }       
+        }
 
         public void CreateEdge(DijkstraNodeViewModel node1, DijkstraNodeViewModel node2)
         {
@@ -115,6 +137,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             {
                 DijkstraViewObjects.Remove(dijkstraObject);
             }
+            OnGraphChanged();
         }
 
         private void AddOrRemoveDijkstraNode(DijkstraObjectViewModel dijkstraObject, bool isAdd)
@@ -130,6 +153,15 @@ namespace DijkstraCoffeeAndCode.ViewModels
                 if (dijkstraObject == StartNode) { StartNode = null; }
                 if (dijkstraObject == EndNode) { EndNode = null; }
                 DijkstraViewObjects.Remove(dijkstraObject);
+            }
+            OnGraphChanged();
+        }
+
+        private void OnGraphChanged()
+        {
+            if (SelectedExecutionMode != AlgorithmExecutionModeEnum.Manual)
+            {
+                RunDijkstraAlgorithm();
             }
         }
 
@@ -170,6 +202,18 @@ namespace DijkstraCoffeeAndCode.ViewModels
             {
                 case UserInteractionState.BeginDrag:
                     ResetAllDijkstraObjects();
+                    break;
+                case UserInteractionState.EndDrag:
+                    if(SelectedExecutionMode == AlgorithmExecutionModeEnum.OnEnd)
+                    {
+                        RunDijkstraAlgorithm();
+                    }
+                    break;
+                case UserInteractionState.ContinueDrag:
+                    if(SelectedExecutionMode == AlgorithmExecutionModeEnum.Continuous)
+                    {
+                        RunDijkstraAlgorithm();
+                    }
                     break;
                 case UserInteractionState.EndInteraction:
                     if (!node.WasMovedWhileInteracting)

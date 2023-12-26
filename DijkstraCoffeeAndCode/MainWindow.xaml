@@ -22,7 +22,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Height="35"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <ItemsControl Background="AliceBlue" Grid.Row="0" ItemsSource="{Binding Path=DijkstraViewObjects}" 
@@ -48,17 +48,37 @@
                 </Style>
             </ItemsControl.ItemContainerStyle>
         </ItemsControl>
+        <TabControl Grid.Row="1">
+            <TabControl.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="Padding" Value="4"/>
+                    <Setter Property="Height" Value="26"/>
+                    <Setter Property="MinWidth" Value="75"/>
+                    <Setter Property="Margin" Value="4"/>
+                </Style>
+                <Style TargetType="RadioButton">
+                    <Setter Property="Margin" Value="2"/>
+                </Style>
+            </TabControl.Resources>
+            <TabItem Header="Build">
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Erase All Nodes"/>
+                    <Button Content="Erase Selected Nodes"/>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Execute">
+                <StackPanel Orientation="Horizontal">
+                    <GroupBox Header="Solve Method" Padding="4">
+                        <ComboBox ItemsSource="{Binding AlgorithmExecutionModes}" SelectedItem="{Binding SelectedExecutionMode}"/>
+                    </GroupBox>
+                    <Button Content="Solve Now" Command="{Binding RunDijkstraAlgorithmCommand}"/>
+                    <Button Content="Start Step"/>
+                    <Button Content="Next Step"/>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="1">
-            <Button Margin="4" Content="Solve" Width="75" Command="{Binding RunDijkstraAlgorithmCommand}"/>
-            <Button x:Name="stepBtn" Margin="4" Content="Begin Step" Width="75" Focusable="False"/>
-
-            <Button x:Name="resetBtn" Margin="4" Content="Erase Nodes" Width="75" Focusable="False"/>
-            <Button x:Name="resetStep" Margin="4" Content="Reset" Width="75" Focusable="False"/>
-            
-            <TextBox x:Name="infoBox" Width="400" VerticalContentAlignment="Center" TextWrapping="Wrap" Text="Welcome to WunderVision's Dijkstra Demo" IsReadOnly="True"/>
-            
-        </StackPanel>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+        
         
     </Grid>
 </Window>
