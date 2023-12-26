@@ -17,24 +17,14 @@ namespace DijkstraCoffeeAndCode.ViewModels
 {
     public class GraphViewModel : INotifyPropertyChanged
     {
-        private Graph _dijkstraGraph = new Graph();
-        public ObservableCollection<DijkstraObjectViewModel> DijkstraObjects { get; private set; } = new();
-        private Dictionary<Node, DijkstraNodeViewModel> _nodesToViewModel = new();
-        private Dictionary<Edge, DijkstraEdgeViewModel> _edgesToViewModel = new();
-
-        public ObservableCollection<DijkstraNodeViewModel> SelectedNodes { get; private set; } = new();
         public const int MAX_SELECTED_NODES = 2;
-
-        public ICommand CreateEdgesCommand { get; set; }
-        public ICommand DeleteNodesCommand { get; set; }
-        public ICommand RunDijkstraAlgorithmCommand { get; set; }
-
-        private DijkstraNodeViewModel? _startNode = null;
-        private DijkstraNodeViewModel? _endNode = null;
 
         public event PropertyChangedEventHandler? PropertyChanged;
         private void Notify([CallerMemberName] string name = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
+
+        private Graph _dijkstraGraph = new Graph();
+        private DijkstraNodeViewModel? _startNode = null;
         public DijkstraNodeViewModel? StartNode
         {
             get => _startNode;
@@ -47,6 +37,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
         }
 
+        private DijkstraNodeViewModel? _endNode = null;
         public DijkstraNodeViewModel? EndNode
         {
             get => _endNode;
@@ -59,14 +50,27 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
         }
 
+        public DijkstraObjectViewCollection<Node, DijkstraNodeViewModel> _nodeViewCollection;
+        public DijkstraObjectViewCollection<Edge, DijkstraEdgeViewModel> _edgeViewCollection;
+
+        public ObservableCollection<DijkstraObjectViewModel> DijkstraViewObjects { get; private set; } = new();
+        public ObservableCollection<DijkstraNodeViewModel> SelectedNodes { get; private set; } = new();
+
+        public ICommand CreateEdgesCommand { get; set; }
+        public ICommand DeleteNodesCommand { get; set; }
+        public ICommand RunDijkstraAlgorithmCommand { get; set; }
+
+
         public GraphViewModel()
         {
             CreateEdgesCommand = new Commands.CreateEdgesCommand(this);
             DeleteNodesCommand = new Commands.DeleteNodesCommand(this);
             RunDijkstraAlgorithmCommand = new Commands.RunDijkstraAlgorithmCommand(this);
+            _nodeViewCollection = new(_dijkstraGraph.Nodes, DijkstraNodeViewModel.MakeNodeViewModel);
+            _nodeViewCollection.AddOrRemove += AddOrRemoveDijkstraNode;
 
-            _dijkstraGraph.Nodes.CollectionChanged += GraphNodesCollectionChanged;
-            _dijkstraGraph.Edges.CollectionChanged += GraphEdgesCollectionChanged;
+            _edgeViewCollection = new(_dijkstraGraph.Edges, DijkstraEdgeViewModel.MakeEdgeViewModel);
+            _edgeViewCollection.AddOrRemove += AddOrRemoveDijkstraEdge;
         }
 
 
@@ -86,59 +90,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             {
                 DeleteNode(node);
             }
-        }
-
-        private void GraphNodesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                    {
-                        if (e.NewItems == null || e.NewItems.Count == 0) { return; }
-                        if (!(e.NewItems[0] is Node node)) { return; }
-                        AddNewNodeViewModel(node);
-                    }
-                    break;
-
-                case NotifyCollectionChangedAction.Remove:
-                    {
-                        if (e.OldItems == null || e.OldItems.Count == 0) { return; }
-                        if (!(e.OldItems[0] is Node node)) { return; }
-                        RemoveNodeViewModel(node);
-                    }
-                    break;
-            }
-        }
-
-        private DijkstraNodeViewModel GetDijkstraNodeViewModel(Node node)
-        {
-            if (_nodesToViewModel.ContainsKey(node))
-            {
-                return _nodesToViewModel[node];
-            }
-
-            throw new Exception("Node not found in collection.");
-        }
-
-        private void AddNewNodeViewModel(Node node)
-        {
-            DijkstraNodeViewModel nodeViewModel = new(node);
-            nodeViewModel.UserInteraction += NodeUserInteractionHandler;
-            _nodesToViewModel.Add(node, nodeViewModel);
-            DijkstraObjects.Add(nodeViewModel);
-        }
-
-        private void RemoveNodeViewModel(Node node)
-        {
-            DijkstraNodeViewModel nodeToRemove = GetDijkstraNodeViewModel(node);
-            RemoveSelectedNode(nodeToRemove);
-            if (nodeToRemove == StartNode) { StartNode = null; }
-            if (nodeToRemove == EndNode) { EndNode = null; }
-
-            _nodesToViewModel.Remove(node);
-            DijkstraObjects.Remove(nodeToRemove);
-        }
-
+        }       
 
         public void CreateEdge(DijkstraNodeViewModel node1, DijkstraNodeViewModel node2)
         {
@@ -153,52 +105,33 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
         }
 
-        private void GraphEdgesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        private void AddOrRemoveDijkstraEdge(DijkstraObjectViewModel dijkstraObject, bool isAdd)
         {
-            switch (e.Action)
+            if (isAdd)
             {
-                case NotifyCollectionChangedAction.Add:
-                    {
-                        if (e.NewItems == null || e.NewItems.Count == 0) { return; }
-                        if (!(e.NewItems[0] is Edge edge)) { return; }
-                        AddEdgeViewModel(edge);
-                    }
-                    break;
-                case NotifyCollectionChangedAction.Remove:
-                    {
-                        if (e.OldItems == null || e.OldItems.Count == 0) { return; }
-                        if (!(e.OldItems[0] is Edge edge)) { return; }
-                        RemoveEdgeViewModel(edge);
-                    }
-                    break;
+                DijkstraViewObjects.Add(dijkstraObject);
+            }
+            else
+            {
+                DijkstraViewObjects.Remove(dijkstraObject);
             }
         }
 
-        private DijkstraEdgeViewModel GetEdgeViewModel(Edge edge)
+        private void AddOrRemoveDijkstraNode(DijkstraObjectViewModel dijkstraObject, bool isAdd)
         {
-            if (_edgesToViewModel.ContainsKey(edge))
+            if (isAdd)
             {
-                return _edgesToViewModel[edge];
+                ((DijkstraNodeViewModel)dijkstraObject).UserInteraction += NodeUserInteractionHandler;
+                DijkstraViewObjects.Add(dijkstraObject);
             }
-
-            throw new Exception("Edge not found in collection.");
+            else
+            {
+                RemoveSelectedNode((DijkstraNodeViewModel)dijkstraObject);
+                if (dijkstraObject == StartNode) { StartNode = null; }
+                if (dijkstraObject == EndNode) { EndNode = null; }
+                DijkstraViewObjects.Remove(dijkstraObject);
+            }
         }
-
-        private void AddEdgeViewModel(Edge edge)
-        {
-            DijkstraEdgeViewModel edgeViewModel = new(edge);
-            _edgesToViewModel.Add(edge, edgeViewModel);
-            DijkstraObjects.Add(edgeViewModel);
-        }
-
-        private void RemoveEdgeViewModel(Edge edge)
-        {
-            DijkstraEdgeViewModel edgeToRemove = GetEdgeViewModel(edge);
-            _edgesToViewModel.Remove(edge);
-            DijkstraObjects.Remove(edgeToRemove);
-        }
-
-
 
         public void ClearSelectedNodes()
         {
@@ -252,7 +185,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
         private void ResetAllDijkstraObjects()
         {
-            foreach (var dijkstraObject in DijkstraObjects)
+            foreach (var dijkstraObject in DijkstraViewObjects)
             {
                 dijkstraObject.Reset();
             }
@@ -264,7 +197,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             {
                 var currentNode = nodes[nodeIndex];
 
-                var nodeViewModel = GetDijkstraNodeViewModel(currentNode);
+                var nodeViewModel = _nodeViewCollection.GetViewModel(currentNode);
                 nodeViewModel.IsHighlighted = true;
 
                 if (nodeIndex < nodes.Count - 1)
@@ -273,7 +206,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
                     Edge? sharedEdge = currentNode.FindSharedEdge(nextNode);
                     if (sharedEdge == null) { throw new Exception("No Edge found between route nodes"); }
 
-                    var edgeViewModel = GetEdgeViewModel(sharedEdge);
+                    var edgeViewModel = _edgeViewCollection.GetViewModel(sharedEdge);
                     edgeViewModel.IsHighlighted = true;
                 }
 
@@ -285,7 +218,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             ResetAllDijkstraObjects();
             foreach (var node in dijkstraState.DijkstraNodes)
             {
-                var nodeViewModel = GetDijkstraNodeViewModel(node.Node);
+                var nodeViewModel = _nodeViewCollection.GetViewModel(node.Node);
                 nodeViewModel.RouteSegmentDistance = node.RouteSegmentDistance;
             }
 
@@ -295,7 +228,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
         public void RunDijkstraAlgorithm()
         {
-            if (StartNode == null || EndNode == null) { return; }           
+            if (StartNode == null || EndNode == null) { return; }
             try
             {
                 var result = Dijkstra.FindShortestPath(StartNode.Node, EndNode.Node);

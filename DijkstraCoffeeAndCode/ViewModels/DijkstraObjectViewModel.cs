@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace DijkstraCoffeeAndCode.ViewModels
 {
+    public delegate void DijkstraObjectViewCollectionEvent(DijkstraObjectViewModel dijkstraObject, bool isAdd);
+
     public class DijkstraObjectViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;

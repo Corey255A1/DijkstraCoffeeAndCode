@@ -4,20 +4,23 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:DijkstraCoffeeAndCode.Views"
-             xmlns:vm="clr-namespace:DijkstraCoffeeAndCode.ViewModels"
+             xmlns:vm="clr-namespace:DijkstraCoffeeAndCode.ViewModels" 
+             xmlns:sys="clr-namespace:System;assembly=netstandard"
              mc:Ignorable="d" 
-             Width="50" Height="50">
+             Width="{Binding Width, FallbackValue=50}" Height="{Binding Height, FallbackValue=50}">
     <UserControl.Resources>
+        <vm:DoubleToIntStringConverter x:Key="doubleToIntConv"/>
+        <vm:HideableNumberConverter x:Key="hideableNumberConv"/>
         <Style TargetType="Ellipse" x:Key="node">
             <Setter Property="Fill" Value="White"/>
             <Style.Triggers>
-                <DataTrigger Binding="{Binding IsSelected}" Value="true">
-                    <Setter Property="Fill" Value="CadetBlue"/>
-                </DataTrigger>
                 <DataTrigger Binding="{Binding IsHighlighted}" Value="true">
                     <Setter Property="Fill" Value="Lime"/>
                 </DataTrigger>
+                <DataTrigger Binding="{Binding IsSelected}" Value="true">
+                    <Setter Property="Fill" Value="CadetBlue"/>
+                </DataTrigger>
+
             </Style.Triggers>
         </Style>
         <Style TargetType="Rectangle" x:Key="thumb">
@@ -55,7 +58,17 @@
 
         <Ellipse Style="{StaticResource ResourceKey=node}" Margin="2" Height="Auto" Width="Auto" Stroke="Black"  MouseMove="NodeMouseMove" MouseLeftButtonDown="NodeMouseDown" MouseLeftButtonUp="NodeMouseUp"/>
         <Rectangle Style="{StaticResource ResourceKey=thumb}" Margin="8,8,8,8" IsHitTestVisible="False"/>
-        <Label IsHitTestVisible="False" Content="{Binding RouteSegmentDistance}" Margin="5,15" Padding="0" HorizontalContentAlignment="Center" FontSize="14" FontWeight="Bold" Background="#BFFFFFFF" VerticalContentAlignment="Center"/>
+        <Label IsHitTestVisible="False" 
+               Content="{Binding RouteSegmentDistance, Converter={StaticResource doubleToIntConv}}" 
+               Margin="5,15" Padding="0" HorizontalContentAlignment="Center" FontSize="14" FontWeight="Bold" Background="#BFFFFFFF" VerticalContentAlignment="Center">
+            <Label.Visibility>
+                <Binding Path="RouteSegmentDistance" Converter="{StaticResource hideableNumberConv}">
+                    <Binding.ConverterParameter>
+                        <sys:Double>0</sys:Double>
+                    </Binding.ConverterParameter>
+                </Binding>
+            </Label.Visibility>
+        </Label>
         <Ellipse IsHitTestVisible="False" Style="{StaticResource ResourceKey=ringIndicator}" Height="Auto" Width="Auto"/>
     </Grid>
 </UserControl>

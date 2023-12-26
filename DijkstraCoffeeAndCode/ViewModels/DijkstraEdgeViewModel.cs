@@ -53,6 +53,11 @@ namespace DijkstraCoffeeAndCode.ViewModels
             get => _edge.Distance;
         }
 
+        public static DijkstraEdgeViewModel MakeEdgeViewModel(Edge edge)
+        {
+            return new DijkstraEdgeViewModel(edge);
+        }
+
         public DijkstraEdgeViewModel(Edge edge)
         {
             _edge = edge;

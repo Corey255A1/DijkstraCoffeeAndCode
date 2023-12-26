@@ -64,6 +64,9 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
         public bool WasMovedWhileInteracting { get; private set; }
 
+        public double Width { get => 50; }
+        public double Height { get => 50; }
+
         public double X
         {
             get => Node.Point.X;
@@ -88,12 +91,12 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
         public double Left
         {
-            get => Node.Point.X - 25;
+            get => Node.Point.X - (Width/2);
         }
 
         public double Top
         {
-            get => Node.Point.Y - 25;
+            get => Node.Point.Y - (Height/2);
         }
 
         public double ZIndex
@@ -116,22 +119,28 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public ICommand SetAsEndCommand { get; set; }
         public ICommand DeleteCommand { get; set; }
 
+        public static DijkstraNodeViewModel MakeNodeViewModel(Node node)
+        {
+            return new DijkstraNodeViewModel(node);
+        }
+
+
         public DijkstraNodeViewModel(double x, double y)
         {
-            Construct(new DijkstraAlgorithm.Node(x, y));
+            Construct(new Node(x, y));
         }
 
         public DijkstraNodeViewModel()
         {
-            Construct(new DijkstraAlgorithm.Node(0, 0));
+            Construct(new Node(0, 0));
         }
 
-        public DijkstraNodeViewModel(DijkstraAlgorithm.Node node)
+        public DijkstraNodeViewModel(Node node)
         {
             Construct(node);
         }
 
-        private void Construct(DijkstraAlgorithm.Node node)
+        private void Construct(Node node)
         {
             _node = node;
             SetAsStartCommand = new SetNodeAsStartCommand(this);
