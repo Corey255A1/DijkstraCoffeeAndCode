@@ -7,7 +7,7 @@
         xmlns:views="clr-namespace:DijkstraCoffeeAndCode.Views"
         xmlns:vm="clr-namespace:DijkstraCoffeeAndCode.ViewModels"
         mc:Ignorable="d"
-        Title="WunderVision - Dijkstra Coffee And Code" Height="452.406" Width="803.61" PreviewKeyDown="Window_PreviewKeyDown">
+        Title="WunderVision - Dijkstra Coffee And Code" Height="452.406" Width="803.61">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -51,10 +51,10 @@
 
         <StackPanel Orientation="Horizontal" Grid.Row="1">
             <Button Margin="4" Content="Solve" Width="75" Command="{Binding RunDijkstraAlgorithmCommand}"/>
-            <Button x:Name="stepBtn" Margin="4" Content="Begin Step" Width="75" Click="stepBtn_Click" Focusable="False"/>
+            <Button x:Name="stepBtn" Margin="4" Content="Begin Step" Width="75" Focusable="False"/>
 
-            <Button x:Name="resetBtn" Margin="4" Content="Erase Nodes" Width="75" Click="resetBtn_Click" Focusable="False"/>
-            <Button x:Name="resetStep" Margin="4" Content="Reset" Width="75" Focusable="False" Click="resetStep_Click"/>
+            <Button x:Name="resetBtn" Margin="4" Content="Erase Nodes" Width="75" Focusable="False"/>
+            <Button x:Name="resetStep" Margin="4" Content="Reset" Width="75" Focusable="False"/>
             
             <TextBox x:Name="infoBox" Width="400" VerticalContentAlignment="Center" TextWrapping="Wrap" Text="Welcome to WunderVision's Dijkstra Demo" IsReadOnly="True"/>
             
