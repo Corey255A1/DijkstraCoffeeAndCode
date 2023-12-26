@@ -30,7 +30,7 @@ namespace DijkstraAlgorithm
             return _point.Distance(node._point);
         }
 
-        public Edge? AddEdge(Node node)
+        public Edge? MakeEdge(Node node)
         {
             Edge? edge = FindSharedEdge(node);
             if (edge != null) { return null; }

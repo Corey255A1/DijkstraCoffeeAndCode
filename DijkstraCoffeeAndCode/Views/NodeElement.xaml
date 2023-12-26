@@ -55,7 +55,7 @@
 
         <Ellipse Style="{StaticResource ResourceKey=node}" Margin="2" Height="Auto" Width="Auto" Stroke="Black"  MouseMove="NodeMouseMove" MouseLeftButtonDown="NodeMouseDown" MouseLeftButtonUp="NodeMouseUp"/>
         <Rectangle Style="{StaticResource ResourceKey=thumb}" Margin="8,8,8,8" IsHitTestVisible="False"/>
-        <Label IsHitTestVisible="False" Content="50000" Margin="5,15" Padding="0" HorizontalContentAlignment="Center" FontSize="14" FontWeight="Bold" Background="#BFFFFFFF" VerticalContentAlignment="Center"/>
+        <Label IsHitTestVisible="False" Content="{Binding RouteSegmentDistance}" Margin="5,15" Padding="0" HorizontalContentAlignment="Center" FontSize="14" FontWeight="Bold" Background="#BFFFFFFF" VerticalContentAlignment="Center"/>
         <Ellipse IsHitTestVisible="False" Style="{StaticResource ResourceKey=ringIndicator}" Height="Auto" Width="Auto"/>
     </Grid>
 </UserControl>

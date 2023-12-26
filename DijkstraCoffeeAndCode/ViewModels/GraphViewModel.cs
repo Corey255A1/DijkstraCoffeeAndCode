@@ -18,6 +18,8 @@ namespace DijkstraCoffeeAndCode.ViewModels
     {
         private Graph _dijkstraGraph = new Graph();
         public ObservableCollection<DijkstraObjectViewModel> DijkstraObjects { get; private set; } = new();
+        private Dictionary<Node, DijkstraNodeViewModel> _nodesToViewModel = new();
+        private Dictionary<Edge, DijkstraEdgeViewModel> _edgesToViewModel = new();
 
         public ObservableCollection<DijkstraNodeViewModel> SelectedNodes { get; private set; } = new();
         public const int MAX_SELECTED_NODES = 2;
@@ -75,9 +77,6 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public void DeleteNode(DijkstraNodeViewModel node)
         {
             _dijkstraGraph.RemoveNode(node.Node);
-            RemoveSelectedNode(node);
-            if (node == StartNode) { StartNode = null; }
-            if (node == EndNode) { EndNode = null; }
         }
 
         public void DeleteSelectedNodes()
@@ -110,26 +109,32 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
         }
 
+        private DijkstraNodeViewModel GetDijkstraNodeViewModel(Node node)
+        {
+            if (_nodesToViewModel.ContainsKey(node))
+            {
+                return _nodesToViewModel[node];
+            }
+
+            throw new Exception("Node not found in collection.");
+        }
+
         private void AddNewNodeViewModel(Node node)
         {
             DijkstraNodeViewModel nodeViewModel = new(node);
             nodeViewModel.UserInteraction += NodeUserInteractionHandler;
+            _nodesToViewModel.Add(node, nodeViewModel);
             DijkstraObjects.Add(nodeViewModel);
         }
 
         private void RemoveNodeViewModel(Node node)
         {
-            DijkstraNodeViewModel? nodeToRemove = DijkstraObjects.FirstOrDefault(dijkstraObject =>
-            {
-                if (dijkstraObject is DijkstraNodeViewModel dijkstraNode)
-                {
-                    return dijkstraNode.Node == node;
-                }
-                return false;
-            }) as DijkstraNodeViewModel;
+            DijkstraNodeViewModel nodeToRemove = GetDijkstraNodeViewModel(node);
+            RemoveSelectedNode(nodeToRemove);
+            if (nodeToRemove == StartNode) { StartNode = null; }
+            if (nodeToRemove == EndNode) { EndNode = null; }
 
-            if (nodeToRemove == null) { return; }
-
+            _nodesToViewModel.Remove(node);
             DijkstraObjects.Remove(nodeToRemove);
         }
 
@@ -168,24 +173,27 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
         }
 
+        private DijkstraEdgeViewModel GetEdgeViewModel(Edge edge)
+        {
+            if (_edgesToViewModel.ContainsKey(edge))
+            {
+                return _edgesToViewModel[edge];
+            }
+
+            throw new Exception("Edge not found in collection.");
+        }
+
         private void AddEdgeViewModel(Edge edge)
         {
-            DijkstraObjects.Add(new DijkstraEdgeViewModel(edge));
+            DijkstraEdgeViewModel edgeViewModel = new(edge);
+            _edgesToViewModel.Add(edge, edgeViewModel);
+            DijkstraObjects.Add(edgeViewModel);
         }
 
         private void RemoveEdgeViewModel(Edge edge)
         {
-            DijkstraEdgeViewModel? edgeToRemove = DijkstraObjects.FirstOrDefault(dijkstraObject =>
-            {
-                if (dijkstraObject is DijkstraEdgeViewModel dijkstraEdge)
-                {
-                    return dijkstraEdge.Edge == edge;
-                }
-                return false;
-            }) as DijkstraEdgeViewModel;
-
-            if (edgeToRemove == null) { return; }
-
+            DijkstraEdgeViewModel edgeToRemove = GetEdgeViewModel(edge);
+            _edgesToViewModel.Remove(edge);
             DijkstraObjects.Remove(edgeToRemove);
         }
 
@@ -243,11 +251,18 @@ namespace DijkstraCoffeeAndCode.ViewModels
         {
             if (StartNode == null || EndNode == null) { return; }
 
+            foreach(var dijkstraObject in DijkstraObjects)
+            {
+                dijkstraObject.Reset();
+            }
+
             try
             {
-                foreach (var node in Dijkstra.FindShortestPath(StartNode.Node, EndNode.Node))
+                var result = Dijkstra.FindShortestPath(StartNode.Node, EndNode.Node);
+                foreach (var node in result.DijkstraNodes)
                 {
-                    Debug.WriteLine(node.ShortestRouteDistance);
+                    var nodeViewModel = GetDijkstraNodeViewModel(node.Node);
+                    nodeViewModel.RouteSegmentDistance = node.ShortestRouteDistance;
                 }
             }
             catch (Exception e)

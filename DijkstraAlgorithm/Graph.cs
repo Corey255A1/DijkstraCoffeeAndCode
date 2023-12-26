@@ -38,7 +38,7 @@ namespace DijkstraAlgorithm
 
         public void AddEdge(Node node1, Node node2)
         {
-            Edge? edge = node1.AddEdge(node2);
+            Edge? edge = node1.MakeEdge(node2);
             if(edge == null) { return; }
 
             _edges.Add(edge);

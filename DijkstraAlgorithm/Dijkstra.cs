@@ -12,9 +12,9 @@ namespace DijkstraAlgorithm
 {
     public static class Dijkstra
     {
-        public static List<DijkstraNode> FindShortestPath(Node startNode, Node endNode)
+        public static DijkstraState FindShortestPath(Node startNode, Node endNode)
         {
-            DijkstraState dijkstraState = new DijkstraState(startNode, endNode);
+            DijkstraState dijkstraState = new(startNode, endNode);
             while (!dijkstraState.IsFinished)
             {
                 while (dijkstraState.HasNodeNeighbors)
@@ -23,7 +23,7 @@ namespace DijkstraAlgorithm
                 }
                 dijkstraState.VisitNextNode();
             }
-            return dijkstraState.GenerateShortestPathList();
+            return dijkstraState;
         }
 
         public static DijkstraState TakeStep(Node startNode, Node endNode)

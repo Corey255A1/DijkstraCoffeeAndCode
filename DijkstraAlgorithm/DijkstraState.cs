@@ -21,6 +21,9 @@ namespace DijkstraAlgorithm
 
         private HashSet<DijkstraNode> _nodesToVisit = new();
         private Dictionary<Node, DijkstraNode> _dijkstraNodes = new();
+
+        public IEnumerable<DijkstraNode> DijkstraNodes => _dijkstraNodes.Values;
+
         public bool IsFinished => CurrentNode == null || CurrentNode == EndNode || CurrentNode.Visited;
 
         public DijkstraState(Node startNode, Node endNode)

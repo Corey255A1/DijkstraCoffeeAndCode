@@ -108,6 +108,16 @@ namespace DijkstraCoffeeAndCode.ViewModels
             get => 1.0;
         }
 
+        private double _routeSegmentDistance = 0.0;
+        public double RouteSegmentDistance
+        {
+            get => _routeSegmentDistance;
+            set
+            {
+                _routeSegmentDistance = value;
+                Notify();
+            }
+        }
 
         public ICommand SetAsStartCommand { get; set; }
         public ICommand SetAsEndCommand { get; set; }
@@ -134,6 +144,11 @@ namespace DijkstraCoffeeAndCode.ViewModels
             SetAsStartCommand = new SetNodeAsStartCommand(this);
             SetAsEndCommand = new SetNodeAsEndCommand(this);
             DeleteCommand = new DeleteNodeViewCommand(this);
+        }
+
+        public override void Reset()
+        {
+            RouteSegmentDistance = 0.0;
         }
 
         public void Move(double dX, double dY)

@@ -12,6 +12,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
     {
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void Notify([CallerMemberName] string name = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-
+        
+        public virtual void Reset() { }
     }
 }

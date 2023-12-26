@@ -18,16 +18,16 @@ var nodeList = new List<Node>()
     endNode
 };
 
-startNode.AddEdge(nodeList[1]);
-nodeList[1].AddEdge(nodeList[2]);
-nodeList[2].AddEdge(endNode);
-startNode.AddEdge(nodeList[3]);
-nodeList[3].AddEdge(nodeList[4]);
-nodeList[4].AddEdge(endNode);
+startNode.MakeEdge(nodeList[1]);
+nodeList[1].MakeEdge(nodeList[2]);
+nodeList[2].MakeEdge(endNode);
+startNode.MakeEdge(nodeList[3]);
+nodeList[3].MakeEdge(nodeList[4]);
+nodeList[4].MakeEdge(endNode);
 
-nodeList[2].AddEdge(nodeList[3]);
+nodeList[2].MakeEdge(nodeList[3]);
 
-foreach (var node in Dijkstra.FindShortestPath(startNode, endNode))
+foreach (var node in Dijkstra.FindShortestPath(startNode, endNode).GenerateShortestPathList())
 {
     Console.WriteLine($"{node.Node.Point.X}, {node.Node.Point.Y}");
 }
