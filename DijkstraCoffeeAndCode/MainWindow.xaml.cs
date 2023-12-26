@@ -32,28 +32,5 @@ namespace DijkstraCoffeeAndCode
             Point clickPoint = e.GetPosition(sender as FrameworkElement);
             Graph.AddNewNode(clickPoint.X, clickPoint.Y);
         }
-
-        private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            
-        }
-
-        private void solveBtn_Click(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void resetBtn_Click(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void stepBtn_Click(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
-        private void resetStep_Click(object sender, RoutedEventArgs e)
-        {
-            
-        }
     }
 }

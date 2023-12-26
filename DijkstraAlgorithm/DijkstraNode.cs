@@ -9,23 +9,20 @@ namespace DijkstraAlgorithm
     public class DijkstraNode : IComparable<DijkstraNode>
     {
         private bool _visited;
-
         public bool Visited
         {
             get { return _visited; }
             set { _visited = value; }
         }
 
-        private double _shortesRouteDistance = double.MaxValue;
-
-        public double ShortestRouteDistance
+        private double _routeSegmentDistance = double.MaxValue;
+        public double RouteSegmentDistance
         {
-            get { return _shortesRouteDistance; }
-            set { _shortesRouteDistance = value; }
+            get { return _routeSegmentDistance; }
+            set { _routeSegmentDistance = value; }
         }
 
         private DijkstraNode? _shortestRouteNode;
-
         public DijkstraNode? ShortestRouteNode
         {
             get { return _shortestRouteNode; }
@@ -47,12 +44,12 @@ namespace DijkstraAlgorithm
 
         public static bool operator <(DijkstraNode left, DijkstraNode right)
         {
-            return left.ShortestRouteDistance < right.ShortestRouteDistance;
+            return left.RouteSegmentDistance < right.RouteSegmentDistance;
         }
 
         public static bool operator >(DijkstraNode left, DijkstraNode right)
         {
-            return left.ShortestRouteDistance > right.ShortestRouteDistance;
+            return left.RouteSegmentDistance > right.RouteSegmentDistance;
         }
 
 
@@ -61,24 +58,24 @@ namespace DijkstraAlgorithm
         {
             if (other == null) { throw new ArgumentNullException("other"); }
             if (other == this) { return 0; }
-            return (int)(ShortestRouteDistance - other.ShortestRouteDistance);
+            return (int)(RouteSegmentDistance - other.RouteSegmentDistance);
         }
 
         public void UpdateShortestRoute(DijkstraNode node)
         {
-            double nextRouteDistance = node.ShortestRouteDistance + _node.Distance(node.Node);
-            if (nextRouteDistance >= ShortestRouteDistance)
+            double nextRouteDistance = node.RouteSegmentDistance + _node.Distance(node.Node);
+            if (nextRouteDistance >= RouteSegmentDistance)
             {
                 return;
             }
             ShortestRouteNode = node;
-            ShortestRouteDistance = nextRouteDistance;
+            RouteSegmentDistance = nextRouteDistance;
         }
 
         public void Reset()
         {
             ShortestRouteNode = null;
-            ShortestRouteDistance = double.MaxValue;
+            RouteSegmentDistance = double.MaxValue;
             Visited = false;
         }
     }

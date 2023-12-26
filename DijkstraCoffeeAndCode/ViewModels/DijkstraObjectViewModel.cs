@@ -12,7 +12,18 @@ namespace DijkstraCoffeeAndCode.ViewModels
     {
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void Notify([CallerMemberName] string name = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        
+
+        private bool _isHighlighted;
+        public bool IsHighlighted
+        {
+            get { return _isHighlighted; }
+            set
+            {
+                _isHighlighted = value;
+                Notify();
+            }
+        }
+
         public virtual void Reset() { }
     }
 }

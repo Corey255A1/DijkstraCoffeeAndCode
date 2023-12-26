@@ -12,7 +12,7 @@ using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.ViewModels
 {
-    public enum UserInteractionState { BeginDrag, Continue, EndDrag, Delete, SetAsStart, SetAsEnd };
+    public enum UserInteractionState { BeginInteraction, BeginDrag, ContinueDrag, EndDrag, EndInteraction, Delete, SetAsStart, SetAsEnd };
     public class UserInteractionEventArgs : EventArgs
     {
         public UserInteractionState State { get; set; }
@@ -53,13 +53,6 @@ namespace DijkstraCoffeeAndCode.ViewModels
         {
             get { return _isSelected; }
             set { _isSelected = value; Notify(); }
-        }
-
-        private bool _isHighlighted = false;
-        public bool IsHighlighted
-        {
-            get { return _isHighlighted; }
-            set { _isHighlighted = value; Notify(); }
         }
 
         private bool _isInteracting = false;
@@ -149,6 +142,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public override void Reset()
         {
             RouteSegmentDistance = 0.0;
+            IsHighlighted = false;
         }
 
         public void Move(double dX, double dY)
@@ -175,13 +169,24 @@ namespace DijkstraCoffeeAndCode.ViewModels
         {
             IsInteracting = true;
             WasMovedWhileInteracting = false;
+            RaiseUserInteraction(UserInteractionState.BeginInteraction);
+        }
+
+        public void BeginDrag()
+        {
+            WasMovedWhileInteracting = true;
             RaiseUserInteraction(UserInteractionState.BeginDrag);
+        }
+
+        public void EndDrag()
+        {
+            RaiseUserInteraction(UserInteractionState.EndDrag);
         }
 
         public void EndInteraction()
         {
             IsInteracting = false;
-            RaiseUserInteraction(UserInteractionState.EndDrag);
+            RaiseUserInteraction(UserInteractionState.EndInteraction);            
         }
 
         public void UserCommandSetStart()

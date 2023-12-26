@@ -6,8 +6,19 @@
              xmlns:local="clr-namespace:DijkstraCoffeeAndCode.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style TargetType="Line" x:Key="highlightLine">
+            <Setter Property="StrokeThickness" Value="5"/>
+            <Setter Property="Stroke" Value="Black"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsHighlighted}" Value="true">
+                    <Setter Property="Stroke" Value="Lime"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
     <Canvas>
-        <Line X1="{Binding X1}" Y1="{Binding Y1}" Y2="{Binding Y2}" X2="{Binding X2}" Stroke="Black" StrokeThickness="5"/>
+        <Line Style="{StaticResource highlightLine}" X1="{Binding X1}" Y1="{Binding Y1}" Y2="{Binding Y2}" X2="{Binding X2}"/>
         <TextBlock Text="{Binding Distance, StringFormat={}{0:#}}" 
                    Canvas.Top="{Binding CenterY}" 
                    Canvas.Left="{Binding CenterX}" Foreground="White" FontFamily="Calibri" FontSize="24" FontWeight="Bold">

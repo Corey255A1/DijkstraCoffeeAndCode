@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -234,7 +235,10 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
             switch (e.State)
             {
-                case UserInteractionState.EndDrag:
+                case UserInteractionState.BeginDrag:
+                    ResetAllDijkstraObjects();
+                    break;
+                case UserInteractionState.EndInteraction:
                     if (!node.WasMovedWhileInteracting)
                     {
                         ToggleSelectedNode(node);
@@ -246,24 +250,56 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
         }
 
-
-        public void RunDijkstraAlgorithm()
+        private void ResetAllDijkstraObjects()
         {
-            if (StartNode == null || EndNode == null) { return; }
-
-            foreach(var dijkstraObject in DijkstraObjects)
+            foreach (var dijkstraObject in DijkstraObjects)
             {
                 dijkstraObject.Reset();
             }
+        }
 
+        public void HighlightRoute(List<Node> nodes)
+        {
+            for (int nodeIndex = 0; nodeIndex < nodes.Count; nodeIndex++)
+            {
+                var currentNode = nodes[nodeIndex];
+
+                var nodeViewModel = GetDijkstraNodeViewModel(currentNode);
+                nodeViewModel.IsHighlighted = true;
+
+                if (nodeIndex < nodes.Count - 1)
+                {
+                    var nextNode = nodes[nodeIndex + 1];
+                    Edge? sharedEdge = currentNode.FindSharedEdge(nextNode);
+                    if (sharedEdge == null) { throw new Exception("No Edge found between route nodes"); }
+
+                    var edgeViewModel = GetEdgeViewModel(sharedEdge);
+                    edgeViewModel.IsHighlighted = true;
+                }
+
+            }
+        }
+
+        public void UpdateDijkstraView(DijkstraState dijkstraState)
+        {
+            ResetAllDijkstraObjects();
+            foreach (var node in dijkstraState.DijkstraNodes)
+            {
+                var nodeViewModel = GetDijkstraNodeViewModel(node.Node);
+                nodeViewModel.RouteSegmentDistance = node.RouteSegmentDistance;
+            }
+
+            var shortestPathList = dijkstraState.GenerateShortestPathList();
+            HighlightRoute(shortestPathList.Select(dijkstraNode => dijkstraNode.Node).ToList());
+        }
+
+        public void RunDijkstraAlgorithm()
+        {
+            if (StartNode == null || EndNode == null) { return; }           
             try
             {
                 var result = Dijkstra.FindShortestPath(StartNode.Node, EndNode.Node);
-                foreach (var node in result.DijkstraNodes)
-                {
-                    var nodeViewModel = GetDijkstraNodeViewModel(node.Node);
-                    nodeViewModel.RouteSegmentDistance = node.ShortestRouteDistance;
-                }
+                UpdateDijkstraView(result);
             }
             catch (Exception e)
             {

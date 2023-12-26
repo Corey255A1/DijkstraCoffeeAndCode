@@ -47,7 +47,7 @@ namespace DijkstraAlgorithm
             _dijkstraNodes[endNode.Node] = endNode;
 
             CurrentNode = startNode;
-            CurrentNode.ShortestRouteDistance = 0;
+            CurrentNode.RouteSegmentDistance = 0;
             LastCheckedNeighbor = null;
             _currentNodeNeighbors = new Queue<DijkstraNode>(GetOrCreateDijkstraNode(CurrentNode.Node.Neighbors));
         }

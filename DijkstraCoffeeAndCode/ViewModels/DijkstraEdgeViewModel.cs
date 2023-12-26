@@ -14,17 +14,6 @@ namespace DijkstraCoffeeAndCode.ViewModels
         private Edge _edge;
         public Edge Edge => _edge;
 
-        private bool _highlighted;
-        public bool Highlighted
-        {
-            get { return _highlighted; }
-            set
-            {
-                _highlighted = value;
-                Notify();
-            }
-        }
-
         public double Left => 0;
         public double Top => 0;
         public double ZIndex => 0;
@@ -69,6 +58,11 @@ namespace DijkstraCoffeeAndCode.ViewModels
             _edge = edge;
             _edge.Node1.Point.VectorChanged += Node1PositionChanged;
             _edge.Node2.Point.VectorChanged += Node2PositionChanged;
+        }
+
+        public override void Reset()
+        {
+            IsHighlighted = false;
         }
 
         private void NotifyPositions()

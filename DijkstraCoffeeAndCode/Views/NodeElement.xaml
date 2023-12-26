@@ -22,14 +22,14 @@
         </Style>
         <Style TargetType="Rectangle" x:Key="thumb">
             <Setter Property="Fill" Value="Transparent"/>
-            <Style.Triggers>
+            <!--<Style.Triggers>
                 <DataTrigger Binding="{Binding IsStartNode}" Value="true">
                     <Setter Property="Fill" Value="DarkBlue"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding IsEndNode}" Value="true">
                     <Setter Property="Fill" Value="DarkRed"/>
                 </DataTrigger>
-            </Style.Triggers>
+            </Style.Triggers>-->
         </Style>
         <Style TargetType="Ellipse" x:Key="ringIndicator">
             <Setter Property="StrokeThickness" Value="6"/>

@@ -14,6 +14,8 @@ namespace DijkstraCoffeeAndCode.Views
     public partial class NodeElement : UserControl
     {
         private Point _gripPoint;
+        private bool _checkingForDragThreshold = false;
+        private const int PIXEL_DRAG_THRESHOLD_SQ = 25; // 5 pixels squared.
 
         private DijkstraNodeViewModel? _viewModel;
 
@@ -35,17 +37,28 @@ namespace DijkstraCoffeeAndCode.Views
             ((UIElement)sender).CaptureMouse();
             e.Handled = true;
             _gripPoint = Mouse.GetPosition(this);
+            _checkingForDragThreshold = true;
             _viewModel.BeginInteraction();
-
         }
 
         private void NodeMouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (_viewModel == null || !_viewModel.IsInteracting) { return; }
+            if (_viewModel == null) { return; }
+            if (!_viewModel.IsInteracting && !_checkingForDragThreshold) { return; }
 
             ((UIElement)sender).ReleaseMouseCapture();
             e.Handled = true;
+            _checkingForDragThreshold = false;
+            if(_viewModel.WasMovedWhileInteracting)
+            {
+                _viewModel.EndDrag();
+            }
             _viewModel.EndInteraction();
+        }
+
+        private bool VectorLengthPassedThreshold(Point point)
+        {
+            return (point.X * point.X + point.Y * point.Y) > PIXEL_DRAG_THRESHOLD_SQ;
         }
 
         private Point GetMouseGripDeltaPosition(IInputElement element)
@@ -56,10 +69,20 @@ namespace DijkstraCoffeeAndCode.Views
 
         private void NodeMouseMove(object sender, MouseEventArgs e)
         {
-            if (_viewModel == null || !_viewModel.IsInteracting) { return; }
+            if (_viewModel == null) { return; }
+            if (!_viewModel.IsInteracting && !_checkingForDragThreshold) { return; }
 
             Point deltaPoint = GetMouseGripDeltaPosition((UIElement)sender);
-            _viewModel.Move(deltaPoint.X, deltaPoint.Y);
+            if (_checkingForDragThreshold && VectorLengthPassedThreshold(deltaPoint))
+            {
+                _checkingForDragThreshold = false;
+                _viewModel.BeginDrag();
+            }
+            
+            if (_viewModel.WasMovedWhileInteracting)
+            {
+                _viewModel.Move(deltaPoint.X, deltaPoint.Y);
+            }
             e.Handled = true;
         }
 
