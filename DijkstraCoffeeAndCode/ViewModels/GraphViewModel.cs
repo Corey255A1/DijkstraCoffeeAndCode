@@ -23,8 +23,6 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public event PropertyChangedEventHandler? PropertyChanged;
         private void Notify([CallerMemberName] string name = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-
-        private Graph _dijkstraGraph = new Graph();
         private DijkstraNodeViewModel? _startNode = null;
         public DijkstraNodeViewModel? StartNode
         {
@@ -51,12 +49,25 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
         }
 
+        private DijkstraState? _dijkstraStepState = null;
+        public DijkstraState? DijkstraStepState
+        {
+            get { return _dijkstraStepState; }
+            set
+            {
+                _dijkstraStepState = value;
+                Notify();
+            }
+        }
+
+
         private AlgorithmExecutionModeEnum _selectedExecutionMode = AlgorithmExecutionModeEnum.Manual;
         public AlgorithmExecutionModeEnum SelectedExecutionMode
         {
             get { return _selectedExecutionMode; }
-            set {
-                if(_selectedExecutionMode == value) { return; }
+            set
+            {
+                if (_selectedExecutionMode == value) { return; }
                 _selectedExecutionMode = value;
                 Notify();
                 if (_selectedExecutionMode != AlgorithmExecutionModeEnum.Manual)
@@ -66,14 +77,14 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
         }
 
-
         public IEnumerable<AlgorithmExecutionModeEnum> AlgorithmExecutionModes
         {
-            get=>Enum.GetValues(typeof(AlgorithmExecutionModeEnum)).Cast<AlgorithmExecutionModeEnum>();
+            get => Enum.GetValues(typeof(AlgorithmExecutionModeEnum)).Cast<AlgorithmExecutionModeEnum>();
         }
 
-        public DijkstraObjectViewCollection<Node, DijkstraNodeViewModel> _nodeViewCollection;
-        public DijkstraObjectViewCollection<Edge, DijkstraEdgeViewModel> _edgeViewCollection;
+        private Graph _dijkstraGraph = new Graph();
+        private DijkstraObjectViewCollection<Node, DijkstraNodeViewModel> _nodeViewCollection;
+        private DijkstraObjectViewCollection<Edge, DijkstraEdgeViewModel> _edgeViewCollection;
 
         public ObservableCollection<DijkstraObjectViewModel> DijkstraViewObjects { get; private set; } = new();
         public ObservableCollection<DijkstraNodeViewModel> SelectedNodes { get; private set; } = new();
@@ -81,13 +92,16 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public ICommand CreateEdgesCommand { get; set; }
         public ICommand DeleteNodesCommand { get; set; }
         public ICommand RunDijkstraAlgorithmCommand { get; set; }
+        public ICommand RunDijkstraStepCommand { get; set; }
 
 
         public GraphViewModel()
         {
-            CreateEdgesCommand = new Commands.CreateEdgesCommand(this);
-            DeleteNodesCommand = new Commands.DeleteNodesCommand(this);
-            RunDijkstraAlgorithmCommand = new Commands.RunDijkstraAlgorithmCommand(this);
+            CreateEdgesCommand = new CreateEdgesCommand(this);
+            DeleteNodesCommand = new DeleteNodesCommand(this);
+            RunDijkstraAlgorithmCommand = new RunDijkstraAlgorithmCommand(this);
+            RunDijkstraStepCommand = new RunDijkstraStepCommand(this);
+
             _nodeViewCollection = new(_dijkstraGraph.Nodes, DijkstraNodeViewModel.MakeNodeViewModel);
             _nodeViewCollection.AddOrRemove += AddOrRemoveDijkstraNode;
 
@@ -201,16 +215,16 @@ namespace DijkstraCoffeeAndCode.ViewModels
             switch (e.State)
             {
                 case UserInteractionState.BeginDrag:
-                    ResetAllDijkstraObjects();
+                    ResetAlgorithm();
                     break;
                 case UserInteractionState.EndDrag:
-                    if(SelectedExecutionMode == AlgorithmExecutionModeEnum.OnEnd)
+                    if (SelectedExecutionMode == AlgorithmExecutionModeEnum.OnEnd)
                     {
                         RunDijkstraAlgorithm();
                     }
                     break;
                 case UserInteractionState.ContinueDrag:
-                    if(SelectedExecutionMode == AlgorithmExecutionModeEnum.Continuous)
+                    if (SelectedExecutionMode == AlgorithmExecutionModeEnum.Continuous)
                     {
                         RunDijkstraAlgorithm();
                     }
@@ -227,7 +241,13 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
         }
 
-        private void ResetAllDijkstraObjects()
+        private void ResetAlgorithm()
+        {
+            DijkstraStepState = null;
+            ResetAllDijkstraViewObjects();
+        }
+
+        private void ResetAllDijkstraViewObjects()
         {
             foreach (var dijkstraObject in DijkstraViewObjects)
             {
@@ -259,15 +279,62 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
         public void UpdateDijkstraView(DijkstraState dijkstraState)
         {
-            ResetAllDijkstraObjects();
+            ResetAllDijkstraViewObjects();
+            ClearSelectedNodes();
             foreach (var node in dijkstraState.DijkstraNodes)
             {
                 var nodeViewModel = _nodeViewCollection.GetViewModel(node.Node);
                 nodeViewModel.RouteSegmentDistance = node.RouteSegmentDistance;
+                if (!dijkstraState.IsFinished)
+                {
+                    nodeViewModel.IsVisited = node.IsVisited;
+                }
             }
 
-            var shortestPathList = dijkstraState.GenerateShortestPathList();
-            HighlightRoute(shortestPathList.Select(dijkstraNode => dijkstraNode.Node).ToList());
+            if (dijkstraState.IsFinished)
+            {
+                var shortestPathList = dijkstraState.GenerateShortestPathList();
+                HighlightRoute(shortestPathList.Select(dijkstraNode => dijkstraNode.Node).ToList());
+            }
+            else
+            {
+                if (dijkstraState.CurrentNode == null)
+                {
+                    throw new Exception("Invalud Dijkstra State");
+                }
+                var nodeViewModel = _nodeViewCollection.GetViewModel(dijkstraState.CurrentNode.Node);
+                nodeViewModel.IsHighlighted = true;
+
+                if (dijkstraState.LastCheckedNeighbor != null)
+                {
+                    nodeViewModel = _nodeViewCollection.GetViewModel(dijkstraState.LastCheckedNeighbor.Node);
+                    nodeViewModel.IsHighlightedAlternate = true;
+                }
+
+
+            }
+        }
+
+        public void RunDijkstraStepAlgorithm()
+        {
+            if (StartNode == null || EndNode == null) { return; }
+            try
+            {
+                if (DijkstraStepState == null || DijkstraStepState.IsFinished)
+                {
+                    DijkstraStepState = Dijkstra.TakeStep(StartNode.Node, EndNode.Node);
+                }
+                else
+                {
+                    Dijkstra.TakeStep(DijkstraStepState);
+                }
+
+                UpdateDijkstraView(DijkstraStepState);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.ToString());
+            }
         }
 
         public void RunDijkstraAlgorithm()

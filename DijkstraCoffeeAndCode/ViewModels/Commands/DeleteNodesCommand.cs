@@ -15,6 +15,12 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
         public DeleteNodesCommand(GraphViewModel viewModel)
         {
             _viewModel = viewModel;
+            _viewModel.SelectedNodes.CollectionChanged += SelectedNodesCollectionChanged;
+        }
+
+        private void SelectedNodesCollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            CanExecuteChanged?.Invoke(this, e);
         }
 
         public bool CanExecute(object? parameter)

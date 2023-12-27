@@ -67,7 +67,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
         public override void Reset()
         {
-            IsHighlighted = false;
+            base.Reset();
         }
 
         private void NotifyPositions()

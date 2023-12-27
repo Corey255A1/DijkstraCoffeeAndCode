@@ -15,7 +15,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if(value is double number && parameter is double hideValue) { 
-                if(number == hideValue)
+                if(number == hideValue || number == double.MaxValue)
                 {
                     return Visibility.Collapsed;
                 }

@@ -26,6 +26,20 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
         }
 
-        public virtual void Reset() { }
+        private bool _isHighlightedAlternate;
+        public bool IsHighlightedAlternate
+        {
+            get { return _isHighlightedAlternate; }
+            set
+            {
+                _isHighlightedAlternate = value;
+                Notify();
+            }
+        }
+
+        public virtual void Reset() { 
+            IsHighlighted = false;
+            IsHighlightedAlternate = false;
+        }
     }
 }

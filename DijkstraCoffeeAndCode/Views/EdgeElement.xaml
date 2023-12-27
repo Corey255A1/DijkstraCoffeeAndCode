@@ -21,7 +21,7 @@
         <Line Style="{StaticResource highlightLine}" X1="{Binding X1}" Y1="{Binding Y1}" Y2="{Binding Y2}" X2="{Binding X2}"/>
         <TextBlock Text="{Binding Distance, StringFormat={}{0:#}}" 
                    Canvas.Top="{Binding CenterY}" 
-                   Canvas.Left="{Binding CenterX}" Foreground="White" FontFamily="Calibri" FontSize="24" FontWeight="Bold">
+                   Canvas.Left="{Binding CenterX}"  Foreground="White" FontFamily="Calibri" FontSize="24" FontWeight="Bold">
             <TextBlock.Effect>
                 <DropShadowEffect ShadowDepth="0" Color="Black" BlurRadius="4"/>
             </TextBlock.Effect>

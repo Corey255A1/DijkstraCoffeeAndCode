@@ -14,6 +14,12 @@
         <Style TargetType="Ellipse" x:Key="node">
             <Setter Property="Fill" Value="White"/>
             <Style.Triggers>
+                <DataTrigger Binding="{Binding IsVisited}" Value="true">
+                    <Setter Property="Fill" Value="DarkBlue"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsHighlightedAlternate}" Value="true">
+                    <Setter Property="Fill" Value="Red"/>
+                </DataTrigger>
                 <DataTrigger Binding="{Binding IsHighlighted}" Value="true">
                     <Setter Property="Fill" Value="Lime"/>
                 </DataTrigger>

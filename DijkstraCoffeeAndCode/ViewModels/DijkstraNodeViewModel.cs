@@ -62,6 +62,13 @@ namespace DijkstraCoffeeAndCode.ViewModels
             set { _isInteracting = value; Notify(); }
         }
 
+        private bool _isVisited = false;
+        public bool IsVisited
+        {
+            get { return _isVisited; }
+            set { _isVisited = value; Notify(); }
+        }
+
         public bool WasMovedWhileInteracting { get; private set; }
 
         public double Width { get => 50; }
@@ -151,7 +158,8 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public override void Reset()
         {
             RouteSegmentDistance = 0.0;
-            IsHighlighted = false;
+            IsVisited = false;
+            base.Reset();
         }
 
         public void Move(double dX, double dY)

@@ -63,7 +63,7 @@
             <TabItem Header="Build">
                 <StackPanel Orientation="Horizontal">
                     <Button Content="Erase All Nodes"/>
-                    <Button Content="Erase Selected Nodes"/>
+                    <Button Content="Erase Selected Nodes" Command="{Binding DeleteNodesCommand}"/>
                 </StackPanel>
             </TabItem>
             <TabItem Header="Execute">
@@ -72,9 +72,7 @@
                         <ComboBox ItemsSource="{Binding AlgorithmExecutionModes}" SelectedItem="{Binding SelectedExecutionMode}"/>
                     </GroupBox>
                     <Button Content="Solve Now" Command="{Binding RunDijkstraAlgorithmCommand}"/>
-                    <Button Content="Start Step"/>
-                    <Button Content="Next Step"/>
-
+                    <Button Content="Take Step" Command="{Binding RunDijkstraStepCommand}"/>
                 </StackPanel>
             </TabItem>
         </TabControl>

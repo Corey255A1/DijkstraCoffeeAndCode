@@ -9,7 +9,7 @@ namespace DijkstraAlgorithm
     public class DijkstraNode : IComparable<DijkstraNode>
     {
         private bool _visited;
-        public bool Visited
+        public bool IsVisited
         {
             get { return _visited; }
             set { _visited = value; }
@@ -76,7 +76,7 @@ namespace DijkstraAlgorithm
         {
             ShortestRouteNode = null;
             RouteSegmentDistance = double.MaxValue;
-            Visited = false;
+            IsVisited = false;
         }
     }
 }

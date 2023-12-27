@@ -24,7 +24,7 @@ namespace DijkstraAlgorithm
 
         public IEnumerable<DijkstraNode> DijkstraNodes => _dijkstraNodes.Values;
 
-        public bool IsFinished => CurrentNode == null || CurrentNode == EndNode || CurrentNode.Visited;
+        public bool IsFinished => CurrentNode == null || CurrentNode == EndNode || CurrentNode.IsVisited;
 
         public DijkstraState(Node startNode, Node endNode)
         {
@@ -75,7 +75,7 @@ namespace DijkstraAlgorithm
                (baseNode) =>
                {
                    if (!_dijkstraNodes.ContainsKey(baseNode)) { return true; }
-                   return !_dijkstraNodes[baseNode].Visited;
+                   return !_dijkstraNodes[baseNode].IsVisited;
                }));
         }
 
@@ -105,12 +105,14 @@ namespace DijkstraAlgorithm
         {
             if (CurrentNode == null) { return; }
 
-            CurrentNode.Visited = true;
+            CurrentNode.IsVisited = true;
             CurrentNode = _nodesToVisit.Min((node) => node);
             if (CurrentNode == null) { return; }
 
             _nodesToVisit.Remove(CurrentNode);
             _currentNodeNeighbors = new Queue<DijkstraNode>(GetUnvisitedNeighborNodes(CurrentNode));
+
+            LastCheckedNeighbor = null;
         }
 
         public List<DijkstraNode> GenerateShortestPathList()

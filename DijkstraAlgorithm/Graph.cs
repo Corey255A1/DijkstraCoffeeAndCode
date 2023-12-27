@@ -27,13 +27,16 @@ namespace DijkstraAlgorithm
             _nodes.Add(node);
         }
 
+        // Remove the edges associated from the node
+        // before triggering the Node removed callbacks.
+        // Otherwise, the nodes will still have those connections
         public void RemoveNode(Node node)
         {
-            _nodes.Remove(node);
             foreach (var edge in _edges.Where(edge => edge.Contains(node)).ToList())
             {
                 RemoveEdge(edge);
             }
+            _nodes.Remove(node);
         }
 
         public void AddEdge(Node node1, Node node2)
