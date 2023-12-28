@@ -12,7 +12,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Graphics.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary.MergedDictionaries>            
         </ResourceDictionary>
     </Window.Resources>
     <Window.InputBindings>
@@ -26,7 +26,7 @@
             <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
 
-        <ItemsControl Background="LightGray" Grid.Row="0" ItemsSource="{Binding Path=DijkstraViewObjects}" 
+        <ItemsControl Grid.RowSpan="2" Background="ForestGreen" Grid.Row="0" ItemsSource="{Binding Path=DijkstraViewObjects}" 
                       MouseRightButtonDown="CanvasMouseRightButtonDown" MouseLeftButtonDown="CanvasMouseLeftButtonDown">
             <ItemsControl.Resources>
                 <DataTemplate DataType="{x:Type vm:DijkstraNodeViewModel}">

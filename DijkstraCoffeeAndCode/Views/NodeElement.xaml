@@ -12,19 +12,19 @@
         <vm:DoubleToIntStringConverter x:Key="doubleToIntConv"/>
         <vm:HideableNumberConverter x:Key="hideableNumberConv"/>
         <Style TargetType="Ellipse" x:Key="node">
-            <Setter Property="Fill" Value="{StaticResource nodeDefault}"/>
+            <Setter Property="Fill" Value="{StaticResource nodeDefaultColorBrush}"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsVisited}" Value="true">
-                    <Setter Property="Fill" Value="{StaticResource nodeVisited}"/>
+                    <Setter Property="Fill" Value="{StaticResource nodeVisitedColorBrush}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding IsHighlightedAlternate}" Value="true">
-                    <Setter Property="Fill" Value="{StaticResource highlightAltColor}"/>
+                    <Setter Property="Fill" Value="{StaticResource highlightAltColorBrush}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding IsHighlighted}" Value="true">
-                    <Setter Property="Fill" Value="{StaticResource highlightColor}"/>
+                    <Setter Property="Fill" Value="{StaticResource highlightColorBrush}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding IsSelected}" Value="true">
-                    <Setter Property="Fill" Value="{StaticResource selectedColor}"/>
+                    <Setter Property="Fill" Value="{StaticResource selectedColorBrush}"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -41,10 +41,36 @@
             <Setter Property="Stroke" Value="Transparent"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsStartNode}" Value="true">
-                    <Setter Property="Stroke" Value="{StaticResource startNode}"/>
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation To="{StaticResource startNodeColor}" Storyboard.TargetProperty="(Ellipse.Stroke).(SolidColorBrush.Color)" Duration="0:0:0.5"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
+                    <DataTrigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation To="{x:Null}" Storyboard.TargetProperty="(Ellipse.Stroke).(SolidColorBrush.Color)" Duration="0:0:0.5"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.ExitActions>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding IsEndNode}" Value="true">
-                    <Setter Property="Stroke" Value="{StaticResource endNode}"/>
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation To="{StaticResource endNodeColor}" Storyboard.TargetProperty="(Ellipse.Stroke).(SolidColorBrush.Color)" Duration="0:0:0.5"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
+                    <DataTrigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation To="{x:Null}" Storyboard.TargetProperty="(Ellipse.Stroke).(SolidColorBrush.Color)" Duration="0:0:0.5"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.ExitActions>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
