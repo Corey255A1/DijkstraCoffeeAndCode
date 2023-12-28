@@ -14,6 +14,9 @@ namespace DijkstraCoffeeAndCode.ViewModels
         private Dictionary<K, V> _objectToViewModel = new();
         private Func<K, V> viewFactory;
 
+        public IEnumerable<K> Keys { get=>_objectToViewModel.Keys; }
+        public IEnumerable<V> Values { get=>_objectToViewModel.Values; }
+
         public event DijkstraObjectViewCollectionEvent? AddOrRemove;
         public DijkstraObjectViewCollection(ObservableCollection<K> collection, Func<K, V> objectToViewModel)
         {

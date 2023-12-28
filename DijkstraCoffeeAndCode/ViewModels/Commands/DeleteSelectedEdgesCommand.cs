@@ -7,12 +7,12 @@ using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.ViewModels.Commands
 {
-    public class DeleteNodesCommand : ICommand
+    public class DeleteSelectedEdgesCommand : ICommand
     {
         public event EventHandler? CanExecuteChanged;
 
         private GraphViewModel _viewModel;
-        public DeleteNodesCommand(GraphViewModel viewModel)
+        public DeleteSelectedEdgesCommand(GraphViewModel viewModel)
         {
             _viewModel = viewModel;
             _viewModel.SelectedNodes.CollectionChanged += SelectedNodesCollectionChanged;
@@ -30,7 +30,8 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
 
         public void Execute(object? parameter)
         {
-            _viewModel.DeleteSelectedNodes();
+            _viewModel.DeleteSelectedEdges();
+            _viewModel.ClearSelectedNodes();
         }
     }
 }

@@ -62,11 +62,15 @@
             </ContextMenu>
         </Grid.ContextMenu>
 
-        <Ellipse Style="{StaticResource ResourceKey=node}" Margin="2" Height="Auto" Width="Auto" Stroke="Black"  MouseMove="NodeMouseMove" MouseLeftButtonDown="NodeMouseDown" MouseLeftButtonUp="NodeMouseUp"/>
+        <Ellipse Style="{StaticResource ResourceKey=node}" Margin="2" Height="Auto" Width="Auto" Stroke="Black"  MouseMove="NodeMouseMove" MouseLeftButtonDown="NodeMouseDown" MouseLeftButtonUp="NodeMouseUp">
+            <Ellipse.BitmapEffect>
+                <DropShadowBitmapEffect Color="Black" ShadowDepth="0.5" Softness="0.5"/>
+            </Ellipse.BitmapEffect>
+        </Ellipse>
         <Rectangle Style="{StaticResource ResourceKey=thumb}" Margin="8,8,8,8" IsHitTestVisible="False"/>
-        <Label IsHitTestVisible="False" 
+        <Label IsHitTestVisible="False" BorderThickness="0"
                Content="{Binding RouteSegmentDistance, Converter={StaticResource doubleToIntConv}}" 
-               Margin="5,15" Padding="0" HorizontalContentAlignment="Center" FontSize="14" FontWeight="Bold" Background="#BFFFFFFF" VerticalContentAlignment="Center">
+               Margin="5,15" Padding="0" HorizontalContentAlignment="Center" FontSize="14" FontWeight="Bold" Background="#4FFFFFFF" VerticalContentAlignment="Center">
             <Label.Visibility>
                 <Binding Path="RouteSegmentDistance" Converter="{StaticResource hideableNumberConv}">
                     <Binding.ConverterParameter>

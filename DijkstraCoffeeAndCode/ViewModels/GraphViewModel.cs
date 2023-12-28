@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -90,7 +91,9 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public ObservableCollection<DijkstraNodeViewModel> SelectedNodes { get; private set; } = new();
 
         public ICommand CreateEdgesCommand { get; set; }
-        public ICommand DeleteNodesCommand { get; set; }
+        public ICommand DeleteSelectedNodesCommand { get; set; }
+        public ICommand DeleteSelectedEdgesCommand { get; set; }
+        public ICommand DeleteAllNodesCommand { get; set; }
         public ICommand RunDijkstraAlgorithmCommand { get; set; }
         public ICommand RunDijkstraStepCommand { get; set; }
 
@@ -98,7 +101,9 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public GraphViewModel()
         {
             CreateEdgesCommand = new CreateEdgesCommand(this);
-            DeleteNodesCommand = new DeleteNodesCommand(this);
+            DeleteSelectedNodesCommand = new DeleteSelectedNodesCommand(this);
+            DeleteSelectedEdgesCommand = new DeleteSelectedEdgesCommand(this);
+            DeleteAllNodesCommand = new DeleteAllNodesCommand(this);
             RunDijkstraAlgorithmCommand = new RunDijkstraAlgorithmCommand(this);
             RunDijkstraStepCommand = new RunDijkstraStepCommand(this);
 
@@ -120,12 +125,34 @@ namespace DijkstraCoffeeAndCode.ViewModels
             _dijkstraGraph.RemoveNode(node.Node);
         }
 
+        public void DeleteAllNodes()
+        {
+            _dijkstraGraph.RemoveAllNodes();
+        }
+
         public void DeleteSelectedNodes()
         {
             foreach (var node in SelectedNodes.ToList())
             {
                 DeleteNode(node);
             }
+        }
+
+        public void DeleteEdge(DijkstraNodeViewModel node1, DijkstraNodeViewModel node2)
+        {
+            _dijkstraGraph.RemoveEdge(node1.Node, node2.Node);
+        }
+
+        public void DeleteSelectedEdges()
+        {
+            if (SelectedNodes.Count < 2) { return; }
+
+            for (int nodeIndex = 1; nodeIndex < SelectedNodes.Count; ++nodeIndex)
+            {
+                DeleteEdge(SelectedNodes[nodeIndex - 1], SelectedNodes[nodeIndex]);
+            }
+
+            DeleteEdge(SelectedNodes[SelectedNodes.Count - 1], SelectedNodes[0]);
         }
 
         public void CreateEdge(DijkstraNodeViewModel node1, DijkstraNodeViewModel node2)
@@ -135,10 +162,17 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
         public void CreateEdgesFromSelected()
         {
+            if(SelectedNodes.Count < 2) { return; }
+
+            // order of node selection affects which edges are deleted.
+            // alternatively can check all nodes against all other nodes.
+
             for (int nodeIndex = 1; nodeIndex < SelectedNodes.Count; ++nodeIndex)
             {
                 CreateEdge(SelectedNodes[nodeIndex - 1], SelectedNodes[nodeIndex]);
             }
+
+            CreateEdge(SelectedNodes[SelectedNodes.Count - 1], SelectedNodes[0]);
         }
 
         private void AddOrRemoveDijkstraEdge(DijkstraObjectViewModel dijkstraObject, bool isAdd)

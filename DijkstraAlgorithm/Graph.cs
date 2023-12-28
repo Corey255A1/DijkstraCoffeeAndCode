@@ -39,6 +39,14 @@ namespace DijkstraAlgorithm
             _nodes.Remove(node);
         }
 
+        public void RemoveAllNodes()
+        {
+            foreach(var node in _nodes.ToList())
+            {
+                RemoveNode(node);
+            }
+        }
+
         public void AddEdge(Node node1, Node node2)
         {
             Edge? edge = node1.MakeEdge(node2);
@@ -51,6 +59,14 @@ namespace DijkstraAlgorithm
         {
             edge.Clear();
             _edges.Remove(edge);
+        }
+
+        public void RemoveEdge(Node node1, Node node2)
+        {
+            Edge? edge = node1.FindSharedEdge(node2);
+            if (edge == null) { return; }
+
+            RemoveEdge(edge);
         }
 
 

@@ -17,12 +17,12 @@
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Command="{Binding CreateEdgesCommand}" Key="E"/>
-        <KeyBinding Command="{Binding DeleteNodesCommand}" Key="Delete"/>
+        <KeyBinding Command="{Binding DeleteSelectedNodesCommand}" Key="Delete"/>
     </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
 
         <ItemsControl Background="AliceBlue" Grid.Row="0" ItemsSource="{Binding Path=DijkstraViewObjects}" 
@@ -62,14 +62,16 @@
             </TabControl.Resources>
             <TabItem Header="Build">
                 <StackPanel Orientation="Horizontal">
-                    <Button Content="Erase All Nodes"/>
-                    <Button Content="Erase Selected Nodes" Command="{Binding DeleteNodesCommand}"/>
+                    <Button Content="Delete All Nodes" Command="{Binding DeleteAllNodesCommand}"/>
+                    <Button Content="Delete Selected Nodes" Command="{Binding DeleteSelectedNodesCommand}"/>
+                    <Button Content="Delete All Edges"/>
+                    <Button Content="Delete Selected Edges" Command="{Binding DeleteSelectedEdgesCommand}"/>
                 </StackPanel>
             </TabItem>
             <TabItem Header="Execute">
                 <StackPanel Orientation="Horizontal">
-                    <GroupBox Header="Solve Method" Padding="4">
-                        <ComboBox ItemsSource="{Binding AlgorithmExecutionModes}" SelectedItem="{Binding SelectedExecutionMode}"/>
+                    <GroupBox Header="Solve Method" Padding="4" Height="60">
+                        <ComboBox ItemsSource="{Binding AlgorithmExecutionModes}" SelectedItem="{Binding SelectedExecutionMode}" VerticalContentAlignment="Center"/>
                     </GroupBox>
                     <Button Content="Solve Now" Command="{Binding RunDijkstraAlgorithmCommand}"/>
                     <Button Content="Take Step" Command="{Binding RunDijkstraStepCommand}"/>
