@@ -1,4 +1,5 @@
 ﻿using DijkstraAlgorithm;
+using DijkstraAlgorithm.File;
 using DijkstraCoffeeAndCode.ViewModels.Commands;
 using System;
 using System.Collections.Generic;
@@ -83,7 +84,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             get => Enum.GetValues(typeof(AlgorithmExecutionModeEnum)).Cast<AlgorithmExecutionModeEnum>();
         }
 
-        private Graph _dijkstraGraph = new Graph();
+        private Graph _dijkstraGraph;
         private DijkstraObjectViewCollection<Node, DijkstraNodeViewModel> _nodeViewCollection;
         private DijkstraObjectViewCollection<Edge, DijkstraEdgeViewModel> _edgeViewCollection;
 
@@ -97,7 +98,10 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public ICommand DeleteAllEdgesCommand { get; set; }
         public ICommand RunDijkstraAlgorithmCommand { get; set; }
         public ICommand RunDijkstraStepCommand { get; set; }
+        public ICommand SaveGraphCommand { get; set; }
+        public ICommand LoadGraphCommand { get; set; }
 
+        public Func<bool,string,string>? GetFilePath { get; set; }
 
         public GraphViewModel()
         {
@@ -108,14 +112,68 @@ namespace DijkstraCoffeeAndCode.ViewModels
             DeleteAllEdgesCommand = new DeleteAllEdgesCommand(this);
             RunDijkstraAlgorithmCommand = new RunDijkstraAlgorithmCommand(this);
             RunDijkstraStepCommand = new RunDijkstraStepCommand(this);
+            SaveGraphCommand = new SaveGraphCommand(this);
+            LoadGraphCommand = new LoadGraphCommand(this);
 
+            SetGraph(new Graph());
+        }
+
+        private void Clear()
+        {
+            DijkstraViewObjects.Clear();
+            SelectedNodes.Clear();
+        }
+
+        private void SetGraph(Graph graph)
+        {
+            Clear();
+            _dijkstraGraph = graph;
             _nodeViewCollection = new(_dijkstraGraph.Nodes, DijkstraNodeViewModel.MakeNodeViewModel);
             _nodeViewCollection.AddOrRemove += AddOrRemoveDijkstraNode;
 
+            foreach(var nodeView in _nodeViewCollection.Values)
+            {
+                AddOrRemoveDijkstraNode(nodeView, true);
+            }
+
             _edgeViewCollection = new(_dijkstraGraph.Edges, DijkstraEdgeViewModel.MakeEdgeViewModel);
             _edgeViewCollection.AddOrRemove += AddOrRemoveDijkstraEdge;
+
+            foreach (var edgeView in _edgeViewCollection.Values)
+            {
+                AddOrRemoveDijkstraEdge(edgeView, true);
+            }
         }
 
+        public void LoadGraph()
+        {
+            if (GetFilePath == null) { return; }
+            try
+            {
+                string filePath = GetFilePath(true, "graph file (*.gxml)|*.gxml");
+                if(String.IsNullOrEmpty(filePath)) { return; }
+                SetGraph(Graph.LoadGraph(filePath));
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+        }
+
+        public void SaveGraph()
+        {
+            if (GetFilePath == null) { return; }
+            try
+            {
+                string filePath = GetFilePath(false, "graph file (*.gxml)|*.gxml");
+                if (String.IsNullOrEmpty(filePath)) { return; }
+                Graph.SaveGraph(_dijkstraGraph, filePath);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+        }
 
         public void AddNewNode(double x, double y)
         {
@@ -171,7 +229,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
         public void CreateEdgesFromSelected()
         {
-            if(SelectedNodes.Count < 2) { return; }
+            if (SelectedNodes.Count < 2) { return; }
 
             // order of node selection affects which edges are deleted.
             // alternatively can check all nodes against all other nodes.

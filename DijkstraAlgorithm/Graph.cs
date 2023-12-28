@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DijkstraAlgorithm.File;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -15,16 +16,57 @@ namespace DijkstraAlgorithm
         private ObservableCollection<Edge> _edges;
         public ObservableCollection<Edge> Edges { get { return _edges; } }
 
+        private uint _nodeID = 0;
+
         public Graph()
         {
             _nodes = new ObservableCollection<Node>();
             _edges = new ObservableCollection<Edge>();
         }
 
+        public static Graph LoadGraph(string filePath)
+        {
+            GraphFile graphFile = GraphFile.LoadGraph(filePath);
+            Graph graph = new Graph();
+            foreach (var node in graphFile.Nodes)
+            {
+                graph.AddNode(node.ID, node.X, node.Y);
+            }
+
+            foreach (var edge in graphFile.Edges)
+            {
+                graph.AddEdge(edge.Node1ID,edge.Node2ID);
+            }
+
+            return graph;
+        }
+
+        public static void SaveGraph(Graph graph, string filePath)
+        {
+            GraphFile.SaveGraph(new GraphFile(graph), filePath);
+        }
+
+        private uint GetNodeID()
+        {
+            _nodeID += 1;
+            return _nodeID;
+        }
+
+        private void AddNode(uint id, double x, double y)
+        {
+            _nodeID = Math.Max(id, _nodeID);
+            Node node = new(id, x, y);
+            _nodes.Add(node);
+        }
+
         public void AddNode(double x, double y)
         {
-            Node node = new(x, y);
-            _nodes.Add(node);
+            AddNode(GetNodeID(), x, y);
+        }
+
+        public Node GetNodeByID(uint id)
+        {
+            return Nodes.First(n => n.ID == id);
         }
 
         // Remove the edges associated from the node
@@ -41,16 +83,21 @@ namespace DijkstraAlgorithm
 
         public void RemoveAllNodes()
         {
-            foreach(var node in _nodes.ToList())
+            foreach (var node in _nodes.ToList())
             {
                 RemoveNode(node);
             }
         }
 
+        public void AddEdge(uint node1ID, uint node2ID)
+        {
+            AddEdge(GetNodeByID(node1ID), GetNodeByID(node2ID));
+        }
+
         public void AddEdge(Node node1, Node node2)
         {
             Edge? edge = node1.MakeEdge(node2);
-            if(edge == null) { return; }
+            if (edge == null) { return; }
 
             _edges.Add(edge);
         }
@@ -71,7 +118,7 @@ namespace DijkstraAlgorithm
 
         public void RemoveAllEdges()
         {
-            foreach(var edge in _edges.ToList())
+            foreach (var edge in _edges.ToList())
             {
                 RemoveEdge(edge);
             }

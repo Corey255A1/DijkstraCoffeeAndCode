@@ -22,6 +22,11 @@ namespace DijkstraCoffeeAndCode.ViewModels
         {
             collection.CollectionChanged += CollectionChangedHandler;
             viewFactory = objectToViewModel;
+
+            foreach(var item in collection)
+            {
+                AddNewObjectViewModel(item);
+            }
         }
 
         public void CollectionChangedHandler(object? sender, NotifyCollectionChangedEventArgs e)

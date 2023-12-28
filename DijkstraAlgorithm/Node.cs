@@ -3,11 +3,19 @@
 
 // WunderVision Complete Refactor in 2023
 using System.Collections.ObjectModel;
+using System.Security.Cryptography;
 
 namespace DijkstraAlgorithm
 {
     public class Node
     {
+        private uint _id;
+        public uint ID
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+
         private Vector2D _point;
         public Vector2D Point => _point;
 
@@ -17,11 +25,18 @@ namespace DijkstraAlgorithm
 
         public Node()
         {
+            _id = 0;
             _point = new Vector2D(0, 0);
         }
 
         public Node(double x, double y)
         {
+            _id = 0;
+            _point = new Vector2D(x, y);
+        }
+        public Node(uint id, double x, double y)
+        {
+            _id = id;
             _point = new Vector2D(x, y);
         }
 

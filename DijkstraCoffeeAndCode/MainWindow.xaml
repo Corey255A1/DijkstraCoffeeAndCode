@@ -8,13 +8,6 @@
         xmlns:vm="clr-namespace:DijkstraCoffeeAndCode.ViewModels"
         mc:Ignorable="d"
         Title="WunderVision - Dijkstra Coffee And Code" Height="452.406" Width="803.61">
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Graphics.xaml"/>
-            </ResourceDictionary.MergedDictionaries>            
-        </ResourceDictionary>
-    </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Command="{Binding CreateEdgesCommand}" Key="E"/>
         <KeyBinding Command="{Binding DeleteSelectedEdgesCommand}" Modifiers="Shift" Key="E"/>
@@ -49,7 +42,13 @@
                 </Style>
             </ItemsControl.ItemContainerStyle>
         </ItemsControl>
-        <TabControl Grid.Row="1">
+        <TabControl Grid.Row="1" Width="600">
+            <TabItem Header="File">
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Save" Command="{Binding SaveGraphCommand}"/>
+                    <Button Content="Load" Command="{Binding LoadGraphCommand}"/>
+                </StackPanel>                
+            </TabItem>
             <TabItem Header="Build">
                 <StackPanel Orientation="Horizontal">
                     <GroupBox Header="Nodes">
@@ -74,6 +73,7 @@
                     </GroupBox>
                     <Button Content="Solve Now" Command="{Binding RunDijkstraAlgorithmCommand}"/>
                     <Button Content="Take Step" Command="{Binding RunDijkstraStepCommand}"/>
+                    <Button Content="Reset" Command="{Binding RunDijkstraStepCommand}"/>
                 </StackPanel>
             </TabItem>
         </TabControl>
