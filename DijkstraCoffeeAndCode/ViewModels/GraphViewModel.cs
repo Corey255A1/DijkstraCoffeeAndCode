@@ -94,6 +94,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public ICommand DeleteSelectedNodesCommand { get; set; }
         public ICommand DeleteSelectedEdgesCommand { get; set; }
         public ICommand DeleteAllNodesCommand { get; set; }
+        public ICommand DeleteAllEdgesCommand { get; set; }
         public ICommand RunDijkstraAlgorithmCommand { get; set; }
         public ICommand RunDijkstraStepCommand { get; set; }
 
@@ -104,6 +105,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             DeleteSelectedNodesCommand = new DeleteSelectedNodesCommand(this);
             DeleteSelectedEdgesCommand = new DeleteSelectedEdgesCommand(this);
             DeleteAllNodesCommand = new DeleteAllNodesCommand(this);
+            DeleteAllEdgesCommand = new DeleteAllEdgesCommand(this);
             RunDijkstraAlgorithmCommand = new RunDijkstraAlgorithmCommand(this);
             RunDijkstraStepCommand = new RunDijkstraStepCommand(this);
 
@@ -136,11 +138,17 @@ namespace DijkstraCoffeeAndCode.ViewModels
             {
                 DeleteNode(node);
             }
+            ClearSelectedNodes();
         }
 
         public void DeleteEdge(DijkstraNodeViewModel node1, DijkstraNodeViewModel node2)
         {
             _dijkstraGraph.RemoveEdge(node1.Node, node2.Node);
+        }
+
+        public void DeleteAllEdges()
+        {
+            _dijkstraGraph.RemoveAllEdges();
         }
 
         public void DeleteSelectedEdges()
@@ -153,6 +161,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
 
             DeleteEdge(SelectedNodes[SelectedNodes.Count - 1], SelectedNodes[0]);
+            ClearSelectedNodes();
         }
 
         public void CreateEdge(DijkstraNodeViewModel node1, DijkstraNodeViewModel node2)
@@ -173,6 +182,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
 
             CreateEdge(SelectedNodes[SelectedNodes.Count - 1], SelectedNodes[0]);
+            ClearSelectedNodes();
         }
 
         private void AddOrRemoveDijkstraEdge(DijkstraObjectViewModel dijkstraObject, bool isAdd)
@@ -314,7 +324,6 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public void UpdateDijkstraView(DijkstraState dijkstraState)
         {
             ResetAllDijkstraViewObjects();
-            ClearSelectedNodes();
             foreach (var node in dijkstraState.DijkstraNodes)
             {
                 var nodeViewModel = _nodeViewCollection.GetViewModel(node.Node);

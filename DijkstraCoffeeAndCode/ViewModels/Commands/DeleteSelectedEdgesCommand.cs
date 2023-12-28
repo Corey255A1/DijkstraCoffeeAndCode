@@ -25,7 +25,7 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
 
         public bool CanExecute(object? parameter)
         {
-            return _viewModel.SelectedNodes.Count > 0;
+            return _viewModel.SelectedNodes.Count > 1;
         }
 
         public void Execute(object? parameter)

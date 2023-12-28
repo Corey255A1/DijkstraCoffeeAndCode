@@ -12,43 +12,39 @@
         <vm:DoubleToIntStringConverter x:Key="doubleToIntConv"/>
         <vm:HideableNumberConverter x:Key="hideableNumberConv"/>
         <Style TargetType="Ellipse" x:Key="node">
-            <Setter Property="Fill" Value="White"/>
+            <Setter Property="Fill" Value="{StaticResource nodeDefault}"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsVisited}" Value="true">
-                    <Setter Property="Fill" Value="DarkBlue"/>
+                    <Setter Property="Fill" Value="{StaticResource nodeVisited}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding IsHighlightedAlternate}" Value="true">
-                    <Setter Property="Fill" Value="Red"/>
+                    <Setter Property="Fill" Value="{StaticResource highlightAltColor}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding IsHighlighted}" Value="true">
-                    <Setter Property="Fill" Value="Lime"/>
+                    <Setter Property="Fill" Value="{StaticResource highlightColor}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding IsSelected}" Value="true">
-                    <Setter Property="Fill" Value="CadetBlue"/>
+                    <Setter Property="Fill" Value="{StaticResource selectedColor}"/>
                 </DataTrigger>
-
             </Style.Triggers>
         </Style>
         <Style TargetType="Rectangle" x:Key="thumb">
             <Setter Property="Fill" Value="Transparent"/>
-            <!--<Style.Triggers>
-                <DataTrigger Binding="{Binding IsStartNode}" Value="true">
-                    <Setter Property="Fill" Value="DarkBlue"/>
-                </DataTrigger>
+            <Style.Triggers>
                 <DataTrigger Binding="{Binding IsEndNode}" Value="true">
-                    <Setter Property="Fill" Value="DarkRed"/>
+                    <Setter Property="Fill" Value="{StaticResource ResourceKey=coffeePot}"/>
                 </DataTrigger>
-            </Style.Triggers>-->
+            </Style.Triggers>
         </Style>
         <Style TargetType="Ellipse" x:Key="ringIndicator">
             <Setter Property="StrokeThickness" Value="6"/>
             <Setter Property="Stroke" Value="Transparent"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsStartNode}" Value="true">
-                    <Setter Property="Stroke" Value="DarkBlue"/>
+                    <Setter Property="Stroke" Value="{StaticResource startNode}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding IsEndNode}" Value="true">
-                    <Setter Property="Stroke" Value="DarkRed"/>
+                    <Setter Property="Stroke" Value="{StaticResource endNode}"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -70,7 +66,7 @@
         <Rectangle Style="{StaticResource ResourceKey=thumb}" Margin="8,8,8,8" IsHitTestVisible="False"/>
         <Label IsHitTestVisible="False" BorderThickness="0"
                Content="{Binding RouteSegmentDistance, Converter={StaticResource doubleToIntConv}}" 
-               Margin="5,15" Padding="0" HorizontalContentAlignment="Center" FontSize="14" FontWeight="Bold" Background="#4FFFFFFF" VerticalContentAlignment="Center">
+               Margin="5,15" Padding="0" HorizontalContentAlignment="Center" FontSize="14" FontWeight="Bold" Background="#BFFFFFFF" VerticalContentAlignment="Center">
             <Label.Visibility>
                 <Binding Path="RouteSegmentDistance" Converter="{StaticResource hideableNumberConv}">
                     <Binding.ConverterParameter>

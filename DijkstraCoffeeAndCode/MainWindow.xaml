@@ -17,7 +17,8 @@
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Command="{Binding CreateEdgesCommand}" Key="E"/>
-        <KeyBinding Command="{Binding DeleteSelectedNodesCommand}" Key="Delete"/>
+        <KeyBinding Command="{Binding DeleteSelectedEdgesCommand}" Modifiers="Shift" Key="E"/>
+        <KeyBinding Command="{Binding DeleteSelectedNodesCommand}" Key="Delete"/>        
     </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
@@ -49,23 +50,21 @@
             </ItemsControl.ItemContainerStyle>
         </ItemsControl>
         <TabControl Grid.Row="1">
-            <TabControl.Resources>
-                <Style TargetType="Button">
-                    <Setter Property="Padding" Value="4"/>
-                    <Setter Property="Height" Value="26"/>
-                    <Setter Property="MinWidth" Value="75"/>
-                    <Setter Property="Margin" Value="4"/>
-                </Style>
-                <Style TargetType="RadioButton">
-                    <Setter Property="Margin" Value="2"/>
-                </Style>
-            </TabControl.Resources>
             <TabItem Header="Build">
                 <StackPanel Orientation="Horizontal">
-                    <Button Content="Delete All Nodes" Command="{Binding DeleteAllNodesCommand}"/>
-                    <Button Content="Delete Selected Nodes" Command="{Binding DeleteSelectedNodesCommand}"/>
-                    <Button Content="Delete All Edges"/>
-                    <Button Content="Delete Selected Edges" Command="{Binding DeleteSelectedEdgesCommand}"/>
+                    <GroupBox Header="Nodes">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="Delete Selected (Del)" Command="{Binding DeleteSelectedNodesCommand}"/>
+                            <Button Content="Delete All" Command="{Binding DeleteAllNodesCommand}"/>
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox Header="Edges">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="Create (E)" Command="{Binding CreateEdgesCommand}"/>
+                            <Button Content="Delete Selected (Shift+E)" Command="{Binding DeleteSelectedEdgesCommand}"/>
+                            <Button Content="Delete All" Command="{Binding DeleteAllEdgesCommand}"/>
+                        </StackPanel>
+                    </GroupBox>
                 </StackPanel>
             </TabItem>
             <TabItem Header="Execute">
@@ -78,7 +77,7 @@
                 </StackPanel>
             </TabItem>
         </TabControl>
-        
-        
+
+
     </Grid>
 </Window>

@@ -69,6 +69,14 @@ namespace DijkstraAlgorithm
             RemoveEdge(edge);
         }
 
+        public void RemoveAllEdges()
+        {
+            foreach(var edge in _edges.ToList())
+            {
+                RemoveEdge(edge);
+            }
+        }
+
 
     }
 }

@@ -35,7 +35,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
         {
             if (value is double number)
             {
-                return (int)number;
+                return (int)Math.Round(number);
             }
             throw new NotImplementedException();
         }

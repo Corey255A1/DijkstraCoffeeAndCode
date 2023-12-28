@@ -9,10 +9,10 @@
     <UserControl.Resources>
         <Style TargetType="Line" x:Key="highlightLine">
             <Setter Property="StrokeThickness" Value="5"/>
-            <Setter Property="Stroke" Value="Black"/>
+            <Setter Property="Stroke" Value="{StaticResource edgeDefault}"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsHighlighted}" Value="true">
-                    <Setter Property="Stroke" Value="Lime"/>
+                    <Setter Property="Stroke" Value="{StaticResource highlightColor}"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -21,9 +21,9 @@
         <Line Style="{StaticResource highlightLine}" X1="{Binding X1}" Y1="{Binding Y1}" Y2="{Binding Y2}" X2="{Binding X2}"/>
         <TextBlock Text="{Binding Distance, StringFormat={}{0:#}}" 
                    Canvas.Top="{Binding CenterY}" 
-                   Canvas.Left="{Binding CenterX}"  Foreground="White" FontFamily="Calibri" FontSize="24" FontWeight="Bold">
+                   Canvas.Left="{Binding CenterX}" Foreground="White" FontFamily="Calibri" FontSize="24" FontWeight="Bold">
             <TextBlock.Effect>
-                <DropShadowEffect ShadowDepth="0" Color="Black" BlurRadius="4"/>
+                <DropShadowEffect ShadowDepth="1" Color="Black" BlurRadius="2"/>
             </TextBlock.Effect>
         </TextBlock>
     </Canvas>
