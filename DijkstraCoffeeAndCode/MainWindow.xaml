@@ -69,7 +69,7 @@
             </TabItem>
             <TabItem Header="Execute">
                 <StackPanel Orientation="Horizontal">
-                    <GroupBox Header="Solve Method" Padding="4" Height="60">
+                    <GroupBox Header="Solve Method" Padding="4">
                         <ComboBox ItemsSource="{Binding AlgorithmExecutionModes}" SelectedItem="{Binding SelectedExecutionMode}" VerticalContentAlignment="Center"/>
                     </GroupBox>
                     <Button Content="Solve Now" Command="{Binding RunDijkstraAlgorithmCommand}"/>
