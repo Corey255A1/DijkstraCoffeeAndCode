@@ -34,7 +34,19 @@ namespace DijkstraCoffeeAndCode.ViewModels
             {
                 if (_startNode != null) { _startNode.IsStartNode = false; }
                 _startNode = value;
-                if (_startNode != null) { _startNode.IsStartNode = true; }
+                if (_startNode == null)
+                {
+                    ResetAllDijkstraViewObjects();
+                }
+                else
+                {
+                    if (_endNode == _startNode) { EndNode = null; }
+                    _startNode.IsStartNode = true;
+                    if (SelectedExecutionMode != AlgorithmExecutionModeEnum.Manual)
+                    {
+                        RunDijkstraAlgorithm();
+                    }
+                }
                 Notify();
             }
         }
@@ -47,7 +59,19 @@ namespace DijkstraCoffeeAndCode.ViewModels
             {
                 if (_endNode != null) { _endNode.IsEndNode = false; }
                 _endNode = value;
-                if (_endNode != null) { _endNode.IsEndNode = true; }
+                if (_endNode == null)
+                {
+                    ResetAllDijkstraViewObjects();
+                }
+                else
+                {
+                    if (_endNode == _startNode) { StartNode = null; }
+                    _endNode.IsEndNode = true;
+                    if (SelectedExecutionMode != AlgorithmExecutionModeEnum.Manual)
+                    {
+                        RunDijkstraAlgorithm();
+                    }
+                }
                 Notify();
             }
         }
@@ -149,6 +173,8 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
         private void Clear()
         {
+            StartNode = null;
+            EndNode = null;
             DijkstraViewObjects.Clear();
             SelectedNodes.Clear();
         }
@@ -217,7 +243,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             if (GetFilePath == null) { return; }
             try
             {
-                if(isSaveAs || String.IsNullOrEmpty(CurrentFilePath))
+                if (isSaveAs || String.IsNullOrEmpty(CurrentFilePath))
                 {
                     string filePath = GetFilePath(false, GraphFile.FILE_FILTER);
                     if (String.IsNullOrEmpty(filePath)) { return; }
