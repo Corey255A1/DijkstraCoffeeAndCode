@@ -7,29 +7,24 @@ using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.ViewModels.Commands
 {
-    public class SaveGraphCommand: ICommand
+    public class NewGraphCommand: ICommand
     {
         public event EventHandler? CanExecuteChanged;
 
         private GraphViewModel _viewModel;
-        public SaveGraphCommand(GraphViewModel viewModel)
+        public NewGraphCommand(GraphViewModel viewModel)
         {
             _viewModel = viewModel;
         }
 
         public bool CanExecute(object? parameter)
         {
-            return _viewModel.GetFilePath != null;
+            return true;
         }
 
         public void Execute(object? parameter)
         {
-            bool isSaveAs = false;
-            if(parameter != null && parameter.GetType() == typeof(bool))
-            {
-                isSaveAs = (bool)parameter;
-            }
-            _viewModel.SaveGraph(isSaveAs);
+            _viewModel.NewGraph();
         }
     }
 }

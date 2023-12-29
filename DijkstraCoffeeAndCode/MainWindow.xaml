@@ -6,13 +6,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:DijkstraCoffeeAndCode.Views"
         xmlns:vm="clr-namespace:DijkstraCoffeeAndCode.ViewModels"
-        mc:Ignorable="d"
-        Title="WunderVision - Dijkstra Coffee And Code" Height="452.406" Width="803.61">
+        xmlns:sys="clr-namespace:System;assembly=netstandard"
+        Height="452.406" Width="803.61"
+        mc:Ignorable="d">
     <Window.InputBindings>
         <KeyBinding Command="{Binding CreateEdgesCommand}" Key="E"/>
         <KeyBinding Command="{Binding DeleteSelectedEdgesCommand}" Modifiers="Shift" Key="E"/>
-        <KeyBinding Command="{Binding DeleteSelectedNodesCommand}" Key="Delete"/>        
+        <KeyBinding Command="{Binding DeleteSelectedNodesCommand}" Key="Delete"/>
     </Window.InputBindings>
+    <Window.Title>
+        <MultiBinding StringFormat="{}{0} - WunderVision - Dijkstra Coffee and Code">
+            <Binding Path="CurrentFileName"/>
+        </MultiBinding>
+    </Window.Title>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -45,9 +51,16 @@
         <TabControl Grid.Row="1" Width="600">
             <TabItem Header="File">
                 <StackPanel Orientation="Horizontal">
+                    <Button Content="New" Command="{Binding NewGraphCommand}"/>
                     <Button Content="Save" Command="{Binding SaveGraphCommand}"/>
-                    <Button Content="Load" Command="{Binding LoadGraphCommand}"/>
-                </StackPanel>                
+                    <Button Content="Save As" Command="{Binding SaveGraphCommand}">
+                        <Button.CommandParameter>
+                            <sys:Boolean>true</sys:Boolean>
+                        </Button.CommandParameter>
+                    </Button>
+                    <Button Content="Open" Command="{Binding LoadGraphCommand}"/>
+                    <Button Content="Import" Command="{Binding ImportGraphCommand}"/>
+                </StackPanel>
             </TabItem>
             <TabItem Header="Build">
                 <StackPanel Orientation="Horizontal">

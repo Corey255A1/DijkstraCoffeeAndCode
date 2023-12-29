@@ -107,7 +107,7 @@
                         </Trigger>
                         <Trigger Property="IsSelected" Value="False">
                             <Setter TargetName="Border" Property="Background" Value="{StaticResource ResourceKey=tabControlNotColorBrush}"/>
-                            <Setter TargetName="Border" Property="BorderThickness" Value="0,0,0,1"/>
+                            <Setter TargetName="Border" Property="BorderThickness" Value="1,1,1,1"/>
                             <Setter TargetName="Border" Property="BorderBrush" Value="Black"/>
                         </Trigger>
                     </ControlTemplate.Triggers>

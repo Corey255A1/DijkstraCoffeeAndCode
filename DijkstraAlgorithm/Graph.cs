@@ -35,10 +35,27 @@ namespace DijkstraAlgorithm
 
             foreach (var edge in graphFile.Edges)
             {
-                graph.AddEdge(edge.Node1ID,edge.Node2ID);
+                graph.AddEdge(edge.Node1ID, edge.Node2ID);
             }
 
             return graph;
+        }
+
+        public void ImportGraph(string filePath)
+        {
+            GraphFile graphFile = GraphFile.LoadGraph(filePath);
+            // When importing, the IDs cannot be the IDs already in the graph.
+            // use the initial ID as the offset for the Edges
+            uint nodeIDOffset = _nodeID;
+            foreach (var node in graphFile.Nodes)
+            {
+                AddNode(nodeIDOffset + node.ID, node.X, node.Y);
+            }
+
+            foreach (var edge in graphFile.Edges)
+            {
+                AddEdge(nodeIDOffset + edge.Node1ID, nodeIDOffset + edge.Node2ID);
+            }
         }
 
         public static void SaveGraph(Graph graph, string filePath)

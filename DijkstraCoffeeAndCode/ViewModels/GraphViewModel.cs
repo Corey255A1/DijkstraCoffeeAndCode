@@ -8,6 +8,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
@@ -100,8 +101,34 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public ICommand RunDijkstraStepCommand { get; set; }
         public ICommand SaveGraphCommand { get; set; }
         public ICommand LoadGraphCommand { get; set; }
+        public ICommand ImportGraphCommand { get; set; }
+        public ICommand NewGraphCommand { get; set; }
 
-        public Func<bool,string,string>? GetFilePath { get; set; }
+        public Func<bool, string, string>? GetFilePath { get; set; }
+
+        private string _currentFilePath = "";
+
+        public string CurrentFilePath
+        {
+            get { return _currentFilePath; }
+            set
+            {
+                _currentFilePath = value;
+                Notify();
+                Notify(nameof(CurrentFileName));
+            }
+        }
+
+        public string CurrentFileName
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(_currentFilePath)) { return "New Graph"; }
+                return Path.GetFileNameWithoutExtension(_currentFilePath);
+            }
+        }
+
+
 
         public GraphViewModel()
         {
@@ -114,6 +141,8 @@ namespace DijkstraCoffeeAndCode.ViewModels
             RunDijkstraStepCommand = new RunDijkstraStepCommand(this);
             SaveGraphCommand = new SaveGraphCommand(this);
             LoadGraphCommand = new LoadGraphCommand(this);
+            ImportGraphCommand = new ImportGraphCommand(this);
+            NewGraphCommand = new NewGraphCommand(this);
 
             SetGraph(new Graph());
         }
@@ -131,7 +160,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             _nodeViewCollection = new(_dijkstraGraph.Nodes, DijkstraNodeViewModel.MakeNodeViewModel);
             _nodeViewCollection.AddOrRemove += AddOrRemoveDijkstraNode;
 
-            foreach(var nodeView in _nodeViewCollection.Values)
+            foreach (var nodeView in _nodeViewCollection.Values)
             {
                 AddOrRemoveDijkstraNode(nodeView, true);
             }
@@ -150,9 +179,10 @@ namespace DijkstraCoffeeAndCode.ViewModels
             if (GetFilePath == null) { return; }
             try
             {
-                string filePath = GetFilePath(true, "graph file (*.gxml)|*.gxml");
-                if(String.IsNullOrEmpty(filePath)) { return; }
+                string filePath = GetFilePath(true, GraphFile.FILE_FILTER);
+                if (String.IsNullOrEmpty(filePath)) { return; }
                 SetGraph(Graph.LoadGraph(filePath));
+                CurrentFilePath = filePath;
             }
             catch (Exception e)
             {
@@ -160,14 +190,45 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
         }
 
-        public void SaveGraph()
+        public void ImportGraph()
         {
             if (GetFilePath == null) { return; }
             try
             {
-                string filePath = GetFilePath(false, "graph file (*.gxml)|*.gxml");
+                string filePath = GetFilePath(true, GraphFile.FILE_FILTER);
                 if (String.IsNullOrEmpty(filePath)) { return; }
-                Graph.SaveGraph(_dijkstraGraph, filePath);
+                _dijkstraGraph.ImportGraph(filePath);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+
+        }
+
+        public void NewGraph()
+        {
+            CurrentFilePath = "";
+            SetGraph(new Graph());
+        }
+
+        public void SaveGraph(bool isSaveAs = true)
+        {
+            if (GetFilePath == null) { return; }
+            try
+            {
+                if(isSaveAs || String.IsNullOrEmpty(CurrentFilePath))
+                {
+                    string filePath = GetFilePath(false, GraphFile.FILE_FILTER);
+                    if (String.IsNullOrEmpty(filePath)) { return; }
+                    Graph.SaveGraph(_dijkstraGraph, filePath);
+                    CurrentFilePath = filePath;
+                }
+                else
+                {
+                    Graph.SaveGraph(_dijkstraGraph, CurrentFilePath);
+                }
+
             }
             catch (Exception e)
             {
