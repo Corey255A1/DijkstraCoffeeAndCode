@@ -17,8 +17,37 @@ namespace DijkstraCoffeeAndCode
     {
 
         public GraphViewModel Graph { get; private set; }
+
+
+
+        public int ViewWidth
+        {
+            get { return (int)GetValue(ViewWidthProperty); }
+            set { SetValue(ViewWidthProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ViewWidth.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ViewWidthProperty =
+            DependencyProperty.Register("ViewWidth", typeof(int), typeof(MainWindow), new PropertyMetadata(null));
+
+
+
+        public int ViewHeight
+        {
+            get { return (int)GetValue(ViewHeightProperty); }
+            set { SetValue(ViewHeightProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ViewHeight.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ViewHeightProperty =
+            DependencyProperty.Register("ViewHeight", typeof(int), typeof(MainWindow), new PropertyMetadata(null));
+
+
+
         public MainWindow()
         {
+            ViewWidth = 2048;
+            ViewHeight = 2048;
             Graph = new GraphViewModel();
             Graph.GetFilePath = GetFilePath;
             DataContext = Graph;
@@ -56,6 +85,18 @@ namespace DijkstraCoffeeAndCode
         {
             Point clickPoint = e.GetPosition(sender as FrameworkElement);
             Graph.AddNewNode(clickPoint.X, clickPoint.Y);
+        }
+
+        private void ZoomOutClick(object sender, RoutedEventArgs e)
+        {
+            ViewHeight /= 2;
+            ViewWidth /= 2;
+        }
+
+        private void ZoomInClick(object sender, RoutedEventArgs e)
+        {
+            ViewHeight *= 2;
+            ViewWidth *= 2;
         }
     }
 }
