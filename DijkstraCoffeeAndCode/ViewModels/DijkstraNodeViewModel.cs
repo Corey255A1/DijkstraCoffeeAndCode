@@ -11,6 +11,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
     public class UserInteractionEventArgs : EventArgs
     {
         public UserInteractionState State { get; set; }
+        public object? Data { get; set; }
     }
     public class DijkstraNodeViewModel : DijkstraObjectViewModel
     {
@@ -168,9 +169,9 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public void Move(double dX, double dY)
         {
             SetCenterPosition(X + dX, Y + dY);
-            if (WasMovedWhileInteracting)
+            if (IsInteracting)
             {
-                RaiseUserInteraction(UserInteractionState.ContinueDrag);
+                RaiseUserInteraction(UserInteractionState.ContinueDrag, new Vector2D(dX, dY));
             }
         }
 
@@ -178,15 +179,11 @@ namespace DijkstraCoffeeAndCode.ViewModels
         {
             X = x;
             Y = y;
-            if (IsInteracting)
-            {
-                WasMovedWhileInteracting = true;
-            }
         }
 
-        private void RaiseUserInteraction(UserInteractionState state)
+        private void RaiseUserInteraction(UserInteractionState state, object? data = null)
         {
-            UserInteraction?.Invoke(this, new UserInteractionEventArgs() { State = state });
+            UserInteraction?.Invoke(this, new UserInteractionEventArgs() { State = state, Data=data });
         }
 
         public void BeginInteraction()

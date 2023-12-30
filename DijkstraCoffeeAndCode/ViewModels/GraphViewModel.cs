@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using System.Xml.Linq;
 
 namespace DijkstraCoffeeAndCode.ViewModels
 {
@@ -323,6 +324,20 @@ namespace DijkstraCoffeeAndCode.ViewModels
             else { AddSelectedNode(node); }
         }
 
+        private void ProcessUserDragNode(DijkstraNodeViewModel node, UserInteractionEventArgs e)
+        {
+            if(e.Data == null) { return; }
+            if(!(e.Data is Vector2D positionDelta)){ return; }
+
+            foreach(var selectedNode in SelectedNodes)
+            {
+                if(selectedNode != node)
+                {
+                    selectedNode.Move(positionDelta.X, positionDelta.Y);
+                }
+            }
+        }
+
         private void NodeUserInteractionHandler(object? sender, UserInteractionEventArgs e)
         {
             if (!(sender is DijkstraNodeViewModel node)) { return; }
@@ -336,7 +351,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
                     OnGraphChanged();
                     break;
                 case UserInteractionState.ContinueDrag:
-                    OnGraphChanged();
+                    ProcessUserDragNode(node, e);
                     break;
                 case UserInteractionState.EndInteraction:
                     if (!node.WasMovedWhileInteracting)
