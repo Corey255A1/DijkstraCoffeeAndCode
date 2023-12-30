@@ -1,4 +1,5 @@
 ﻿// WUNDERVISION 2018
+using DijkstraAlgorithm;
 using DijkstraCoffeeAndCode.ViewModels;
 using Microsoft.Win32;
 using System;
@@ -18,40 +19,59 @@ namespace DijkstraCoffeeAndCode
 
         public GraphViewModel Graph { get; private set; }
 
-
-
-        public int ViewWidth
+        public double ViewWidth
         {
-            get { return (int)GetValue(ViewWidthProperty); }
+            get { return (double)GetValue(ViewWidthProperty); }
             set { SetValue(ViewWidthProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for ViewWidth.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ViewWidthProperty =
-            DependencyProperty.Register("ViewWidth", typeof(int), typeof(MainWindow), new PropertyMetadata(null));
+            DependencyProperty.Register("ViewWidth", typeof(double), typeof(MainWindow), new PropertyMetadata(null));
 
 
-
-        public int ViewHeight
+        public double ViewHeight
         {
-            get { return (int)GetValue(ViewHeightProperty); }
+            get { return (double)GetValue(ViewHeightProperty); }
             set { SetValue(ViewHeightProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for ViewHeight.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ViewHeightProperty =
-            DependencyProperty.Register("ViewHeight", typeof(int), typeof(MainWindow), new PropertyMetadata(null));
+            DependencyProperty.Register("ViewHeight", typeof(double), typeof(MainWindow), new PropertyMetadata(null));
+
+        private const int VIEW_SIZE = 2048;
+        private double _zoomLevel = 0.9;
+        public double ZoomLevel
+        {
+            get => _zoomLevel;
+            set
+            {
+                _zoomLevel = value;
+                if (_zoomLevel > 1.5) { _zoomLevel = 1.5; }
+                else if (_zoomLevel < 0.5) { _zoomLevel = 0.5; }
+
+                ViewHeight = VIEW_SIZE * _zoomLevel;
+                ViewWidth = VIEW_SIZE * _zoomLevel;
+            }
+        }
+
 
 
 
         public MainWindow()
         {
-            ViewWidth = 2048;
-            ViewHeight = 2048;
+            ViewWidth = VIEW_SIZE;
+            ViewHeight = VIEW_SIZE;
+            ZoomLevel = 0.8;
             Graph = new GraphViewModel();
             Graph.GetFilePath = GetFilePath;
+            Graph.MessageEvent += GraphMessageEvent;
             DataContext = Graph;
             InitializeComponent();
+        }
+
+        private void GraphMessageEvent(string message)
+        {
+            MessageBox.Show(message);
         }
 
         private string GetFilePath(bool isOpen, string extensions)
@@ -87,16 +107,19 @@ namespace DijkstraCoffeeAndCode
             Graph.AddNewNode(clickPoint.X, clickPoint.Y);
         }
 
+        private void ScaleZoom(double scale)
+        {
+            ZoomLevel *= scale;
+        }
+
         private void ZoomOutClick(object sender, RoutedEventArgs e)
         {
-            ViewHeight /= 2;
-            ViewWidth /= 2;
+            ScaleZoom(0.8);
         }
 
         private void ZoomInClick(object sender, RoutedEventArgs e)
         {
-            ViewHeight *= 2;
-            ViewWidth *= 2;
+            ScaleZoom(1.2);
         }
     }
 }

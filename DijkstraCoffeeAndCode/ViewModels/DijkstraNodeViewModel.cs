@@ -28,23 +28,31 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public bool IsStartNode
         {
             get { return _isStartNode; }
-            set {
-                _isStartNode = value;                
+            set
+            {
+                if (_isStartNode == value) { return; }
+                _isStartNode = value;
                 Notify();
-                _isEndNode = false;
-                Notify(nameof(IsEndNode));
+                if (_isStartNode)
+                {
+                    IsEndNode = false;
+                }
             }
         }
 
         private bool _isEndNode = false;
         public bool IsEndNode
-        {   
+        {
             get { return _isEndNode; }
-            set { 
+            set
+            {
+                if (_isEndNode == value) { return; }
                 _isEndNode = value;
                 Notify();
-                _isStartNode = false;
-                Notify(nameof(IsStartNode));
+                if (_isEndNode)
+                {
+                    IsStartNode = false;
+                }
             }
         }
 
@@ -98,12 +106,12 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
         public double Left
         {
-            get => Node.Point.X - (Width/2);
+            get => Node.Point.X - (Width / 2);
         }
 
         public double Top
         {
-            get => Node.Point.Y - (Height/2);
+            get => Node.Point.Y - (Height / 2);
         }
 
         public double ZIndex
@@ -207,7 +215,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public void EndInteraction()
         {
             IsInteracting = false;
-            RaiseUserInteraction(UserInteractionState.EndInteraction);            
+            RaiseUserInteraction(UserInteractionState.EndInteraction);
         }
 
         public void UserCommandSetStart()

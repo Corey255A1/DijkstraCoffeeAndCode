@@ -94,7 +94,7 @@
             <TabItem Header="Execute">
                 <StackPanel Orientation="Horizontal">
                     <GroupBox Header="Solve Method" Padding="4">
-                        <ComboBox ItemsSource="{Binding AlgorithmExecutionModes}" SelectedItem="{Binding SelectedExecutionMode}" VerticalContentAlignment="Center"/>
+                        <ComboBox x:Name="executionModeSelection" ItemsSource="{Binding AlgorithmExecutionModes}" SelectedItem="{Binding SelectedExecutionMode, Delay=10}" VerticalContentAlignment="Center"/>
                     </GroupBox>
                     <Button Content="Solve Now" Command="{Binding RunDijkstraAlgorithmCommand}"/>
                     <Button Content="Take Step" Command="{Binding RunDijkstraStepCommand}"/>

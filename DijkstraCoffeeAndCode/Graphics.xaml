@@ -84,8 +84,11 @@
                         </Grid.RowDefinitions>
                         <TabPanel IsItemsHost="True" Margin="10,0,8,-1" Panel.ZIndex="1"/>
                         <Border Grid.Row="1" Background="{TemplateBinding Background}"
-                                CornerRadius="8,8,0,0" BorderThickness="1" BorderBrush="Black" Padding="4">
+                                CornerRadius="8" BorderThickness="1" BorderBrush="Black" Padding="4">
                             <ContentPresenter ContentSource="SelectedContent"/>
+                            <Border.BitmapEffect>
+                                <DropShadowBitmapEffect ShadowDepth="1" Softness="0.2"/>
+                            </Border.BitmapEffect>
                         </Border>
                     </Grid>
                 </ControlTemplate>

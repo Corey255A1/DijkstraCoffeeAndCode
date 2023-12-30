@@ -19,6 +19,8 @@ using System.Windows.Input;
 namespace DijkstraCoffeeAndCode.ViewModels
 {
     public enum AlgorithmExecutionModeEnum { Manual, OnEnd, Continuous };
+    public delegate string GetFilePath(bool isOpen, string fileExtensions);
+    public delegate void MessageEvent(string message);
     public class GraphViewModel : INotifyPropertyChanged
     {
         public const int MAX_SELECTED_NODES = 2;
@@ -34,20 +36,13 @@ namespace DijkstraCoffeeAndCode.ViewModels
             {
                 if (_startNode != null) { _startNode.IsStartNode = false; }
                 _startNode = value;
-                if (_startNode == null)
-                {
-                    ResetAllDijkstraViewObjects();
-                }
-                else
+                if (_startNode != null)
                 {
                     if (_endNode == _startNode) { EndNode = null; }
                     _startNode.IsStartNode = true;
-                    if (SelectedExecutionMode != AlgorithmExecutionModeEnum.Manual)
-                    {
-                        RunDijkstraAlgorithm();
-                    }
                 }
                 Notify();
+                OnGraphChanged();
             }
         }
 
@@ -59,20 +54,13 @@ namespace DijkstraCoffeeAndCode.ViewModels
             {
                 if (_endNode != null) { _endNode.IsEndNode = false; }
                 _endNode = value;
-                if (_endNode == null)
-                {
-                    ResetAllDijkstraViewObjects();
-                }
-                else
+                if (_endNode != null)
                 {
                     if (_endNode == _startNode) { StartNode = null; }
                     _endNode.IsEndNode = true;
-                    if (SelectedExecutionMode != AlgorithmExecutionModeEnum.Manual)
-                    {
-                        RunDijkstraAlgorithm();
-                    }
                 }
                 Notify();
+                OnGraphChanged();
             }
         }
 
@@ -97,10 +85,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
                 if (_selectedExecutionMode == value) { return; }
                 _selectedExecutionMode = value;
                 Notify();
-                if (_selectedExecutionMode != AlgorithmExecutionModeEnum.Manual)
-                {
-                    RunDijkstraAlgorithm();
-                }
+                OnGraphChanged();
             }
         }
 
@@ -128,7 +113,8 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public ICommand ImportGraphCommand { get; set; }
         public ICommand NewGraphCommand { get; set; }
 
-        public Func<bool, string, string>? GetFilePath { get; set; }
+        public GetFilePath? GetFilePath { get; set; }
+        public event MessageEvent MessageEvent;
 
         private string _currentFilePath = "";
 
@@ -151,8 +137,6 @@ namespace DijkstraCoffeeAndCode.ViewModels
                 return Path.GetFileNameWithoutExtension(_currentFilePath);
             }
         }
-
-
 
         public GraphViewModel()
         {
@@ -197,68 +181,6 @@ namespace DijkstraCoffeeAndCode.ViewModels
             foreach (var edgeView in _edgeViewCollection.Values)
             {
                 AddOrRemoveDijkstraEdge(edgeView, true);
-            }
-        }
-
-        public void LoadGraph()
-        {
-            if (GetFilePath == null) { return; }
-            try
-            {
-                string filePath = GetFilePath(true, GraphFile.FILE_FILTER);
-                if (String.IsNullOrEmpty(filePath)) { return; }
-                SetGraph(Graph.LoadGraph(filePath));
-                CurrentFilePath = filePath;
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.Message);
-            }
-        }
-
-        public void ImportGraph()
-        {
-            if (GetFilePath == null) { return; }
-            try
-            {
-                string filePath = GetFilePath(true, GraphFile.FILE_FILTER);
-                if (String.IsNullOrEmpty(filePath)) { return; }
-                _dijkstraGraph.ImportGraph(filePath);
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.Message);
-            }
-
-        }
-
-        public void NewGraph()
-        {
-            CurrentFilePath = "";
-            SetGraph(new Graph());
-        }
-
-        public void SaveGraph(bool isSaveAs = true)
-        {
-            if (GetFilePath == null) { return; }
-            try
-            {
-                if (isSaveAs || String.IsNullOrEmpty(CurrentFilePath))
-                {
-                    string filePath = GetFilePath(false, GraphFile.FILE_FILTER);
-                    if (String.IsNullOrEmpty(filePath)) { return; }
-                    Graph.SaveGraph(_dijkstraGraph, filePath);
-                    CurrentFilePath = filePath;
-                }
-                else
-                {
-                    Graph.SaveGraph(_dijkstraGraph, CurrentFilePath);
-                }
-
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.Message);
             }
         }
 
@@ -364,7 +286,14 @@ namespace DijkstraCoffeeAndCode.ViewModels
         {
             if (SelectedExecutionMode != AlgorithmExecutionModeEnum.Manual)
             {
-                RunDijkstraAlgorithm();
+                if (StartNode == null || EndNode == null)
+                {
+                    ResetAllDijkstraViewObjects();
+                }
+                else
+                {
+                    RunDijkstraAlgorithm();
+                }
             }
         }
 
@@ -407,16 +336,10 @@ namespace DijkstraCoffeeAndCode.ViewModels
                     ResetAlgorithm();
                     break;
                 case UserInteractionState.EndDrag:
-                    if (SelectedExecutionMode == AlgorithmExecutionModeEnum.OnEnd)
-                    {
-                        RunDijkstraAlgorithm();
-                    }
+                    OnGraphChanged();
                     break;
                 case UserInteractionState.ContinueDrag:
-                    if (SelectedExecutionMode == AlgorithmExecutionModeEnum.Continuous)
-                    {
-                        RunDijkstraAlgorithm();
-                    }
+                    OnGraphChanged();
                     break;
                 case UserInteractionState.EndInteraction:
                     if (!node.WasMovedWhileInteracting)
@@ -521,6 +444,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
             catch (Exception e)
             {
+                MessageEvent?.Invoke("Could not run algorithm on current graph");
                 Debug.WriteLine(e.ToString());
             }
         }
@@ -535,9 +459,82 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
             catch (Exception e)
             {
+                MessageEvent?.Invoke("Could not run algorithm on current graph");
+                // Set to manual mode to prevent slamming the algorithm with invalid graphs.
+                if(SelectedExecutionMode != AlgorithmExecutionModeEnum.Manual)
+                {
+                    SelectedExecutionMode = AlgorithmExecutionModeEnum.Manual;
+                }
                 Debug.WriteLine(e.ToString());
             }
 
         }
+
+        public void LoadGraph()
+        {
+            if (GetFilePath == null) { return; }
+            try
+            {
+                string filePath = GetFilePath(true, GraphFile.FILE_FILTER);
+                if (String.IsNullOrEmpty(filePath)) { return; }
+                SetGraph(Graph.LoadGraph(filePath));
+                CurrentFilePath = filePath;
+            }
+            catch (Exception e)
+            {
+                MessageEvent?.Invoke("Could Not Load Graph");
+                Debug.WriteLine(e.Message);
+            }
+        }
+
+        public void ImportGraph()
+        {
+            if (GetFilePath == null) { return; }
+            try
+            {
+                string filePath = GetFilePath(true, GraphFile.FILE_FILTER);
+                if (String.IsNullOrEmpty(filePath)) { return; }
+                _dijkstraGraph.ImportGraph(filePath);
+            }
+            catch (Exception e)
+            {
+                MessageEvent?.Invoke("Could Not Import Graph");
+                Debug.WriteLine(e.Message);
+            }
+
+        }
+
+        public void NewGraph()
+        {
+            CurrentFilePath = "";
+            SetGraph(new Graph());
+        }
+
+        public void SaveGraph(bool isSaveAs = true)
+        {
+            if (GetFilePath == null) { return; }
+            try
+            {
+                if (isSaveAs || String.IsNullOrEmpty(CurrentFilePath))
+                {
+                    string filePath = GetFilePath(false, GraphFile.FILE_FILTER);
+                    if (String.IsNullOrEmpty(filePath)) { return; }
+                    Graph.SaveGraph(_dijkstraGraph, filePath);
+                    CurrentFilePath = filePath;
+                }
+                else
+                {                    
+                    Graph.SaveGraph(_dijkstraGraph, CurrentFilePath);
+                }
+
+            }
+            catch (Exception e)
+            {
+                MessageEvent?.Invoke("Could Not Save Graph");
+                Debug.WriteLine(e.Message);
+            }
+        }
+
+
     }
 }
