@@ -1,12 +1,5 @@
-﻿// WUNDERVISION 2018
-// https://www.wundervisionengineering.com
-
-// WunderVision Complete Refactor in 2023
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using static DijkstraAlgorithm.Dijkstra;
+﻿// WunderVision 2023
+// https://www.wundervisionengineering.com/
 
 namespace DijkstraAlgorithm
 {

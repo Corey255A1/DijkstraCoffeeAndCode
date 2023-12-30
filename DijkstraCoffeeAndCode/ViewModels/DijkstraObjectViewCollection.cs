@@ -1,11 +1,9 @@
-﻿using DijkstraAlgorithm;
+﻿// WunderVision 2023
+// https://www.wundervisionengineering.com/
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DijkstraCoffeeAndCode.ViewModels
 {
@@ -14,8 +12,8 @@ namespace DijkstraCoffeeAndCode.ViewModels
         private Dictionary<K, V> _objectToViewModel = new();
         private Func<K, V> viewFactory;
 
-        public IEnumerable<K> Keys { get=>_objectToViewModel.Keys; }
-        public IEnumerable<V> Values { get=>_objectToViewModel.Values; }
+        public IEnumerable<K> Keys { get => _objectToViewModel.Keys; }
+        public IEnumerable<V> Values { get => _objectToViewModel.Values; }
 
         public event DijkstraObjectViewCollectionEvent? AddOrRemove;
         public DijkstraObjectViewCollection(ObservableCollection<K> collection, Func<K, V> objectToViewModel)
@@ -23,7 +21,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             collection.CollectionChanged += CollectionChangedHandler;
             viewFactory = objectToViewModel;
 
-            foreach(var item in collection)
+            foreach (var item in collection)
             {
                 AddNewObjectViewModel(item);
             }

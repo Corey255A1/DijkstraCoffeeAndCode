@@ -1,12 +1,8 @@
-﻿// WUNDERVISION 2018
-using DijkstraAlgorithm;
+﻿// WunderVision 2023
+// https://www.wundervisionengineering.com/
 using DijkstraCoffeeAndCode.ViewModels;
 using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode

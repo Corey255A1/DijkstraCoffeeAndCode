@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// WunderVision 2023
+// https://www.wundervisionengineering.com/
+using System;
 using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.ViewModels.Commands
@@ -20,7 +18,7 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
 
         private void ViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == nameof(_viewModel.StartNode) || 
+            if (e.PropertyName == nameof(_viewModel.StartNode) ||
                 e.PropertyName == nameof(_viewModel.EndNode) ||
                 e.PropertyName == nameof(_viewModel.SelectedExecutionMode))
             {
@@ -35,8 +33,8 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
 
         public bool CanExecute(object? parameter)
         {
-            return _viewModel.StartNode != null && 
-                _viewModel.EndNode != null && 
+            return _viewModel.StartNode != null &&
+                _viewModel.EndNode != null &&
                 _viewModel.SelectedExecutionMode == AlgorithmExecutionModeEnum.Manual;
         }
 

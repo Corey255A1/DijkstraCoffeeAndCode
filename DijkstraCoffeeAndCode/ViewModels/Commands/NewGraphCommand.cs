@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.ViewModels.Commands
 {
-    public class NewGraphCommand: ICommand
+    public class NewGraphCommand : ICommand
     {
         public event EventHandler? CanExecuteChanged;
 

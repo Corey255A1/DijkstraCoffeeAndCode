@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.ViewModels.Commands
@@ -20,7 +16,7 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
 
         private void ViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == nameof(_viewModel.IsEndNode))
+            if (e.PropertyName == nameof(_viewModel.IsEndNode))
             {
                 CanExecuteChanged?.Invoke(this, new EventArgs());
             }

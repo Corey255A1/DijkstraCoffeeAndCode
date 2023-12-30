@@ -1,10 +1,7 @@
-﻿using DijkstraAlgorithm.File;
-using System;
-using System.Collections.Generic;
+﻿// WunderVision 2023
+// https://www.wundervisionengineering.com/
+using DijkstraAlgorithm.File;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DijkstraAlgorithm
 {

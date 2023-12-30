@@ -1,6 +1,5 @@
 ﻿// WunderVision 2023
-// https://www.wundervisionengineering.com
-
+// https://www.wundervisionengineering.com/
 namespace DijkstraAlgorithm
 {
     public delegate void VectorChangedEvent(Vector2D position);

@@ -1,8 +1,5 @@
-﻿// WUNDERVISION 2018
-// https://www.wundervisionengineering.com
-
-// WunderVision Complete Refactor in 2023
-
+﻿// WunderVision 2023
+// https://www.wundervisionengineering.com/
 namespace DijkstraAlgorithm
 {
     public class Edge
@@ -36,8 +33,8 @@ namespace DijkstraAlgorithm
 
         public Node GetOtherNode(Node node)
         {
-            if(Node1 == node) { return Node2; }
-            else if(Node2 == node) { return Node1; }
+            if (Node1 == node) { return Node2; }
+            else if (Node2 == node) { return Node1; }
 
             throw new Exception("Node not part of this Edge");
         }

@@ -1,6 +1,5 @@
 ﻿// WunderVision 2023
-// https://www.wundervisionengineering.com
-
+// https://www.wundervisionengineering.com/
 using DijkstraAlgorithm;
 
 Console.WriteLine("Welcome to the Dijsktra Console");

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-
+﻿// WunderVision 2023
+// https://www.wundervisionengineering.com/
 namespace DijkstraAlgorithm
 {
     public class DijkstraState

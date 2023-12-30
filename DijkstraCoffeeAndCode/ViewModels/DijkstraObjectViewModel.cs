@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// WunderVision 2023
+// https://www.wundervisionengineering.com/
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DijkstraCoffeeAndCode.ViewModels
 {
@@ -37,7 +34,8 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
         }
 
-        public virtual void Reset() { 
+        public virtual void Reset()
+        {
             IsHighlighted = false;
             IsHighlightedAlternate = false;
         }

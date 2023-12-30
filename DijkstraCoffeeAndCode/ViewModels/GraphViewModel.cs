@@ -1,19 +1,16 @@
-﻿using DijkstraAlgorithm;
+﻿// WunderVision 2023
+// https://www.wundervisionengineering.com/
+using DijkstraAlgorithm;
 using DijkstraAlgorithm.File;
 using DijkstraCoffeeAndCode.ViewModels.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.ViewModels
@@ -461,7 +458,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             {
                 MessageEvent?.Invoke("Could not run algorithm on current graph");
                 // Set to manual mode to prevent slamming the algorithm with invalid graphs.
-                if(SelectedExecutionMode != AlgorithmExecutionModeEnum.Manual)
+                if (SelectedExecutionMode != AlgorithmExecutionModeEnum.Manual)
                 {
                     SelectedExecutionMode = AlgorithmExecutionModeEnum.Manual;
                 }
@@ -523,7 +520,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
                     CurrentFilePath = filePath;
                 }
                 else
-                {                    
+                {
                     Graph.SaveGraph(_dijkstraGraph, CurrentFilePath);
                 }
 

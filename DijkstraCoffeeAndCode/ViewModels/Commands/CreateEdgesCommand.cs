@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.ViewModels.Commands
@@ -12,7 +8,8 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
         public event EventHandler? CanExecuteChanged;
 
         private GraphViewModel _viewModel;
-        public CreateEdgesCommand(GraphViewModel viewModel) { 
+        public CreateEdgesCommand(GraphViewModel viewModel)
+        {
             _viewModel = viewModel;
             _viewModel.SelectedNodes.CollectionChanged += SelectedNodesCollectionChanged;
         }

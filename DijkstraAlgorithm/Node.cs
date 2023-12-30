@@ -1,9 +1,6 @@
-﻿// WUNDERVISION 2018
-// https://www.wundervisionengineering.com
-
-// WunderVision Complete Refactor in 2023
+﻿// WunderVision 2023
+// https://www.wundervisionengineering.com/
 using System.Collections.ObjectModel;
-using System.Security.Cryptography;
 
 namespace DijkstraAlgorithm
 {

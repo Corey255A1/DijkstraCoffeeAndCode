@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
-using System.Windows.Media;
 
 namespace DijkstraCoffeeAndCode.ViewModels
 {
@@ -14,8 +9,9 @@ namespace DijkstraCoffeeAndCode.ViewModels
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if(value is double number && parameter is double hideValue) { 
-                if(number == hideValue || number == double.MaxValue)
+            if (value is double number && parameter is double hideValue)
+            {
+                if (number == hideValue || number == double.MaxValue)
                 {
                     return Visibility.Collapsed;
                 }
@@ -29,7 +25,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
         }
     }
 
-    public class DoubleToIntStringConverter: IValueConverter
+    public class DoubleToIntStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

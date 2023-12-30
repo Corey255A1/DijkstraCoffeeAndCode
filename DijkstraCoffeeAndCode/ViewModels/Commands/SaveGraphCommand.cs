@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.ViewModels.Commands
 {
-    public class SaveGraphCommand: ICommand
+    public class SaveGraphCommand : ICommand
     {
         public event EventHandler? CanExecuteChanged;
 
@@ -25,7 +21,7 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
         public void Execute(object? parameter)
         {
             bool isSaveAs = false;
-            if(parameter != null && parameter.GetType() == typeof(bool))
+            if (parameter != null && parameter.GetType() == typeof(bool))
             {
                 isSaveAs = (bool)parameter;
             }

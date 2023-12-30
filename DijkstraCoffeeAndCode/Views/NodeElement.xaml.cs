@@ -1,10 +1,8 @@
 ﻿// WUNDERVISION 2018
 using DijkstraCoffeeAndCode.ViewModels;
-using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace DijkstraCoffeeAndCode.Views
 {
@@ -49,7 +47,7 @@ namespace DijkstraCoffeeAndCode.Views
             ((UIElement)sender).ReleaseMouseCapture();
             e.Handled = true;
             _checkingForDragThreshold = false;
-            if(_viewModel.WasMovedWhileInteracting)
+            if (_viewModel.WasMovedWhileInteracting)
             {
                 _viewModel.EndDrag();
             }
@@ -78,7 +76,7 @@ namespace DijkstraCoffeeAndCode.Views
                 _checkingForDragThreshold = false;
                 _viewModel.BeginDrag();
             }
-            
+
             if (_viewModel.WasMovedWhileInteracting)
             {
                 _viewModel.Move(deltaPoint.X, deltaPoint.Y);
