@@ -21,8 +21,6 @@ namespace DijkstraCoffeeAndCode.ViewModels
     public delegate void MessageEvent(string message);
     public class GraphViewModel : INotifyPropertyChanged
     {
-        public const int MAX_SELECTED_NODES = 2;
-
         public event PropertyChangedEventHandler? PropertyChanged;
         private void Notify([CallerMemberName] string name = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
@@ -98,6 +96,13 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
         public ObservableCollection<DijkstraObjectViewModel> DijkstraViewObjects { get; private set; } = new();
         public ObservableCollection<DijkstraNodeViewModel> SelectedNodes { get; private set; } = new();
+        public DijkstraNodeViewModel? SelectedNode
+        {
+            get
+            {
+                return SelectedNodes.Count == 0 ? null : SelectedNodes[0];
+            }
+        }
 
         public ICommand CreateEdgesCommand { get; set; }
         public ICommand DeleteSelectedNodesCommand { get; set; }
@@ -110,6 +115,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public ICommand LoadGraphCommand { get; set; }
         public ICommand ImportGraphCommand { get; set; }
         public ICommand NewGraphCommand { get; set; }
+        public ICommand ResetGraphCommand { get; set; }
 
         public GetFilePath? GetFilePath { get; set; }
         public event MessageEvent MessageEvent;
@@ -149,6 +155,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             LoadGraphCommand = new LoadGraphCommand(this);
             ImportGraphCommand = new ImportGraphCommand(this);
             NewGraphCommand = new NewGraphCommand(this);
+            ResetGraphCommand = new ResetGraphCommand(this);
 
             SetGraph(new Graph());
         }
@@ -158,7 +165,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             StartNode = null;
             EndNode = null;
             DijkstraViewObjects.Clear();
-            SelectedNodes.Clear();
+            ClearSelectedNodes();
         }
 
         private void SetGraph(Graph graph)
@@ -302,40 +309,71 @@ namespace DijkstraCoffeeAndCode.ViewModels
                 node.IsSelected = false;
             }
             SelectedNodes.Clear();
+            Notify(nameof(SelectedNode));
         }
 
-        public void AddSelectedNode(DijkstraNodeViewModel node)
+        private bool IsMultiSelectMode()
         {
-            if (SelectedNodes.Contains(node)) { return; }
+            return Keyboard.GetKeyStates(Key.LeftShift).HasFlag(KeyStates.Down) ||
+                Keyboard.GetKeyStates(Key.RightShift).HasFlag(KeyStates.Down);
+
+        }
+
+        public void AddSelectedNode(DijkstraNodeViewModel node, bool isMultiSelect = false)
+        {
+            if (SelectedNodes.Contains(node) && isMultiSelect) { return; }
+            if (!isMultiSelect) { ClearSelectedNodes(); }
 
             node.IsSelected = true;
             SelectedNodes.Add(node);
+            Notify(nameof(SelectedNode));
         }
 
         public void RemoveSelectedNode(DijkstraNodeViewModel node)
         {
             node.IsSelected = false;
             SelectedNodes.Remove(node);
+            Notify(nameof(SelectedNode));
         }
 
-        public void ToggleSelectedNode(DijkstraNodeViewModel node)
+        public void ToggleSelectedNode(DijkstraNodeViewModel node, bool isMultiSelect = false)
         {
-            if (node.IsSelected) { RemoveSelectedNode(node); }
-            else { AddSelectedNode(node); }
+            if (node.IsSelected)
+            {
+                if (SelectedNodes.Count > 0 && !isMultiSelect)
+                {
+                    AddSelectedNode(node, false);
+                }
+                else
+                {
+                    RemoveSelectedNode(node);
+                }
+            }
+            else { AddSelectedNode(node, isMultiSelect); }
+        }
+
+        private void MoveOtherSelectedNodes(DijkstraNodeViewModel dragNode, double dX, double dY)
+        {
+            foreach (var selectedNode in SelectedNodes)
+            {
+                if (selectedNode != dragNode)
+                {
+                    selectedNode.Move(dX, dY);
+                }
+            }
         }
 
         private void ProcessUserDragNode(DijkstraNodeViewModel node, UserInteractionEventArgs e)
         {
-            if(e.Data == null) { return; }
-            if(!(e.Data is Vector2D positionDelta)){ return; }
-
-            foreach(var selectedNode in SelectedNodes)
+            if(SelectedExecutionMode == AlgorithmExecutionModeEnum.Continuous)
             {
-                if(selectedNode != node)
-                {
-                    selectedNode.Move(positionDelta.X, positionDelta.Y);
-                }
+                OnGraphChanged();
             }
+            if (!IsMultiSelectMode()) { return; }
+            if (e.Data == null) { return; }
+            if (!(e.Data is Vector2D positionDelta)) { return; }
+
+            MoveOtherSelectedNodes(node, positionDelta.X, positionDelta.Y);
         }
 
         private void NodeUserInteractionHandler(object? sender, UserInteractionEventArgs e)
@@ -348,7 +386,10 @@ namespace DijkstraCoffeeAndCode.ViewModels
                     ResetAlgorithm();
                     break;
                 case UserInteractionState.EndDrag:
-                    OnGraphChanged();
+                    if (SelectedExecutionMode == AlgorithmExecutionModeEnum.OnEnd)
+                    {
+                        OnGraphChanged();
+                    }
                     break;
                 case UserInteractionState.ContinueDrag:
                     ProcessUserDragNode(node, e);
@@ -356,7 +397,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
                 case UserInteractionState.EndInteraction:
                     if (!node.WasMovedWhileInteracting)
                     {
-                        ToggleSelectedNode(node);
+                        ToggleSelectedNode(node, IsMultiSelectMode());
                     }
                     break;
                 case UserInteractionState.SetAsStart: StartNode = node; break;
@@ -371,7 +412,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             ResetAllDijkstraViewObjects();
         }
 
-        private void ResetAllDijkstraViewObjects()
+        public void ResetAllDijkstraViewObjects()
         {
             foreach (var dijkstraObject in DijkstraViewObjects)
             {
@@ -471,7 +512,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
             catch (Exception e)
             {
-                MessageEvent?.Invoke("Could not run algorithm on current graph");
+                MessageEvent?.Invoke("Could Not Run Algorithm On Current Graph");
                 // Set to manual mode to prevent slamming the algorithm with invalid graphs.
                 if (SelectedExecutionMode != AlgorithmExecutionModeEnum.Manual)
                 {

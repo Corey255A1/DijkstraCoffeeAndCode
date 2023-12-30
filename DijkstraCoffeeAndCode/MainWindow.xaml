@@ -19,16 +19,20 @@
             <Binding Path="CurrentFileName"/>
         </MultiBinding>
     </Window.Title>
+    <Window.Resources>
+        <vm:NullToVisibility x:Key="nullToVisible"/>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="60"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
+        <Grid.RowDefinitions>            
             <RowDefinition/>
+            <RowDefinition Height="60"/>
             <RowDefinition Height="120"/>
         </Grid.RowDefinitions>
-        <ScrollViewer Grid.RowSpan="2" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.RowSpan="3" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Auto">
             <Viewbox Stretch="UniformToFill" Height="{Binding ViewHeight, ElementName=window}" Width="{Binding ViewWidth, ElementName=window}">
                 <ItemsControl Background="ForestGreen" Width="2048" Height="2048" Grid.Row="0" ItemsSource="{Binding Path=DijkstraViewObjects}" 
                           MouseRightButtonDown="CanvasMouseRightButtonDown" MouseLeftButtonDown="CanvasMouseLeftButtonDown">
@@ -55,12 +59,14 @@
                 </ItemsControl>
             </Viewbox>
         </ScrollViewer>
-        <StackPanel VerticalAlignment="Center">
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,0,40,0">
+            <views:NodeProperties DataContext="{Binding SelectedNode}" Visibility="{Binding Converter={StaticResource nullToVisible}}"/>
+        </StackPanel>
+        <StackPanel Grid.RowSpan="2" VerticalAlignment="Center">
             <Button MinWidth="0" Width="40" Height="40" Click="ZoomInClick">+</Button>
             <Button MinWidth="0" Width="40" Height="40" Click="ZoomOutClick">-</Button>
         </StackPanel>
-
-        <TabControl Grid.Row="1" Grid.ColumnSpan="2" Width="600" Margin="0,0,0,20">
+        <TabControl Grid.Row="2" Grid.ColumnSpan="2" Width="600" Margin="0,0,0,20">
             <TabItem Header="File">
                 <StackPanel Orientation="Horizontal">
                     <Button Content="New" Command="{Binding NewGraphCommand}"/>
@@ -98,7 +104,7 @@
                     </GroupBox>
                     <Button Content="Solve Now" Command="{Binding RunDijkstraAlgorithmCommand}"/>
                     <Button Content="Take Step" Command="{Binding RunDijkstraStepCommand}"/>
-                    <Button Content="Reset" Command="{Binding RunDijkstraStepCommand}"/>
+                    <Button Content="Reset" Command="{Binding ResetGraphCommand}"/>
                 </StackPanel>
             </TabItem>
         </TabControl>

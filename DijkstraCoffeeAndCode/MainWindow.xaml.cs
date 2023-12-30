@@ -50,9 +50,6 @@ namespace DijkstraCoffeeAndCode
             }
         }
 
-
-
-
         public MainWindow()
         {
             ViewWidth = VIEW_SIZE;

@@ -183,7 +183,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
         private void RaiseUserInteraction(UserInteractionState state, object? data = null)
         {
-            UserInteraction?.Invoke(this, new UserInteractionEventArgs() { State = state, Data=data });
+            UserInteraction?.Invoke(this, new UserInteractionEventArgs() { State = state, Data = data });
         }
 
         public void BeginInteraction()

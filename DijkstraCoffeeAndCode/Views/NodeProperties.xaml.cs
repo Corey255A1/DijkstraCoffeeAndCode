@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// WunderVision 2023
+// https://www.wundervisionengineering.com/
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace DijkstraCoffeeAndCode.Views
 {
@@ -27,20 +18,18 @@ namespace DijkstraCoffeeAndCode.Views
 
         private void UserControlKeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Enter)
+            if (e.Key == Key.Enter && (sender is TextBox textBox))
             {
-                DependencyObject ancestor = Parent;
-                while (ancestor != null)
-                {
-                    var element = ancestor as UIElement;
-                    if (element != null && element.Focusable)
-                    {
-                        element.Focus();
-                        break;
-                    }
+                // An example of how to explicity update the Text binding of a text box
+                //DependencyProperty prop = TextBox.TextProperty;
+                //BindingExpression binding = BindingOperations.GetBindingExpression(textBox, prop);
+                //if (binding != null) { binding.UpdateSource(); }
 
-                    ancestor = VisualTreeHelper.GetParent(ancestor);
-                }
+                // This clears the focus on the Text Box.. however, it doesn't 
+                // Clear the IsFocused property until a different control is focused.
+                Keyboard.ClearFocus();
+                Window window = Window.GetWindow(textBox);
+                FocusManager.SetFocusedElement(window, window);
             }
         }
     }
