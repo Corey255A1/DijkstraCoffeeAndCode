@@ -104,6 +104,14 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
         }
 
+        private int _shortestPathDistance = 0;
+        public int ShortestPathDistance
+        {
+            get { return _shortestPathDistance; }
+            set { _shortestPathDistance = value; Notify(); }
+        }
+
+
         public ICommand CreateEdgesCommand { get; set; }
         public ICommand DeleteSelectedNodesCommand { get; set; }
         public ICommand DeleteSelectedEdgesCommand { get; set; }
@@ -458,10 +466,12 @@ namespace DijkstraCoffeeAndCode.ViewModels
             if (dijkstraState.IsFinished)
             {
                 var shortestPathList = dijkstraState.GenerateShortestPathList();
+                ShortestPathDistance = (int)Math.Round(dijkstraState.EndNode.RouteSegmentDistance);
                 HighlightRoute(shortestPathList.Select(dijkstraNode => dijkstraNode.Node).ToList());
             }
             else
             {
+                ShortestPathDistance = 0;
                 if (dijkstraState.CurrentNode == null)
                 {
                     throw new Exception("Invalud Dijkstra State");

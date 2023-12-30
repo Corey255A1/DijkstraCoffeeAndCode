@@ -105,6 +105,11 @@
                     <Button Content="Solve Now" Command="{Binding RunDijkstraAlgorithmCommand}"/>
                     <Button Content="Take Step" Command="{Binding RunDijkstraStepCommand}"/>
                     <Button Content="Reset" Command="{Binding ResetGraphCommand}"/>
+                    <TextBlock VerticalAlignment="Center" Margin="8,0" FontSize="16">
+                        <TextBlock.Text>
+                            <Binding Path="ShortestPathDistance" StringFormat="{}Shortest Path: {0}"/>
+                        </TextBlock.Text>
+                    </TextBlock>
                 </StackPanel>
             </TabItem>
         </TabControl>
