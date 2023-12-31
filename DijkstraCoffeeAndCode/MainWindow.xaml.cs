@@ -1,5 +1,6 @@
 ﻿// WunderVision 2023
 // https://www.wundervisionengineering.com/
+using DijkstraAlgorithm;
 using DijkstraCoffeeAndCode.ViewModels;
 using Microsoft.Win32;
 using System.Windows;
@@ -97,7 +98,7 @@ namespace DijkstraCoffeeAndCode
         private void CanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Point clickPoint = e.GetPosition(sender as FrameworkElement);
-            Graph.AddNewNode(clickPoint.X, clickPoint.Y);
+            Graph.MakeNewNodeCommand.Execute(new Vector2D(clickPoint.X, clickPoint.Y));
         }
 
         private void ScaleZoom(double scale)

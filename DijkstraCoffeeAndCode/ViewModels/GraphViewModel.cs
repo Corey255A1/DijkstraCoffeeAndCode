@@ -132,6 +132,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public ICommand ResetGraphCommand { get; set; }
         public ICommand UndoCommand { get; set; }
         public ICommand RedoCommand { get; set; }
+        public ICommand MakeNewNodeCommand { get; set; }
 
         public GetFilePath? GetFilePath { get; set; }
         public event MessageEvent MessageEvent;
@@ -174,6 +175,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             ResetGraphCommand = new ResetGraphCommand(this);
             UndoCommand = new UndoCommand(this);
             RedoCommand = new RedoCommand(this);
+            MakeNewNodeCommand = new MakeNewNodeCommand(this);
 
             SetGraph(new Graph());
         }
@@ -207,7 +209,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
         }
 
-        public void AddNewNode(double x, double y)
+        public void MakeNewNode(double x, double y)
         {
             _dijkstraGraph.AddNode(x, y);
         }

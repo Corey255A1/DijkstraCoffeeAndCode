@@ -1,6 +1,8 @@
-﻿using DijkstraCoffeeAndCode.Utils.UndoManager;
+﻿using DijkstraAlgorithm;
+using DijkstraCoffeeAndCode.Utils.UndoManager;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.ViewModels.Commands
@@ -29,16 +31,16 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
 
         public void Execute(object? parameter)
         {
-            _viewModel.UndoStack.AddItem(new UndoItem(_viewModel, new(_viewModel.SelectedNodes)));
+            _viewModel.UndoStack.AddItem(new UndoItem(_viewModel, new(_viewModel.SelectedNodes.Select(nodeView=>nodeView.Node))));
             _viewModel.CreateEdgesFromSelected();
             _viewModel.ClearSelectedNodes();
         }
 
         private class UndoItem : IUndoItem
         {
-            private List<DijkstraNodeViewModel> _selectedNodesSnapShot;
+            private List<Node> _selectedNodesSnapShot;
             private GraphViewModel _viewModel;
-            public UndoItem(GraphViewModel viewModel, List<DijkstraNodeViewModel> snapShot)
+            public UndoItem(GraphViewModel viewModel, List<Node> snapShot)
             {
                 _viewModel = viewModel;
                 _selectedNodesSnapShot = snapShot;
