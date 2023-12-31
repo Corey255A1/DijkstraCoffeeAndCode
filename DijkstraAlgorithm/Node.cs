@@ -16,9 +16,8 @@ namespace DijkstraAlgorithm
         private Vector2D _point;
         public Vector2D Point => _point;
 
-        private ObservableCollection<Edge> _edges = new ObservableCollection<Edge>();
-        public ObservableCollection<Edge> Edges => _edges;
-        public IEnumerable<Node> Neighbors => _edges.ToList().ConvertAll((edge) => edge.GetOtherNode(this));
+        private ObservableCollection<Node> _neighbors = new ObservableCollection<Node>();
+        public ObservableCollection<Node> Neighbors => _neighbors;
 
         public Node()
         {
@@ -31,10 +30,17 @@ namespace DijkstraAlgorithm
             _id = 0;
             _point = new Vector2D(x, y);
         }
+
         public Node(uint id, double x, double y)
         {
             _id = id;
             _point = new Vector2D(x, y);
+        }
+
+        public Node(Node node)
+        {
+            _id = node._id;
+            _point = new Vector2D(node.Point.X, node.Point.Y);
         }
 
         public double Distance(Node node)
@@ -42,47 +48,41 @@ namespace DijkstraAlgorithm
             return _point.Distance(node._point);
         }
 
-        public Edge? MakeEdge(Node node)
+        private void AddNeighbor(Node node)
         {
-            Edge? edge = FindSharedEdge(node);
-            if (edge != null) { return null; }
-
-            edge = new Edge(this, node);
-            AddEdge(edge);
-            node.AddEdge(edge);
-            return edge;
+            _neighbors.Add(node);            
         }
 
-        private void AddEdge(Edge edge)
+        public Edge? MakeEdge(Node node)
         {
-            _edges.Add(edge);
+            if (_neighbors.Contains(node)) { return null; }
+
+            var edge = new Edge(this, node);
+            AddNeighbor(node);
+            node.AddNeighbor(this);
+            return edge;
         }
 
         public void RemoveEdge(Node node)
         {
-            Edge? edge = FindSharedEdge(node);
-            if (edge == null) { return; }
+            if (!_neighbors.Contains(node)) { return; }
 
-            RemoveEdge(edge);
-            node.RemoveEdge(edge);
+            RemoveNeighbor(node);
+            node.RemoveNeighbor(this);
         }
 
-        private void RemoveEdge(Edge edge)
+        private void RemoveNeighbor(Node node)
         {
-            _edges.Remove(edge);
-        }
-
-        public Edge? FindSharedEdge(Node otherNode)
-        {
-            return _edges.ToList().Find(e => e.GetOtherNode(this) == otherNode);
+            _neighbors.Remove(node);
         }
 
         public void RemoveAllEdges()
         {
-            foreach (Edge edge in _edges)
+            foreach (var node in _neighbors)
             {
-                edge.GetOtherNode(this).RemoveEdge(edge);
+                node.RemoveNeighbor(this);
             }
+            _neighbors.Clear();
         }
     }
 }

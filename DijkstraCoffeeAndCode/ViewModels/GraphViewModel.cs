@@ -2,6 +2,7 @@
 // https://www.wundervisionengineering.com/
 using DijkstraAlgorithm;
 using DijkstraAlgorithm.File;
+using DijkstraCoffeeAndCode.Utils.UndoManager;
 using DijkstraCoffeeAndCode.ViewModels.Commands;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,9 @@ namespace DijkstraCoffeeAndCode.ViewModels
     {
         public event PropertyChangedEventHandler? PropertyChanged;
         private void Notify([CallerMemberName] string name = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+        private UndoStack _undoStack = new UndoStack();
+        public UndoStack UndoStack { get { return _undoStack; } }
 
         private DijkstraNodeViewModel? _startNode = null;
         public DijkstraNodeViewModel? StartNode
@@ -124,6 +128,8 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public ICommand ImportGraphCommand { get; set; }
         public ICommand NewGraphCommand { get; set; }
         public ICommand ResetGraphCommand { get; set; }
+        public ICommand UndoCommand { get; set; }
+        public ICommand RedoCommand { get; set; }
 
         public GetFilePath? GetFilePath { get; set; }
         public event MessageEvent MessageEvent;
@@ -164,6 +170,8 @@ namespace DijkstraCoffeeAndCode.ViewModels
             ImportGraphCommand = new ImportGraphCommand(this);
             NewGraphCommand = new NewGraphCommand(this);
             ResetGraphCommand = new ResetGraphCommand(this);
+            UndoCommand = new UndoCommand(this);
+            RedoCommand = new RedoCommand(this);
 
             SetGraph(new Graph());
         }
@@ -241,7 +249,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
 
             DeleteEdge(SelectedNodes[SelectedNodes.Count - 1], SelectedNodes[0]);
-            ClearSelectedNodes();
+            //ClearSelectedNodes();
         }
 
         public void CreateEdge(DijkstraNodeViewModel node1, DijkstraNodeViewModel node2)
@@ -262,7 +270,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
 
             CreateEdge(SelectedNodes[SelectedNodes.Count - 1], SelectedNodes[0]);
-            ClearSelectedNodes();
+            //ClearSelectedNodes();
         }
 
         private void AddOrRemoveDijkstraEdge(DijkstraObjectViewModel dijkstraObject, bool isAdd)
@@ -310,6 +318,8 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
         }
 
+
+
         public void ClearSelectedNodes()
         {
             foreach (var node in SelectedNodes)
@@ -325,6 +335,15 @@ namespace DijkstraCoffeeAndCode.ViewModels
             return Keyboard.GetKeyStates(Key.LeftShift).HasFlag(KeyStates.Down) ||
                 Keyboard.GetKeyStates(Key.RightShift).HasFlag(KeyStates.Down);
 
+        }
+
+        public void SelectNodes(IEnumerable<DijkstraNodeViewModel> nodes)
+        {
+            foreach (var node in nodes)
+            {
+                AddSelectedNode(node, true);
+            }
+            Notify(nameof(SelectedNode));
         }
 
         public void AddSelectedNode(DijkstraNodeViewModel node, bool isMultiSelect = false)
@@ -440,7 +459,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
                 if (nodeIndex < nodes.Count - 1)
                 {
                     var nextNode = nodes[nodeIndex + 1];
-                    Edge? sharedEdge = currentNode.FindSharedEdge(nextNode);
+                    Edge? sharedEdge = _edgeViewCollection.Keys.FirstOrDefault(edge=>edge.Contains(currentNode, nextNode));
                     if (sharedEdge == null) { throw new Exception("No Edge found between route nodes"); }
 
                     var edgeViewModel = _edgeViewCollection.GetViewModel(sharedEdge);

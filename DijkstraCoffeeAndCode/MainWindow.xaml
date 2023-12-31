@@ -13,6 +13,8 @@
         <KeyBinding Command="{Binding CreateEdgesCommand}" Key="E"/>
         <KeyBinding Command="{Binding DeleteSelectedEdgesCommand}" Modifiers="Shift" Key="E"/>
         <KeyBinding Command="{Binding DeleteSelectedNodesCommand}" Key="Delete"/>
+        <KeyBinding Command="{Binding UndoCommand}" Modifiers="Ctrl" Key="Z"/>
+        <KeyBinding Command="{Binding RedoCommand}" Modifiers="Ctrl" Key="Y"/>
     </Window.InputBindings>
     <Window.Title>
         <MultiBinding StringFormat="{}{0} - WunderVision - Dijkstra Coffee and Code">

@@ -13,12 +13,23 @@ namespace DijkstraAlgorithm
         private ObservableCollection<Edge> _edges;
         public ObservableCollection<Edge> Edges { get { return _edges; } }
 
-        private uint _nodeID = 0;
+        private uint _nextNodeID = 0;
 
         public Graph()
         {
             _nodes = new ObservableCollection<Node>();
             _edges = new ObservableCollection<Edge>();
+        }
+
+        private Graph(uint nextNodeID, IList<Node> nodes, IList<Edge> edges)
+        {
+            _nextNodeID = nextNodeID;
+            _nodes = new ObservableCollection<Node>(nodes.Select(node=>new Node(node)));
+            _edges = new ObservableCollection<Edge>();
+            foreach(var edge in edges)
+            {
+                AddEdge(GetNodeByID(edge.Node1.ID), GetNodeByID(edge.Node2.ID));
+            }
         }
 
         public static Graph LoadGraph(string filePath)
@@ -43,7 +54,7 @@ namespace DijkstraAlgorithm
             GraphFile graphFile = GraphFile.LoadGraph(filePath);
             // When importing, the IDs cannot be the IDs already in the graph.
             // use the initial ID as the offset for the Edges
-            uint nodeIDOffset = _nodeID;
+            uint nodeIDOffset = _nextNodeID;
             foreach (var node in graphFile.Nodes)
             {
                 AddNode(nodeIDOffset + node.ID, node.X, node.Y);
@@ -62,13 +73,13 @@ namespace DijkstraAlgorithm
 
         private uint GetNodeID()
         {
-            _nodeID += 1;
-            return _nodeID;
+            _nextNodeID += 1;
+            return _nextNodeID;
         }
 
         private void AddNode(uint id, double x, double y)
         {
-            _nodeID = Math.Max(id, _nodeID);
+            _nextNodeID = Math.Max(id, _nextNodeID);
             Node node = new(id, x, y);
             _nodes.Add(node);
         }
@@ -124,7 +135,7 @@ namespace DijkstraAlgorithm
 
         public void RemoveEdge(Node node1, Node node2)
         {
-            Edge? edge = node1.FindSharedEdge(node2);
+            Edge? edge = _edges.FirstOrDefault(edge => edge.Contains(node1, node2));
             if (edge == null) { return; }
 
             RemoveEdge(edge);
@@ -138,6 +149,10 @@ namespace DijkstraAlgorithm
             }
         }
 
+        public Graph Copy()
+        {
+            return new Graph(_nextNodeID, _nodes, _edges);
+        }
 
     }
 }

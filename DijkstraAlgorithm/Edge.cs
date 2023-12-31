@@ -13,11 +13,6 @@ namespace DijkstraAlgorithm
             Node2 = node2;
         }
 
-        public static Edge? FindSharedEdge(Node node1, Node node2)
-        {
-            return node1.FindSharedEdge(node2);
-        }
-
         public double Distance
         {
             get => Node1.Distance(Node2);
@@ -29,6 +24,11 @@ namespace DijkstraAlgorithm
             if (Node2 == node) { return true; }
 
             return false;
+        }
+
+        public bool Contains(Node node1, Node node2)
+        {
+            return Contains(node1) && Contains(node2);
         }
 
         public Node GetOtherNode(Node node)
