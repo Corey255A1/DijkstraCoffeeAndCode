@@ -2,6 +2,7 @@
 // https://www.wundervisionengineering.com/
 using DijkstraAlgorithm.File;
 using System.Collections.ObjectModel;
+using System.Xml.Linq;
 
 namespace DijkstraAlgorithm
 {
@@ -87,6 +88,17 @@ namespace DijkstraAlgorithm
         public void AddNode(double x, double y)
         {
             AddNode(GetNodeID(), x, y);
+        }
+
+        public void AddNode(Node node)
+        {
+            if(ContainsNodeID(node.ID)){ return; }
+            _nodes.Add(node);
+        }
+
+        public bool ContainsNodeID(uint id)
+        {
+            return Nodes.FirstOrDefault(node => node.ID == id) != null;
         }
 
         public Node GetNodeByID(uint id)

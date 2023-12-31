@@ -96,6 +96,8 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
         private Graph _dijkstraGraph;
         private DijkstraObjectViewCollection<Node, DijkstraNodeViewModel> _nodeViewCollection;
+        public IEnumerable<Node> Nodes => _nodeViewCollection.Keys;
+
         private DijkstraObjectViewCollection<Edge, DijkstraEdgeViewModel> _edgeViewCollection;
 
         public ObservableCollection<DijkstraObjectViewModel> DijkstraViewObjects { get; private set; } = new();
@@ -210,6 +212,11 @@ namespace DijkstraCoffeeAndCode.ViewModels
             _dijkstraGraph.AddNode(x, y);
         }
 
+        public void AddNode(Node node)
+        {
+            _dijkstraGraph.AddNode(node);
+        }
+
         public void DeleteNode(DijkstraNodeViewModel node)
         {
             _dijkstraGraph.RemoveNode(node.Node);
@@ -254,7 +261,12 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
         public void CreateEdge(DijkstraNodeViewModel node1, DijkstraNodeViewModel node2)
         {
-            _dijkstraGraph.AddEdge(node1.Node, node2.Node);
+            CreateEdge(node1.Node, node2.Node);
+        }
+
+        public void CreateEdge(Node node1, Node node2)
+        {
+            _dijkstraGraph.AddEdge(node1, node2);
         }
 
         public void CreateEdgesFromSelected()
@@ -342,6 +354,15 @@ namespace DijkstraCoffeeAndCode.ViewModels
             foreach (var node in nodes)
             {
                 AddSelectedNode(node, true);
+            }
+            Notify(nameof(SelectedNode));
+        }
+
+        public void SelectNodes(IEnumerable<Node> nodes)
+        {
+            foreach (var node in nodes)
+            {
+                AddSelectedNode(_nodeViewCollection.GetViewModel(node), true);
             }
             Notify(nameof(SelectedNode));
         }

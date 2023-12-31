@@ -1,4 +1,5 @@
-﻿using DijkstraCoffeeAndCode.Utils.UndoManager;
+﻿using DijkstraAlgorithm;
+using DijkstraCoffeeAndCode.Utils.UndoManager;
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;
@@ -28,36 +29,48 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
 
         public void Execute(object? parameter)
         {
+            _viewModel.UndoStack.AddItem(new UndoItem(_viewModel, _viewModel.SelectedNodes));
             _viewModel.DeleteSelectedNodes();
         }
 
         private class UndoItem : IUndoItem
         {
-            private List<DijkstraNodeViewModel> _selectedNodesSnapShot;
+            private Dictionary<Node, List<Node>> _neighborCache;
             private GraphViewModel _viewModel;
-            public UndoItem(GraphViewModel viewModel, List<DijkstraNodeViewModel> snapShot)
+            public UndoItem(GraphViewModel viewModel, IEnumerable<DijkstraNodeViewModel> snapShot)
             {
                 _viewModel = viewModel;
-                _selectedNodesSnapShot = snapShot;
+                _neighborCache = new();
+                foreach(var node in snapShot)
+                {
+                    _neighborCache[node.Node] = new List<Node>(node.Node.Neighbors);
+                }
             }
 
             public void Undo()
             {
-                if (_selectedNodesSnapShot == null) { return; }
-
                 _viewModel.ClearSelectedNodes();
-                _viewModel.SelectNodes(_selectedNodesSnapShot);
-                _viewModel.DeleteSelectedEdges();
+                foreach(var node in _neighborCache.Keys)
+                {
+                    _viewModel.AddNode(node);
+                }
+
+                foreach (var node in _neighborCache.Keys)
+                {
+                    foreach(var neighbor in _neighborCache[node])
+                    {
+                        _viewModel.CreateEdge(node, neighbor);
+                    }                    
+                }
+
+                _viewModel.SelectNodes(_neighborCache.Keys);
             }
 
             public void Redo()
             {
-                if (_selectedNodesSnapShot == null) { return; }
-
                 _viewModel.ClearSelectedNodes();
-                _viewModel.SelectNodes(_selectedNodesSnapShot);
+                _viewModel.SelectNodes(_neighborCache.Keys);
                 _viewModel.DeleteSelectedNodes();
-                _viewModel.SelectNodes(_selectedNodesSnapShot);
             }
         }
     }
