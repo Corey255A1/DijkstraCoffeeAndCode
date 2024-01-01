@@ -32,6 +32,12 @@ namespace DijkstraAlgorithm
             Y = y;
         }
 
+        public Vector2D(Vector2D vector)
+        {
+            X = vector.X;
+            Y = vector.Y;
+        }
+
         public double Distance(Vector2D v)
         {
             return Distance(this, v);

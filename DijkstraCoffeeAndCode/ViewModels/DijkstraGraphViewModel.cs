@@ -20,10 +20,8 @@ namespace DijkstraCoffeeAndCode.ViewModels
 {
     public enum AlgorithmExecutionModeEnum { Manual, OnEnd, Continuous };
 
-
     public class DijkstraGraphViewModel : BaseGraphViewModel
     {
-
         private NodeViewModel? _startNode = null;
         public NodeViewModel? StartNode
         {
@@ -70,7 +68,6 @@ namespace DijkstraCoffeeAndCode.ViewModels
                 Notify();
             }
         }
-
 
         private AlgorithmExecutionModeEnum _selectedExecutionMode = AlgorithmExecutionModeEnum.Manual;
         public AlgorithmExecutionModeEnum SelectedExecutionMode
@@ -153,6 +150,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
         {
             if (SelectedExecutionMode != AlgorithmExecutionModeEnum.Manual)
             {
+                if(IsNodeDragging && SelectedExecutionMode != AlgorithmExecutionModeEnum.Continuous) { return; }
                 if (StartNode == null || EndNode == null)
                 {
                     ResetAllDijkstraViewObjects();
@@ -164,66 +162,38 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
         }
 
-        private bool IsMultiSelectMode()
+        protected override void OnNodeBeginDrag(NodeViewModel node)
         {
-            return Keyboard.GetKeyStates(Key.LeftShift).HasFlag(KeyStates.Down) ||
-                Keyboard.GetKeyStates(Key.RightShift).HasFlag(KeyStates.Down);
-
+            ResetAlgorithm();
+            base.OnNodeBeginDrag(node);
         }
 
-        private void MoveOtherSelectedNodes(NodeViewModel dragNode, double dX, double dY)
+        protected override void NodeUserInteractionHandler(object? sender, UserInteractionEventArgs e)
         {
-            foreach (var selectedNode in SelectedNodes)
-            {
-                if (selectedNode != dragNode.Node)
-                {
-                    GetViewModel(selectedNode).Move(dX, dY);
-                }
-            }
-        }
+            base.NodeUserInteractionHandler(sender, e);
 
-        private void ProcessUserDragNode(NodeViewModel node, UserInteractionEventArgs e)
-        {
-            if (SelectedExecutionMode == AlgorithmExecutionModeEnum.Continuous)
-            {
-                OnGraphChanged();
-            }
-            if (!IsMultiSelectMode()) { return; }
-            if (e.Data == null) { return; }
-            if (!(e.Data is Vector2D positionDelta)) { return; }
-
-            MoveOtherSelectedNodes(node, positionDelta.X, positionDelta.Y);
-        }
-
-        private void NodeUserInteractionHandler(object? sender, UserInteractionEventArgs e)
-        {
-            if (!(sender is NodeViewModel node)) { return; }
+            if (!(sender is DijkstraNodeViewModel node)) { return; }
 
             switch (e.State)
             {
-                case UserInteractionState.BeginDrag:
-                    ResetAlgorithm();
+                case UserInteractionState.SetAsStart: 
+                    SetAsStartNode(node); 
                     break;
-                case UserInteractionState.EndDrag:
-                    if (SelectedExecutionMode == AlgorithmExecutionModeEnum.OnEnd)
-                    {
-                        OnGraphChanged();
-                    }
+                case UserInteractionState.SetAsEnd: 
+                    SetAsEndNode(node);
                     break;
-                case UserInteractionState.ContinueDrag:
-                    ProcessUserDragNode(node, e);
-                    break;
-                case UserInteractionState.EndInteraction:
-                    if (!node.WasMovedWhileInteracting)
-                    {
-                        ToggleSelectedNode(node, IsMultiSelectMode());
-                    }
-                    break;
-                case UserInteractionState.SetAsStart: StartNode = node; break;
-                case UserInteractionState.SetAsEnd: EndNode = node; break;
-                case UserInteractionState.Delete: DeleteNode(node); break;
             }
         }
+
+        public void SetAsStartNode(DijkstraNodeViewModel node)
+        {
+            StartNode = node;
+        }
+        public void SetAsEndNode(DijkstraNodeViewModel node)
+        {
+            EndNode = node;
+        }
+
 
         private void ResetAlgorithm()
         {

@@ -20,6 +20,12 @@ namespace DijkstraCoffeeAndCode.Utils.UndoManager
             RedoCommand = new RedoCommand(this);
         }
 
+        public void Clear()
+        {
+            _undoStack.Clear();
+            _redoStack.Clear();
+        }
+
         public void AddItem(IUndoItem item)
         {
             _redoStack.Clear();

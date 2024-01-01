@@ -12,6 +12,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
     public class GraphViewSelectionManager
     {
         private BaseGraphViewModel _viewModel;
+
         protected ObservableCollection<NodeViewModel> _selectedNodes { get; private set; } = new();
         public IEnumerable<NodeViewModel> SelectedNodeViews => _selectedNodes;
         public IEnumerable<Node> SelectedNodes => _selectedNodes.Select(viewModel => viewModel.Node);
@@ -33,6 +34,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
                 return _selectedNodes.Count == 0 ? null : _selectedNodes[0];
             }
         }
+
         public GraphViewSelectionManager(BaseGraphViewModel viewModel)
         {
             _viewModel = viewModel;

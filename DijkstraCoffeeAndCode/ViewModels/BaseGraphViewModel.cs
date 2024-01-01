@@ -11,6 +11,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Xml.Linq;
 
 namespace DijkstraCoffeeAndCode.ViewModels
 {
@@ -37,6 +38,10 @@ namespace DijkstraCoffeeAndCode.ViewModels
             add { _selectionManager.SelectedNodesChanged += value; }
             remove { _selectionManager.SelectedNodesChanged -= value; }
         }
+
+        protected NodeViewModel? _currentDragNode;
+        public bool IsNodeDragging => _currentDragNode != null;
+        private NodePositionUndoItem? _currentNodePositionUndo;
 
         public ICommand CreateEdgesCommand { get; set; }
         public ICommand DeleteSelectedEdgesCommand { get; set; }
@@ -82,6 +87,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public virtual void Clear()
         {
             GraphViewObjects.Clear();
+            UndoStack.Clear();
             ClearSelectedNodes();
         }
 
@@ -143,6 +149,11 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public void AddNode(Node node)
         {
             _graph.AddNode(node);
+        }
+
+        public void SetNodePosition(Node node, Vector2D position)
+        {
+            GetViewModel(node).SetCenterPosition(position.X, position.Y);
         }
 
         public void DeleteNode(Node node)
@@ -288,6 +299,99 @@ namespace DijkstraCoffeeAndCode.ViewModels
             else
             {
                 SelectNode(node, isMultiSelect);
+            }
+        }
+
+        private bool IsMultiSelectMode()
+        {
+            return Keyboard.GetKeyStates(Key.LeftShift).HasFlag(KeyStates.Down) ||
+                Keyboard.GetKeyStates(Key.RightShift).HasFlag(KeyStates.Down);
+
+        }
+
+        private void MoveOtherSelectedNodes(NodeViewModel dragNode, double dX, double dY)
+        {
+            foreach (var selectedNode in SelectedNodes)
+            {
+                if (selectedNode != dragNode.Node)
+                {
+                    GetViewModel(selectedNode).Move(dX, dY);
+                }
+            }
+        }
+
+        protected virtual void OnNodeContinueDrag(NodeViewModel node, UserInteractionEventArgs e)
+        {
+            if (IsMultiSelectMode())
+            {
+                if (e.Data == null) { return; }
+                if (!(e.Data is Vector2D positionDelta)) { return; }
+
+                MoveOtherSelectedNodes(node, positionDelta.X, positionDelta.Y);
+            }
+
+            OnGraphChanged();
+        }
+
+        protected virtual void OnNodeBeginDrag(NodeViewModel node)
+        {
+            _currentDragNode = node;
+            _currentNodePositionUndo = new(this);
+        }
+
+        protected virtual void OnNodeEndDrag(NodeViewModel node)
+        {
+            _currentDragNode = null;
+            if (_currentNodePositionUndo != null)
+            {
+                _currentNodePositionUndo.SetFinalPosition();
+                UndoStack.AddItem(_currentNodePositionUndo);
+                _currentNodePositionUndo = null;
+            }
+
+            OnGraphChanged();
+        }
+
+        protected virtual void OnNodeBeginInteraction(NodeViewModel node) { }
+
+        protected virtual void OnNodeEndInteraction(NodeViewModel node)
+        {
+            if (!node.WasMovedWhileInteracting)
+            {
+                ToggleSelectedNode(node, IsMultiSelectMode());
+            }
+        }
+
+        protected virtual void OnNodeDelete(NodeViewModel node)
+        {
+            UndoStack.AddItem(new NodeDeleteUndoItem(this, node));
+            DeleteNode(node.Node);
+        }
+
+        protected virtual void NodeUserInteractionHandler(object? sender, UserInteractionEventArgs e)
+        {
+            if (!(sender is NodeViewModel node)) { return; }
+
+            switch (e.State)
+            {
+                case UserInteractionState.BeginInteraction:
+                    OnNodeBeginInteraction(node);
+                    break;
+                case UserInteractionState.BeginDrag:
+                    OnNodeBeginDrag(node);
+                    break;
+                case UserInteractionState.EndDrag:
+                    OnNodeEndDrag(node);
+                    break;
+                case UserInteractionState.ContinueDrag:
+                    OnNodeContinueDrag(node, e);
+                    break;
+                case UserInteractionState.EndInteraction:
+                    OnNodeEndInteraction(node);
+                    break;
+                case UserInteractionState.Delete:
+                    OnNodeDelete(node);
+                    break;
             }
         }
 
