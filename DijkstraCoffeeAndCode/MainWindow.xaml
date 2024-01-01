@@ -82,6 +82,12 @@
                     <Button Content="Import" Command="{Binding FileManager.ImportGraphCommand, ElementName=window}"/>
                 </StackPanel>
             </TabItem>
+            <TabItem Header="Edit">
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Undo (Ctrl+Z)" Command="{Binding UndoCommand}"/>
+                    <Button Content="Redo (Ctrl+Y)" Command="{Binding RedoCommand}"/>
+                </StackPanel>
+            </TabItem>
             <TabItem Header="Build">
                 <StackPanel Orientation="Horizontal">
                     <GroupBox Header="Nodes">
