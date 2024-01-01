@@ -7,8 +7,8 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
     {
         public event EventHandler? CanExecuteChanged;
 
-        private GraphViewModel _viewModel;
-        public SaveGraphCommand(GraphViewModel viewModel)
+        private GraphFileManager _viewModel;
+        public SaveGraphCommand(GraphFileManager viewModel)
         {
             _viewModel = viewModel;
         }

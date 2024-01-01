@@ -18,7 +18,7 @@
     </Window.InputBindings>
     <Window.Title>
         <MultiBinding StringFormat="{}{0} - WunderVision - Dijkstra Coffee and Code">
-            <Binding Path="CurrentFileName"/>
+            <Binding Path="FileManager.CurrentFileName" ElementName="window"/>
         </MultiBinding>
     </Window.Title>
     <Window.Resources>
@@ -36,13 +36,13 @@
         </Grid.RowDefinitions>
         <ScrollViewer Grid.RowSpan="3" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Auto">
             <Viewbox Stretch="UniformToFill" Height="{Binding ViewHeight, ElementName=window}" Width="{Binding ViewWidth, ElementName=window}">
-                <ItemsControl Background="ForestGreen" Width="2048" Height="2048" Grid.Row="0" ItemsSource="{Binding Path=DijkstraViewObjects}" 
+                <ItemsControl Background="ForestGreen" Width="2048" Height="2048" Grid.Row="0" ItemsSource="{Binding Path=GraphViewObjects}" 
                           MouseRightButtonDown="CanvasMouseRightButtonDown" MouseLeftButtonDown="CanvasMouseLeftButtonDown">
                     <ItemsControl.Resources>
-                        <DataTemplate DataType="{x:Type vm:DijkstraNodeViewModel}">
+                        <DataTemplate DataType="{x:Type vm:NodeViewModel}">
                             <views:NodeElement DataContext="{Binding }" />
                         </DataTemplate>
-                        <DataTemplate DataType="{x:Type vm:DijkstraEdgeViewModel}">
+                        <DataTemplate DataType="{x:Type vm:EdgeViewModel}">
                             <views:EdgeElement DataContext="{Binding }" />
                         </DataTemplate>
                     </ItemsControl.Resources>
@@ -71,15 +71,15 @@
         <TabControl Grid.Row="2" Grid.ColumnSpan="2" Width="600" Margin="0,0,0,20">
             <TabItem Header="File">
                 <StackPanel Orientation="Horizontal">
-                    <Button Content="New" Command="{Binding NewGraphCommand}"/>
-                    <Button Content="Save" Command="{Binding SaveGraphCommand}"/>
-                    <Button Content="Save As" Command="{Binding SaveGraphCommand}">
+                    <Button Content="New" Command="{Binding FileManager.NewGraphCommand, ElementName=window}"/>
+                    <Button Content="Save" Command="{Binding FileManager.SaveGraphCommand, ElementName=window}"/>
+                    <Button Content="Save As" Command="{Binding FileManager.SaveGraphCommand, ElementName=window}">
                         <Button.CommandParameter>
                             <sys:Boolean>true</sys:Boolean>
                         </Button.CommandParameter>
                     </Button>
-                    <Button Content="Open" Command="{Binding LoadGraphCommand}"/>
-                    <Button Content="Import" Command="{Binding ImportGraphCommand}"/>
+                    <Button Content="Open" Command="{Binding FileManager.LoadGraphCommand, ElementName=window}"/>
+                    <Button Content="Import" Command="{Binding FileManager.ImportGraphCommand, ElementName=window}"/>
                 </StackPanel>
             </TabItem>
             <TabItem Header="Build">

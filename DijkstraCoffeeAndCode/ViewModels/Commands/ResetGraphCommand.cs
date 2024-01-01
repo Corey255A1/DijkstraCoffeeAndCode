@@ -5,10 +5,10 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
 {
     public class ResetGraphCommand : ICommand
     {
-        private GraphViewModel _viewModel;
+        private DijkstraGraphViewModel _viewModel;
         public event EventHandler? CanExecuteChanged;
 
-        public ResetGraphCommand(GraphViewModel viewModel)
+        public ResetGraphCommand(DijkstraGraphViewModel viewModel)
         {
             _viewModel = viewModel;
             _viewModel.PropertyChanged += ViewModelPropertyChanged;

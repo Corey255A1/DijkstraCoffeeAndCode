@@ -14,7 +14,9 @@ namespace DijkstraCoffeeAndCode
     public partial class MainWindow : Window
     {
 
-        public GraphViewModel Graph { get; private set; }
+        public DijkstraGraphViewModel Graph { get; private set; }
+
+        public GraphFileManager FileManager { get; private set; }
 
         public double ViewWidth
         {
@@ -56,9 +58,11 @@ namespace DijkstraCoffeeAndCode
             ViewWidth = VIEW_SIZE;
             ViewHeight = VIEW_SIZE;
             ZoomLevel = 0.8;
-            Graph = new GraphViewModel();
-            Graph.GetFilePath = GetFilePath;
+            Graph = new DijkstraGraphViewModel();
+            FileManager = new GraphFileManager(Graph);
+            FileManager.GetFilePath = GetFilePath;
             Graph.MessageEvent += GraphMessageEvent;
+            FileManager.MessageEvent += GraphMessageEvent;
             DataContext = Graph;
             InitializeComponent();
         }

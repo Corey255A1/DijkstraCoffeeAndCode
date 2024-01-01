@@ -7,16 +7,17 @@ using System.Collections.Specialized;
 
 namespace DijkstraCoffeeAndCode.ViewModels
 {
-    public class DijkstraObjectViewCollection<K, V> where K : notnull where V : DijkstraObjectViewModel
+    public class GraphObjectViewCollection<K, V> where K : notnull where V : GraphObjectViewModel
     {
+        public delegate V MakeViewModelFactory(K key);
         private Dictionary<K, V> _objectToViewModel = new();
-        private Func<K, V> viewFactory;
+        private MakeViewModelFactory viewFactory;
 
         public IEnumerable<K> Keys { get => _objectToViewModel.Keys; }
         public IEnumerable<V> Values { get => _objectToViewModel.Values; }
 
-        public event DijkstraObjectViewCollectionEvent? AddOrRemove;
-        public DijkstraObjectViewCollection(ObservableCollection<K> collection, Func<K, V> objectToViewModel)
+        public event GraphObjectViewCollectionEvent? AddOrRemove;
+        public GraphObjectViewCollection(ObservableCollection<K> collection, MakeViewModelFactory objectToViewModel)
         {
             collection.CollectionChanged += CollectionChangedHandler;
             viewFactory = objectToViewModel;
@@ -68,7 +69,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
         public void RemoveObjectViewModel(K node)
         {
-            DijkstraObjectViewModel objectToRemove = GetViewModel(node);
+            GraphObjectViewModel objectToRemove = GetViewModel(node);
             _objectToViewModel.Remove(node);
             AddOrRemove?.Invoke(objectToRemove, false);
         }

@@ -6,60 +6,51 @@ using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.ViewModels.Commands
 {
-    public class DeleteAllEdgesCommand : ICommand
+    public class DeleteAllEdgesCommand : BaseGraphCommand
     {
-        public event EventHandler? CanExecuteChanged;
+        public override event EventHandler? CanExecuteChanged;
 
-        private GraphViewModel _viewModel;
-        public DeleteAllEdgesCommand(GraphViewModel viewModel)
-        {
-            _viewModel = viewModel;
-        }
+        public DeleteAllEdgesCommand(BaseGraphViewModel viewModel, UndoStack undoStack) :
+            base(viewModel, undoStack)
+        { }
 
-        public bool CanExecute(object? parameter)
+        public override bool CanExecute(object? parameter)
         {
             return true;
         }
 
-        public void Execute(object? parameter)
+        public override void Execute(object? parameter)
         {
-            _viewModel.UndoStack.AddItem(new UndoItem(_viewModel, _viewModel.Nodes));
-            _viewModel.DeleteAllEdges();
+            UndoStack.AddItem(new UndoItem(ViewModel, ViewModel.Nodes));
+            ViewModel.DeleteAllEdges();
         }
 
 
-        private class UndoItem : IUndoItem
+        private class UndoItem : BaseGraphUndoItem
         {
-            private Dictionary<Node, List<Node>> _neighborCache;
-            private GraphViewModel _viewModel;
-            public UndoItem(GraphViewModel viewModel, IEnumerable<Node> snapShot)
+            public UndoItem(BaseGraphViewModel _viewModel, IEnumerable<Node> nodes) :
+                base(_viewModel, nodes)
             {
-                _viewModel = viewModel;
-                _neighborCache = new();
-                foreach (var node in snapShot)
-                {
-                    _neighborCache[node] = new List<Node>(node.Neighbors);
-                }
             }
 
-            public void Undo()
+            public override void Undo()
             {
-                _viewModel.ClearSelectedNodes();
-                foreach (var node in _neighborCache.Keys)
+                ViewModel.ClearSelectedNodes();
+                foreach (var node in Nodes)
                 {
                     foreach (var neighbor in _neighborCache[node])
                     {
-                        _viewModel.CreateEdge(node, neighbor);
+                        ViewModel.CreateEdge(node, neighbor);
                     }
                 }
 
-                _viewModel.SelectNodes(_neighborCache.Keys);
+                ViewModel.SelectNodes(Nodes);
             }
 
-            public void Redo()
+            public override void Redo()
             {
-                _viewModel.ClearSelectedNodes();
-                _viewModel.DeleteAllEdges();
+                ViewModel.ClearSelectedNodes();
+                ViewModel.DeleteAllEdges();
             }
         }
     }

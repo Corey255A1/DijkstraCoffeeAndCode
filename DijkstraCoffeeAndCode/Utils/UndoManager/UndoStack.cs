@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.Utils.UndoManager
 {
@@ -10,8 +11,13 @@ namespace DijkstraCoffeeAndCode.Utils.UndoManager
     {
         private Stack<IUndoItem> _undoStack = new();
         private Stack<IUndoItem> _redoStack = new();
+
+        public ICommand UndoCommand { get; set; }
+        public ICommand RedoCommand { get; set; }
         public UndoStack()
         {
+            UndoCommand = new UndoCommand(this);
+            RedoCommand = new RedoCommand(this);
         }
 
         public void AddItem(IUndoItem item)

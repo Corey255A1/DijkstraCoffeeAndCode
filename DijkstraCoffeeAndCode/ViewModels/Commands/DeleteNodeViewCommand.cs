@@ -7,8 +7,8 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
     {
         public event EventHandler? CanExecuteChanged;
 
-        private DijkstraNodeViewModel _viewModel;
-        public DeleteNodeViewCommand(DijkstraNodeViewModel viewModel)
+        private NodeViewModel _viewModel;
+        public DeleteNodeViewCommand(NodeViewModel viewModel)
         {
             _viewModel = viewModel;
         }

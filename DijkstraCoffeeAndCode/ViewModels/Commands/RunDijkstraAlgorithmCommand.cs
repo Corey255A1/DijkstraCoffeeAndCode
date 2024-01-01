@@ -7,10 +7,10 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
 {
     public class RunDijkstraAlgorithmCommand : ICommand
     {
-        private GraphViewModel _viewModel;
+        private DijkstraGraphViewModel _viewModel;
         public event EventHandler? CanExecuteChanged;
 
-        public RunDijkstraAlgorithmCommand(GraphViewModel viewModel)
+        public RunDijkstraAlgorithmCommand(DijkstraGraphViewModel viewModel)
         {
             _viewModel = viewModel;
             _viewModel.PropertyChanged += ViewModelPropertyChanged;

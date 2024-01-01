@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DijkstraCoffeeAndCode.ViewModels;
+using System;
 using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.ViewModels.Commands
@@ -7,8 +8,8 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
     {
         public event EventHandler? CanExecuteChanged;
 
-        private DijkstraNodeViewModel _viewModel;
-        public SetNodeAsStartCommand(DijkstraNodeViewModel viewModel)
+        private NodeViewModel _viewModel;
+        public SetNodeAsStartCommand(NodeViewModel viewModel)
         {
             _viewModel = viewModel;
             _viewModel.PropertyChanged += ViewModelPropertyChanged;

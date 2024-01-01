@@ -4,7 +4,7 @@ using DijkstraAlgorithm;
 
 namespace DijkstraCoffeeAndCode.ViewModels
 {
-    public class DijkstraEdgeViewModel : DijkstraObjectViewModel
+    public class EdgeViewModel : GraphObjectViewModel
     {
         private Edge _edge;
         public Edge Edge => _edge;
@@ -48,12 +48,12 @@ namespace DijkstraCoffeeAndCode.ViewModels
             get => _edge.Distance;
         }
 
-        public static DijkstraEdgeViewModel MakeEdgeViewModel(Edge edge)
+        public static EdgeViewModel MakeEdgeViewModel(Edge edge)
         {
-            return new DijkstraEdgeViewModel(edge);
+            return new EdgeViewModel(edge);
         }
 
-        public DijkstraEdgeViewModel(Edge edge)
+        public EdgeViewModel(Edge edge)
         {
             _edge = edge;
             _edge.Node1.Point.VectorChanged += Node1PositionChanged;

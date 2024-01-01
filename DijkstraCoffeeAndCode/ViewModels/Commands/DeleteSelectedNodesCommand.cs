@@ -6,15 +6,14 @@ using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.ViewModels.Commands
 {
-    public class DeleteSelectedNodesCommand : ICommand
+    public class DeleteSelectedNodesCommand : BaseGraphCommand
     {
-        public event EventHandler? CanExecuteChanged;
+        public override event EventHandler? CanExecuteChanged;
 
-        private GraphViewModel _viewModel;
-        public DeleteSelectedNodesCommand(GraphViewModel viewModel)
+        public DeleteSelectedNodesCommand(BaseGraphViewModel viewModel, UndoStack undoStack) :
+            base(viewModel, undoStack)
         {
-            _viewModel = viewModel;
-            _viewModel.SelectedNodes.CollectionChanged += SelectedNodesCollectionChanged;
+            ViewModel.SelectedNodesChanged += SelectedNodesCollectionChanged;
         }
 
         private void SelectedNodesCollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -22,55 +21,47 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
             CanExecuteChanged?.Invoke(this, e);
         }
 
-        public bool CanExecute(object? parameter)
+        public override bool CanExecute(object? parameter)
         {
-            return _viewModel.SelectedNodes.Count > 0;
+            return ViewModel.SelectedNodesCount > 0;
         }
 
-        public void Execute(object? parameter)
+        public override void Execute(object? parameter)
         {
-            _viewModel.UndoStack.AddItem(new UndoItem(_viewModel, _viewModel.SelectedNodes));
-            _viewModel.DeleteSelectedNodes();
+            UndoStack.AddItem(new UndoItem(ViewModel, ViewModel.SelectedNodes));
+            ViewModel.DeleteSelectedNodes();
         }
 
-        private class UndoItem : IUndoItem
+        private class UndoItem : BaseGraphUndoItem
         {
-            private Dictionary<Node, List<Node>> _neighborCache;
-            private GraphViewModel _viewModel;
-            public UndoItem(GraphViewModel viewModel, IEnumerable<DijkstraNodeViewModel> snapShot)
-            {
-                _viewModel = viewModel;
-                _neighborCache = new();
-                foreach(var node in snapShot)
-                {
-                    _neighborCache[node.Node] = new List<Node>(node.Node.Neighbors);
-                }
-            }
+            public UndoItem(BaseGraphViewModel _viewModel, IEnumerable<Node> nodes) :
+                base(_viewModel, nodes)
+            { }
 
-            public void Undo()
+            public override void Undo()
             {
-                _viewModel.ClearSelectedNodes();
-                foreach(var node in _neighborCache.Keys)
+                ViewModel.ClearSelectedNodes();
+                foreach(var node in Nodes)
                 {
-                    _viewModel.AddNode(node);
+                    ViewModel.AddNode(node);
                 }
 
-                foreach (var node in _neighborCache.Keys)
+                foreach (var node in Nodes)
                 {
                     foreach(var neighbor in _neighborCache[node])
                     {
-                        _viewModel.CreateEdge(node, neighbor);
+                        ViewModel.CreateEdge(node, neighbor);
                     }                    
                 }
 
-                _viewModel.SelectNodes(_neighborCache.Keys);
+                ViewModel.SelectNodes(Nodes);
             }
 
-            public void Redo()
+            public override void Redo()
             {
-                _viewModel.ClearSelectedNodes();
-                _viewModel.SelectNodes(_neighborCache.Keys);
-                _viewModel.DeleteSelectedNodes();
+                ViewModel.ClearSelectedNodes();
+                ViewModel.SelectNodes(Nodes);
+                ViewModel.DeleteSelectedNodes();
             }
         }
     }

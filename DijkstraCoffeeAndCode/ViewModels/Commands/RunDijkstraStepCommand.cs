@@ -5,10 +5,10 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
 {
     public class RunDijkstraStepCommand : ICommand
     {
-        private GraphViewModel _viewModel;
+        private DijkstraGraphViewModel _viewModel;
         public event EventHandler? CanExecuteChanged;
 
-        public RunDijkstraStepCommand(GraphViewModel viewModel)
+        public RunDijkstraStepCommand(DijkstraGraphViewModel viewModel)
         {
             _viewModel = viewModel;
             _viewModel.PropertyChanged += ViewModelPropertyChanged;

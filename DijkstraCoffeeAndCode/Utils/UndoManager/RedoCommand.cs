@@ -4,17 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using DijkstraCoffeeAndCode.ViewModels;
 
-namespace DijkstraCoffeeAndCode.ViewModels.Commands
+namespace DijkstraCoffeeAndCode.Utils.UndoManager
 {
     public class RedoCommand : ICommand
     {
         public event EventHandler? CanExecuteChanged;
 
-        private GraphViewModel _viewModel;
-        public RedoCommand(GraphViewModel viewModel)
+        private UndoStack _undoStack;
+        public RedoCommand(UndoStack undoStack)
         {
-            _viewModel = viewModel;
+            _undoStack = undoStack;
         }
 
         public bool CanExecute(object? parameter)
@@ -24,7 +25,7 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
 
         public void Execute(object? parameter)
         {
-            _viewModel.UndoStack.Redo();
+            _undoStack.Redo();
         }
     }
 }

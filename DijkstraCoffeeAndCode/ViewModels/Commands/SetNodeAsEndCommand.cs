@@ -7,8 +7,8 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
     {
         public event EventHandler? CanExecuteChanged;
 
-        private DijkstraNodeViewModel _viewModel;
-        public SetNodeAsEndCommand(DijkstraNodeViewModel viewModel)
+        private NodeViewModel _viewModel;
+        public SetNodeAsEndCommand(NodeViewModel viewModel)
         {
             _viewModel = viewModel;
             _viewModel.PropertyChanged += ViewModelPropertyChanged;

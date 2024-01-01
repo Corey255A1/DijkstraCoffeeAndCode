@@ -5,9 +5,9 @@ using System.Runtime.CompilerServices;
 
 namespace DijkstraCoffeeAndCode.ViewModels
 {
-    public delegate void DijkstraObjectViewCollectionEvent(DijkstraObjectViewModel dijkstraObject, bool isAdd);
+    public delegate void GraphObjectViewCollectionEvent(GraphObjectViewModel graphObject, bool isAdd);
 
-    public class DijkstraObjectViewModel : INotifyPropertyChanged
+    public class GraphObjectViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void Notify([CallerMemberName] string name = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));

@@ -15,7 +15,7 @@ namespace DijkstraCoffeeAndCode.Views
         private bool _checkingForDragThreshold = false;
         private const int PIXEL_DRAG_THRESHOLD_SQ = 25; // 5 pixels squared.
 
-        private DijkstraNodeViewModel? _viewModel;
+        private NodeViewModel? _viewModel;
 
         public NodeElement()
         {
@@ -25,7 +25,7 @@ namespace DijkstraCoffeeAndCode.Views
 
         private void NodeElementDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            _viewModel = e.NewValue as DijkstraNodeViewModel;
+            _viewModel = e.NewValue as NodeViewModel;
         }
 
         private void NodeMouseDown(object sender, MouseButtonEventArgs e)

@@ -9,28 +9,43 @@ using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.ViewModels.Commands
 {
-    public class MakeNewNodeCommand : ICommand
+    public class MakeNewNodeCommand : BaseGraphCommand
     {
-        public event EventHandler? CanExecuteChanged;
+        public override event EventHandler? CanExecuteChanged;
 
-        private GraphViewModel _viewModel;
-
-        public MakeNewNodeCommand(GraphViewModel viewModel)
+        public MakeNewNodeCommand(BaseGraphViewModel viewModel, UndoStack undoStack) :
+            base(viewModel, undoStack)
         {
-            _viewModel = viewModel;
         }
 
-        public bool CanExecute(object? parameter)
+        public override bool CanExecute(object? parameter)
         {
             return true;
         }
 
-        public void Execute(object? parameter)
+        public override void Execute(object? parameter)
         {
             if(!(parameter is Vector2D point)) { return; }
 
-            //_viewModel.UndoStack.AddItem(new UndoItem(_viewModel, new(_viewModel.SelectedNodes.Select(nodeView => nodeView.Node))));
-            _viewModel.MakeNewNode(point.X, point.Y);
+            Node newNode = ViewModel.MakeNewNode(point.X, point.Y);
+            UndoStack.AddItem(new UndoItem(ViewModel, new List<Node> { newNode }));
+        }
+
+        private class UndoItem : BaseGraphUndoItem
+        {
+            public UndoItem(BaseGraphViewModel _viewModel, IEnumerable<Node> nodes) :
+                base(_viewModel, nodes)
+            {
+            }
+            public override void Undo()
+            {
+                ViewModel.DeleteNode(Nodes.First());
+            }
+
+            public override void Redo()
+            {
+                ViewModel.AddNode(Nodes.First());
+            }
         }
     }
 }

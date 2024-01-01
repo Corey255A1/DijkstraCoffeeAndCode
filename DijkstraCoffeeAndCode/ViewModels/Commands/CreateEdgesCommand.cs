@@ -7,16 +7,14 @@ using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.ViewModels.Commands
 {
-    public class CreateEdgesCommand : ICommand
+    public class CreateEdgesCommand : BaseGraphCommand
     {
-        public event EventHandler? CanExecuteChanged;
+        public override event EventHandler? CanExecuteChanged;
 
-        private GraphViewModel _viewModel;
-        
-        public CreateEdgesCommand(GraphViewModel viewModel)
+        public CreateEdgesCommand(BaseGraphViewModel viewModel, UndoStack undoStack):
+            base(viewModel, undoStack)
         {
-            _viewModel = viewModel;
-            _viewModel.SelectedNodes.CollectionChanged += SelectedNodesCollectionChanged;
+            ViewModel.SelectedNodesChanged += SelectedNodesCollectionChanged;
         }
 
         private void SelectedNodesCollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -24,45 +22,37 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
             CanExecuteChanged?.Invoke(this, e);
         }
 
-        public bool CanExecute(object? parameter)
+        public override bool CanExecute(object? parameter)
         {
-            return _viewModel.SelectedNodes.Count > 1;
+            return ViewModel.SelectedNodesCount > 1;
         }
 
-        public void Execute(object? parameter)
+        public override void Execute(object? parameter)
         {
-            _viewModel.UndoStack.AddItem(new UndoItem(_viewModel, new(_viewModel.SelectedNodes.Select(nodeView=>nodeView.Node))));
-            _viewModel.CreateEdgesFromSelected();
-            _viewModel.ClearSelectedNodes();
+            UndoStack.AddItem(new UndoItem(ViewModel, ViewModel.SelectedNodes));
+            ViewModel.CreateEdgesFromSelected();
+            ViewModel.ClearSelectedNodes();
         }
 
-        private class UndoItem : IUndoItem
+        private class UndoItem : BaseGraphUndoItem
         {
-            private List<Node> _selectedNodesSnapShot;
-            private GraphViewModel _viewModel;
-            public UndoItem(GraphViewModel viewModel, List<Node> snapShot)
+            public UndoItem(BaseGraphViewModel _viewModel, IEnumerable<Node> nodes) :
+                base(_viewModel, nodes)
+            { }
+
+            public override void Undo()
             {
-                _viewModel = viewModel;
-                _selectedNodesSnapShot = snapShot;
+                ViewModel.ClearSelectedNodes();
+                ViewModel.SelectNodes(Nodes);
+                ViewModel.DeleteSelectedEdges();
             }
 
-            public void Undo()
+            public override void Redo()
             {
-                if (_selectedNodesSnapShot == null) { return; }
-
-                _viewModel.ClearSelectedNodes();
-                _viewModel.SelectNodes(_selectedNodesSnapShot);
-                _viewModel.DeleteSelectedEdges();
-            }
-
-            public void Redo()
-            {
-                if (_selectedNodesSnapShot == null) { return; }
-
-                _viewModel.ClearSelectedNodes();
-                _viewModel.SelectNodes(_selectedNodesSnapShot);
-                _viewModel.CreateEdgesFromSelected();
-                _viewModel.SelectNodes(_selectedNodesSnapShot);
+                ViewModel.ClearSelectedNodes();
+                ViewModel.SelectNodes(Nodes);
+                ViewModel.CreateEdgesFromSelected();
+                ViewModel.SelectNodes(Nodes);
             }
         }
     }

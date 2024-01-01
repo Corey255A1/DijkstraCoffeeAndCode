@@ -78,16 +78,17 @@ namespace DijkstraAlgorithm
             return _nextNodeID;
         }
 
-        private void AddNode(uint id, double x, double y)
+        private Node AddNode(uint id, double x, double y)
         {
             _nextNodeID = Math.Max(id, _nextNodeID);
             Node node = new(id, x, y);
             _nodes.Add(node);
+            return node;
         }
 
-        public void AddNode(double x, double y)
+        public Node AddNode(double x, double y)
         {
-            AddNode(GetNodeID(), x, y);
+            return AddNode(GetNodeID(), x, y);
         }
 
         public void AddNode(Node node)
