@@ -25,8 +25,10 @@ nodeList[3].MakeEdge(nodeList[4]);
 nodeList[4].MakeEdge(endNode);
 
 nodeList[2].MakeEdge(nodeList[3]);
-
-foreach (var node in Dijkstra.FindShortestPath(startNode, endNode).GenerateShortestPathList())
+var dijkstraState = Dijkstra.FindShortestPath(startNode, endNode);
+foreach (var node in dijkstraState.GenerateShortestPathList())
 {
     Console.WriteLine($"{node.Node.Point.X}, {node.Node.Point.Y}");
 }
+
+Console.WriteLine($"Shortest Distance {dijkstraState.EndNode.RouteSegmentDistance}");
