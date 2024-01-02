@@ -160,6 +160,10 @@ namespace DijkstraCoffeeAndCode.ViewModels
                     RunDijkstraAlgorithm();
                 }
             }
+            else
+            {
+                ResetAllDijkstraViewObjects();
+            }
         }
 
         protected override void OnNodeBeginDrag(NodeViewModel node)

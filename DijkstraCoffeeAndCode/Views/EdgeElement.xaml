@@ -6,32 +6,8 @@
              xmlns:local="clr-namespace:DijkstraCoffeeAndCode.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <UserControl.Resources>
-        <Style TargetType="Line" x:Key="highlightLine">
-            <Setter Property="StrokeThickness" Value="5"/>
-            <Setter Property="Stroke" Value="{StaticResource edgeDefaultColorBrush}"/>
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding IsHighlighted}" Value="true">
-                    <DataTrigger.EnterActions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <ColorAnimation To="{StaticResource highlightColor}" Storyboard.TargetProperty="(Line.Stroke).(SolidColorBrush.Color)" Duration="0:0:0.5"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </DataTrigger.EnterActions>
-                    <DataTrigger.ExitActions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <ColorAnimation To="{x:Null}" Storyboard.TargetProperty="(Line.Stroke).(SolidColorBrush.Color)" Duration="0:0:0.5"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </DataTrigger.ExitActions>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-    </UserControl.Resources>
     <Canvas>
-        <Line Style="{StaticResource highlightLine}" X1="{Binding X1}" Y1="{Binding Y1}" Y2="{Binding Y2}" X2="{Binding X2}"/>
+        <Line Style="{DynamicResource highlightLine}" X1="{Binding X1}" Y1="{Binding Y1}" Y2="{Binding Y2}" X2="{Binding X2}"/>
         <TextBlock Text="{Binding Distance, StringFormat={}{0:#}}" 
                    Canvas.Top="{Binding CenterY}" 
                    Canvas.Left="{Binding CenterX}" Foreground="White" FontFamily="Calibri" FontSize="24" FontWeight="Bold">

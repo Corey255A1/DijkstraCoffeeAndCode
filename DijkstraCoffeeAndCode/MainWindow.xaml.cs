@@ -56,7 +56,15 @@ namespace DijkstraCoffeeAndCode
             }
         }
 
-        public string NextStyleName { get; set; } = "Night Mode";
+        public string NextStyleName
+        {
+            get { return (string)GetValue(NextStyleNameProperty); }
+            set { SetValue(NextStyleNameProperty, value); }
+        }
+
+        public static readonly DependencyProperty NextStyleNameProperty =
+            DependencyProperty.Register("NextStyleName", typeof(string), typeof(MainWindow), new PropertyMetadata("Night Mode"));
+
 
         public MainWindow()
         {
@@ -139,7 +147,7 @@ namespace DijkstraCoffeeAndCode
             if(NextStyleName == "Night Mode")
             {
                 SetNewColorScheme("DarkColors.xaml", "DefaultColors.xaml");
-                NextStyleName = "Light Mode";
+                NextStyleName = "Day Mode";
             }
             else
             {

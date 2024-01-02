@@ -366,6 +366,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
         {
             UndoStack.AddItem(new NodeDeleteUndoItem(this, node));
             DeleteNode(node.Node);
+            
         }
 
         protected virtual void NodeUserInteractionHandler(object? sender, UserInteractionEventArgs e)
