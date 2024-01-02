@@ -79,17 +79,17 @@
                 <ControlTemplate TargetType="TabControl">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>                            
                         </Grid.RowDefinitions>
-                        <TabPanel IsItemsHost="True" Margin="10,0,8,-1" Panel.ZIndex="1"/>
-                        <Border Grid.Row="1" Background="{TemplateBinding Background}"
-                                CornerRadius="8" BorderThickness="1" BorderBrush="Black" Padding="4">
+                        <Border Grid.Row="0" Background="{TemplateBinding Background}"
+                                CornerRadius="0,0,8,8" BorderThickness="1" BorderBrush="Black" Padding="4">
                             <ContentPresenter ContentSource="SelectedContent"/>
                             <Border.BitmapEffect>
-                                <DropShadowBitmapEffect ShadowDepth="1" Softness="0.2"/>
+                                <DropShadowBitmapEffect ShadowDepth="1" Softness="0.5"/>
                             </Border.BitmapEffect>
                         </Border>
+                        <TabPanel Grid.Row="1" IsItemsHost="True" Margin="10,-1,8,0" Panel.ZIndex="1"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -99,18 +99,18 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TabItem">
-                    <Border x:Name="Border" Padding="4" MinWidth="52" Background="{TemplateBinding Background}" CornerRadius="4,4,0,0" >
+                    <Border x:Name="Border" Padding="4" MinWidth="52" Background="{TemplateBinding Background}" CornerRadius="0,0,8,8" >
                         <ContentPresenter x:Name="ContentSite" ContentSource="Header" HorizontalAlignment="Center"/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter TargetName="Border" Property="Background" Value="{StaticResource ResourceKey=tabControlColorBrush}"/>
-                            <Setter TargetName="Border" Property="BorderThickness" Value="1,1,1,0"/>
+                            <Setter TargetName="Border" Property="BorderThickness" Value="1,0,1,1"/>
                             <Setter TargetName="Border" Property="BorderBrush" Value="Black"/>
                         </Trigger>
                         <Trigger Property="IsSelected" Value="False">
                             <Setter TargetName="Border" Property="Background" Value="{StaticResource ResourceKey=tabControlNotColorBrush}"/>
-                            <Setter TargetName="Border" Property="BorderThickness" Value="1,1,1,1"/>
+                            <Setter TargetName="Border" Property="BorderThickness" Value="1"/>
                             <Setter TargetName="Border" Property="BorderBrush" Value="Black"/>
                         </Trigger>
                     </ControlTemplate.Triggers>

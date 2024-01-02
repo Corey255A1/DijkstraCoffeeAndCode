@@ -13,6 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Remove="Resourses\backGraphics.xaml" />
+    <Page Remove="Resourses\Graphics.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="dijkstraico.ico" />
   </ItemGroup>
 
@@ -33,10 +38,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Resourses\Graphics.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Update="MainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

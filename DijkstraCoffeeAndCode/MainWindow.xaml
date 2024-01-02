@@ -36,7 +36,7 @@
         </Grid.RowDefinitions>
         <ScrollViewer Grid.RowSpan="4" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Auto">
             <Viewbox Stretch="UniformToFill" Height="{Binding ViewHeight, ElementName=window}" Width="{Binding ViewWidth, ElementName=window}">
-                <ItemsControl Background="ForestGreen" Width="2048" Height="2048" Grid.Row="0" ItemsSource="{Binding Path=GraphViewObjects}" 
+                <ItemsControl Background="{DynamicResource graphFieldColorBrush}" Width="2048" Height="2048" Grid.Row="0" ItemsSource="{Binding Path=GraphViewObjects}" 
                           MouseRightButtonDown="CanvasMouseRightButtonDown" MouseLeftButtonDown="CanvasMouseLeftButtonDown">
                     <ItemsControl.Resources>
                         <DataTemplate DataType="{x:Type vm:NodeViewModel}">
@@ -86,6 +86,7 @@
                 <StackPanel Orientation="Horizontal">
                     <Button Content="Undo (Ctrl+Z)" Command="{Binding UndoCommand}"/>
                     <Button Content="Redo (Ctrl+Y)" Command="{Binding RedoCommand}"/>
+                    <Button Content="{Binding NextStyleName, ElementName=window}" Click="ColorButtonClick"/>
                 </StackPanel>
             </TabItem>
             <TabItem Header="Build">

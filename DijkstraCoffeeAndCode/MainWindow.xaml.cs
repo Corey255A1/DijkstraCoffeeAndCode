@@ -3,8 +3,11 @@
 using DijkstraAlgorithm;
 using DijkstraCoffeeAndCode.ViewModels;
 using Microsoft.Win32;
+using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Media3D;
 
 namespace DijkstraCoffeeAndCode
 {
@@ -52,6 +55,8 @@ namespace DijkstraCoffeeAndCode
                 ViewWidth = VIEW_SIZE * _zoomLevel;
             }
         }
+
+        public string NextStyleName { get; set; } = "Night Mode";
 
         public MainWindow()
         {
@@ -118,6 +123,29 @@ namespace DijkstraCoffeeAndCode
         private void ZoomInClick(object sender, RoutedEventArgs e)
         {
             ScaleZoom(1.2);
+        }
+        private void SetNewColorScheme(string colorFile, string previousColorFile)
+        {
+            var dictionary = Application.Current.Resources.MergedDictionaries.FirstOrDefault(resource => resource.Source.OriginalString.Contains(previousColorFile));
+            if (dictionary != null) { 
+                Application.Current.Resources.MergedDictionaries.Remove(dictionary); 
+            }
+            ResourceDictionary newColorScheme = new();
+            newColorScheme.Source = new Uri(colorFile, UriKind.Relative);
+            Application.Current.Resources.MergedDictionaries.Add(newColorScheme);
+        }
+        private void ColorButtonClick(object sender, RoutedEventArgs e)
+        {
+            if(NextStyleName == "Night Mode")
+            {
+                SetNewColorScheme("DarkColors.xaml", "DefaultColors.xaml");
+                NextStyleName = "Light Mode";
+            }
+            else
+            {
+                SetNewColorScheme("DefaultColors.xaml", "DarkColors.xaml");
+                NextStyleName = "Night Mode";
+            }
         }
     }
 }
