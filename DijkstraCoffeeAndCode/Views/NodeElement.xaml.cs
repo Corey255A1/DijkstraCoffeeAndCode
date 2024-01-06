@@ -1,4 +1,5 @@
-﻿// WUNDERVISION 2018
+﻿// WunderVision 2023
+// https://www.wundervisionengineering.com/
 using DijkstraCoffeeAndCode.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
@@ -6,9 +7,6 @@ using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.Views
 {
-    /// <summary>
-    /// Interaction logic for NodeElement.xaml
-    /// </summary>
     public partial class NodeElement : UserControl
     {
         private Point _gripPoint;

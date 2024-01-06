@@ -1,8 +1,9 @@
-﻿using DijkstraAlgorithm;
+﻿// WunderVision 2023
+// https://www.wundervisionengineering.com/
+using DijkstraAlgorithm;
 using DijkstraCoffeeAndCode.Utils.UndoManager;
 using System;
 using System.Collections.Generic;
-using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.ViewModels.Commands
 {
@@ -27,7 +28,7 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
 
         public override void Execute(object? parameter)
         {
-            UndoStack.AddItem(new UndoItem(ViewModel,ViewModel.SelectedNodes));
+            UndoStack.AddItem(new UndoItem(ViewModel, ViewModel.SelectedNodes));
             ViewModel.DeleteSelectedEdges();
             ViewModel.ClearSelectedNodes();
         }

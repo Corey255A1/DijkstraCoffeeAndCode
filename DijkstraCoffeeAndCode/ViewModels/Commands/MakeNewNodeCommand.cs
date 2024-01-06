@@ -1,11 +1,10 @@
-﻿using DijkstraAlgorithm;
+﻿// WunderVision 2023
+// https://www.wundervisionengineering.com/
+using DijkstraAlgorithm;
 using DijkstraCoffeeAndCode.Utils.UndoManager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.ViewModels.Commands
 {
@@ -25,7 +24,7 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
 
         public override void Execute(object? parameter)
         {
-            if(!(parameter is Vector2D point)) { return; }
+            if (!(parameter is Vector2D point)) { return; }
 
             Node newNode = ViewModel.MakeNewNode(point.X, point.Y);
             UndoStack.AddItem(new UndoItem(ViewModel, new List<Node> { newNode }));

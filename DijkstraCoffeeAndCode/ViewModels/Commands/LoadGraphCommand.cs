@@ -1,4 +1,6 @@
-﻿using System;
+﻿// WunderVision 2023
+// https://www.wundervisionengineering.com/
+using System;
 using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.ViewModels.Commands

@@ -1,10 +1,9 @@
-﻿using System.Windows;
+﻿// WunderVision 2023
+// https://www.wundervisionengineering.com/
+using System.Windows;
 
 namespace DijkstraCoffeeAndCode
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
     }

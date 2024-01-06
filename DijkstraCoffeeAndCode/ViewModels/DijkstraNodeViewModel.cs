@@ -1,10 +1,6 @@
 ﻿// WunderVision 2023
 // https://www.wundervisionengineering.com/
 using DijkstraAlgorithm;
-using DijkstraCoffeeAndCode.ViewModels.Commands;
-using System;
-using System.Windows.Input;
-using System.Xml.Linq;
 
 namespace DijkstraCoffeeAndCode.ViewModels
 {

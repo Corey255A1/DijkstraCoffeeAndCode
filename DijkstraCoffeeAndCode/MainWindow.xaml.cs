@@ -7,13 +7,9 @@ using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media.Media3D;
 
 namespace DijkstraCoffeeAndCode
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
 
@@ -135,8 +131,9 @@ namespace DijkstraCoffeeAndCode
         private void SetNewColorScheme(string colorFile, string previousColorFile)
         {
             var dictionary = Application.Current.Resources.MergedDictionaries.FirstOrDefault(resource => resource.Source.OriginalString.Contains(previousColorFile));
-            if (dictionary != null) { 
-                Application.Current.Resources.MergedDictionaries.Remove(dictionary); 
+            if (dictionary != null)
+            {
+                Application.Current.Resources.MergedDictionaries.Remove(dictionary);
             }
             ResourceDictionary newColorScheme = new();
             newColorScheme.Source = new Uri(colorFile, UriKind.Relative);
@@ -144,7 +141,7 @@ namespace DijkstraCoffeeAndCode
         }
         private void ColorButtonClick(object sender, RoutedEventArgs e)
         {
-            if(NextStyleName == "Night Mode")
+            if (NextStyleName == "Night Mode")
             {
                 SetNewColorScheme("DarkColors.xaml", "DefaultColors.xaml");
                 NextStyleName = "Day Mode";

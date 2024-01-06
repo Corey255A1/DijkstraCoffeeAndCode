@@ -6,9 +6,6 @@ using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.Views
 {
-    /// <summary>
-    /// Interaction logic for NodeProperties.xaml
-    /// </summary>
     public partial class NodeProperties : UserControl
     {
         public NodeProperties()

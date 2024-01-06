@@ -1,4 +1,6 @@
-﻿using System;
+﻿// WunderVision 2023
+// https://www.wundervisionengineering.com/
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;

@@ -1,9 +1,6 @@
-﻿using DijkstraCoffeeAndCode.Utils.UndoManager;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// WunderVision 2023
+// https://www.wundervisionengineering.com/
+using DijkstraCoffeeAndCode.Utils.UndoManager;
 
 namespace DijkstraCoffeeAndCode.ViewModels.Commands
 {
@@ -17,7 +14,7 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
             _viewModel = viewModel;
             _previousGraphState = previousGraphState;
             _currentGraphState = viewModel.GetStateSnapshot();
-            
+
         }
         public void Redo()
         {

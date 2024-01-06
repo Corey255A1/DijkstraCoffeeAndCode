@@ -1,20 +1,13 @@
 ﻿// WunderVision 2023
 // https://www.wundervisionengineering.com/
 using DijkstraAlgorithm;
-using DijkstraAlgorithm.File;
 using DijkstraCoffeeAndCode.Utils.UndoManager;
 using DijkstraCoffeeAndCode.ViewModels.Commands;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using System.Xml.Linq;
 
 namespace DijkstraCoffeeAndCode.ViewModels
 {
@@ -216,7 +209,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             else if (HasNode(node))
             {
                 StartNode = GetViewModel(node);
-            }            
+            }
         }
 
         public void SetAsEndNode(DijkstraNodeViewModel node)

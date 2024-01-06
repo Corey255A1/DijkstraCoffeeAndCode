@@ -50,7 +50,7 @@ namespace DijkstraAlgorithm
 
         private void AddNeighbor(Node node)
         {
-            _neighbors.Add(node);            
+            _neighbors.Add(node);
         }
 
         public Edge? MakeEdge(Node node)

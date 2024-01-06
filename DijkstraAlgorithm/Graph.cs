@@ -2,7 +2,6 @@
 // https://www.wundervisionengineering.com/
 using DijkstraAlgorithm.File;
 using System.Collections.ObjectModel;
-using System.Xml.Linq;
 
 namespace DijkstraAlgorithm
 {
@@ -25,9 +24,9 @@ namespace DijkstraAlgorithm
         private Graph(uint nextNodeID, IList<Node> nodes, IList<Edge> edges)
         {
             _nextNodeID = nextNodeID;
-            _nodes = new ObservableCollection<Node>(nodes.Select(node=>new Node(node)));
+            _nodes = new ObservableCollection<Node>(nodes.Select(node => new Node(node)));
             _edges = new ObservableCollection<Edge>();
-            foreach(var edge in edges)
+            foreach (var edge in edges)
             {
                 AddEdge(GetNodeByID(edge.Node1.ID), GetNodeByID(edge.Node2.ID));
             }
@@ -93,7 +92,7 @@ namespace DijkstraAlgorithm
 
         public void AddNode(Node node)
         {
-            if(ContainsNodeID(node.ID)){ return; }
+            if (ContainsNodeID(node.ID)) { return; }
             _nodes.Add(node);
         }
 

@@ -1,9 +1,9 @@
-﻿using DijkstraAlgorithm;
+﻿// WunderVision 2023
+// https://www.wundervisionengineering.com/
+using DijkstraAlgorithm;
 using DijkstraCoffeeAndCode.Utils.UndoManager;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.ViewModels.Commands
 {
@@ -11,7 +11,7 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
     {
         public override event EventHandler? CanExecuteChanged;
 
-        public CreateEdgesCommand(BaseGraphViewModel viewModel, UndoStack undoStack):
+        public CreateEdgesCommand(BaseGraphViewModel viewModel, UndoStack undoStack) :
             base(viewModel, undoStack)
         {
             ViewModel.SelectedNodesChanged += SelectedNodesCollectionChanged;

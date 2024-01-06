@@ -1,17 +1,15 @@
-﻿using DijkstraAlgorithm;
+﻿// WunderVision 2023
+// https://www.wundervisionengineering.com/
+using DijkstraAlgorithm;
 using DijkstraCoffeeAndCode.Utils.UndoManager;
 using DijkstraCoffeeAndCode.ViewModels.Commands;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using System.Xml.Linq;
 
 namespace DijkstraCoffeeAndCode.ViewModels
 {
@@ -21,7 +19,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public class BaseGraphViewModelState : IGraphState
         {
             public void StoreState(BaseGraphViewModel viewModel) { }
-            public void RestoreState(BaseGraphViewModel viewModel){}
+            public void RestoreState(BaseGraphViewModel viewModel) { }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -379,7 +377,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
         {
             UndoStack.AddItem(new NodeDeleteUndoItem(this, node));
             DeleteNode(node.Node);
-            
+
         }
 
         protected virtual void NodeUserInteractionHandler(object? sender, UserInteractionEventArgs e)

@@ -1,14 +1,12 @@
-﻿using DijkstraCoffeeAndCode.Utils.UndoManager;
+﻿// WunderVision 2023
+// https://www.wundervisionengineering.com/
+using DijkstraCoffeeAndCode.Utils.UndoManager;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.ViewModels.Commands
 {
-    public abstract class BaseGraphCommand: ICommand
+    public abstract class BaseGraphCommand : ICommand
     {
         public abstract event EventHandler? CanExecuteChanged;
         private BaseGraphViewModel _viewModel;

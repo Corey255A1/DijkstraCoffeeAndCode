@@ -1,8 +1,9 @@
-﻿using DijkstraAlgorithm;
+﻿// WunderVision 2023
+// https://www.wundervisionengineering.com/
+using DijkstraAlgorithm;
 using DijkstraCoffeeAndCode.Utils.UndoManager;
 using System;
 using System.Collections.Generic;
-using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.ViewModels.Commands
 {
@@ -44,17 +45,17 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
             public override void Undo()
             {
                 ViewModel.ClearSelectedNodes();
-                foreach(var node in Nodes)
+                foreach (var node in Nodes)
                 {
                     ViewModel.AddNode(node);
                 }
 
                 foreach (var node in Nodes)
                 {
-                    foreach(var neighbor in _neighborCache[node])
+                    foreach (var neighbor in _neighborCache[node])
                     {
                         ViewModel.CreateEdge(node, neighbor);
-                    }                    
+                    }
                 }
 
                 ViewModel.SelectNodes(Nodes);

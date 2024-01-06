@@ -50,7 +50,8 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
         }
 
-        public bool Contains(K item) {
+        public bool Contains(K item)
+        {
             return _objectToViewModel.ContainsKey(item);
         }
 

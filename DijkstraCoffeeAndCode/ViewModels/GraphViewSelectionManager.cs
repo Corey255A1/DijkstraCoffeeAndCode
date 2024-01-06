@@ -1,11 +1,10 @@
-﻿using DijkstraAlgorithm;
-using System;
+﻿// WunderVision 2023
+// https://www.wundervisionengineering.com/
+using DijkstraAlgorithm;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DijkstraCoffeeAndCode.ViewModels
 {

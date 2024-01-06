@@ -1,8 +1,7 @@
-﻿using System;
+﻿// WunderVision 2023
+// https://www.wundervisionengineering.com/
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.Utils.UndoManager
@@ -41,7 +40,7 @@ namespace DijkstraCoffeeAndCode.Utils.UndoManager
 
         public void Undo()
         {
-            if(_undoStack.Count == 0) { return; }
+            if (_undoStack.Count == 0) { return; }
 
             var item = _undoStack.Pop();
             item.Undo();

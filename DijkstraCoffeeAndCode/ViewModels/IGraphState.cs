@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿// WunderVision 2024
+// https://www.wundervisionengineering.com/
 namespace DijkstraCoffeeAndCode.ViewModels
 {
     public interface IGraphState
