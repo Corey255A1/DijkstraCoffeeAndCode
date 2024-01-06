@@ -16,11 +16,17 @@ namespace DijkstraCoffeeAndCode.Utils.UndoManager
         public UndoCommand(UndoStack undoStack)
         {
             _undoStack = undoStack;
+            _undoStack.UndoItemsChanged += UndoItemsChanged;
+        }
+
+        private void UndoItemsChanged(object? sender, EventArgs e)
+        {
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public bool CanExecute(object? parameter)
         {
-            return true;
+            return _undoStack.HasUndoItems;
         }
 
         public void Execute(object? parameter)

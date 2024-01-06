@@ -22,6 +22,26 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
     public class DijkstraGraphViewModel : BaseGraphViewModel
     {
+
+        public class DijkstraGraphViewModelState : IGraphState
+        {
+            private Node? _startNode;
+            private Node? _endNode;
+            public void RestoreState(BaseGraphViewModel viewModel)
+            {
+                var dijkstraViewModel = ((DijkstraGraphViewModel)viewModel);
+                dijkstraViewModel.SetAsStartNode(_startNode);
+                dijkstraViewModel.SetAsEndNode(_endNode);
+            }
+
+            public void StoreState(BaseGraphViewModel viewModel)
+            {
+                var dijkstraViewModel = ((DijkstraGraphViewModel)viewModel);
+                _startNode = dijkstraViewModel.StartNode?.Node;
+                _endNode = dijkstraViewModel.EndNode?.Node;
+            }
+        }
+
         private NodeViewModel? _startNode = null;
         public NodeViewModel? StartNode
         {
@@ -127,18 +147,9 @@ namespace DijkstraCoffeeAndCode.ViewModels
             CreateEdge(node1.Node, node2.Node);
         }
 
-        protected override void AddOrRemoveEdgeViewModel(GraphObjectViewModel dijkstraObject, bool isAdd)
-        {
-            base.AddOrRemoveEdgeViewModel (dijkstraObject, isAdd);
-        }
-
         protected override void AddOrRemoveNodeViewModel(GraphObjectViewModel dijkstraObject, bool isAdd)
         {
-            if (isAdd)
-            {
-                ((NodeViewModel)dijkstraObject).UserInteraction += NodeUserInteractionHandler;
-            }
-            else
+            if (!isAdd)
             {
                 if (dijkstraObject == StartNode) { StartNode = null; }
                 if (dijkstraObject == EndNode) { EndNode = null; }
@@ -150,7 +161,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
         {
             if (SelectedExecutionMode != AlgorithmExecutionModeEnum.Manual)
             {
-                if(IsNodeDragging && SelectedExecutionMode != AlgorithmExecutionModeEnum.Continuous) { return; }
+                if (IsNodeDragging && SelectedExecutionMode != AlgorithmExecutionModeEnum.Continuous) { return; }
                 if (StartNode == null || EndNode == null)
                 {
                     ResetAllDijkstraViewObjects();
@@ -180,10 +191,10 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
             switch (e.State)
             {
-                case UserInteractionState.SetAsStart: 
-                    SetAsStartNode(node); 
+                case UserInteractionState.SetAsStart:
+                    SetAsStartNode(node);
                     break;
-                case UserInteractionState.SetAsEnd: 
+                case UserInteractionState.SetAsEnd:
                     SetAsEndNode(node);
                     break;
             }
@@ -191,13 +202,41 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
         public void SetAsStartNode(DijkstraNodeViewModel node)
         {
+            IGraphState previous = GetStateSnapshot();
             StartNode = node;
-        }
-        public void SetAsEndNode(DijkstraNodeViewModel node)
-        {
-            EndNode = node;
+            UndoStack.AddItem(new GraphStateUndoItem(this, previous));
         }
 
+        public void SetAsStartNode(Node? node)
+        {
+            if (node == null)
+            {
+                StartNode = null;
+            }
+            else if (HasNode(node))
+            {
+                StartNode = GetViewModel(node);
+            }            
+        }
+
+        public void SetAsEndNode(DijkstraNodeViewModel node)
+        {
+            IGraphState previous = GetStateSnapshot();
+            EndNode = node;
+            UndoStack.AddItem(new GraphStateUndoItem(this, previous));
+        }
+
+        public void SetAsEndNode(Node? node)
+        {
+            if (node == null)
+            {
+                EndNode = null;
+            }
+            else if (HasNode(node))
+            {
+                EndNode = GetViewModel(node);
+            }
+        }
 
         private void ResetAlgorithm()
         {
@@ -241,7 +280,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             foreach (var node in dijkstraState.DijkstraNodes)
             {
                 var nodeViewModel = GetViewModel(node.Node) as DijkstraNodeViewModel;
-                if(nodeViewModel == null) { continue; }
+                if (nodeViewModel == null) { continue; }
 
                 nodeViewModel.RouteSegmentDistance = node.RouteSegmentDistance;
                 if (!dijkstraState.IsFinished)
@@ -320,5 +359,12 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
         }
 
+
+        public override IGraphState GetStateSnapshot()
+        {
+            DijkstraGraphViewModelState state = new DijkstraGraphViewModelState();
+            state.StoreState(this);
+            return state;
+        }
     }
 }

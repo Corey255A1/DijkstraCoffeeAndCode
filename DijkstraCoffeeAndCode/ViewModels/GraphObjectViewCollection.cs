@@ -50,20 +50,24 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
         }
 
-        public V GetViewModel(K node)
+        public bool Contains(K item) {
+            return _objectToViewModel.ContainsKey(item);
+        }
+
+        public V GetViewModel(K item)
         {
-            if (_objectToViewModel.ContainsKey(node))
+            if (Contains(item))
             {
-                return _objectToViewModel[node];
+                return _objectToViewModel[item];
             }
 
             throw new Exception("Object not found in collection.");
         }
 
-        public void AddNewObjectViewModel(K node)
+        public void AddNewObjectViewModel(K item)
         {
-            V objectToAdd = viewFactory.Invoke(node);
-            _objectToViewModel.Add(node, objectToAdd);
+            V objectToAdd = viewFactory.Invoke(item);
+            _objectToViewModel.Add(item, objectToAdd);
             AddOrRemove?.Invoke(objectToAdd, true);
         }
 

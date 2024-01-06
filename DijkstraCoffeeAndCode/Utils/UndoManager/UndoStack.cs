@@ -14,6 +14,12 @@ namespace DijkstraCoffeeAndCode.Utils.UndoManager
 
         public ICommand UndoCommand { get; set; }
         public ICommand RedoCommand { get; set; }
+
+        public event EventHandler? UndoItemsChanged;
+
+        public bool HasUndoItems => _undoStack.Count > 0;
+        public bool HasRedoItems => _redoStack.Count > 0;
+
         public UndoStack()
         {
             UndoCommand = new UndoCommand(this);
@@ -30,6 +36,7 @@ namespace DijkstraCoffeeAndCode.Utils.UndoManager
         {
             _redoStack.Clear();
             _undoStack.Push(item);
+            UndoItemsChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public void Undo()
@@ -39,6 +46,7 @@ namespace DijkstraCoffeeAndCode.Utils.UndoManager
             var item = _undoStack.Pop();
             item.Undo();
             _redoStack.Push(item);
+            UndoItemsChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public void Redo()
@@ -48,6 +56,7 @@ namespace DijkstraCoffeeAndCode.Utils.UndoManager
             var item = _redoStack.Pop();
             item.Redo();
             _undoStack.Push(item);
+            UndoItemsChanged?.Invoke(this, EventArgs.Empty);
         }
 
     }

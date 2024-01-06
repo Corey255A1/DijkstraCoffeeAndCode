@@ -18,6 +18,12 @@ namespace DijkstraCoffeeAndCode.ViewModels
     public delegate void MessageEventHandler(string message);
     public class BaseGraphViewModel : INotifyPropertyChanged
     {
+        public class BaseGraphViewModelState : IGraphState
+        {
+            public void StoreState(BaseGraphViewModel viewModel) { }
+            public void RestoreState(BaseGraphViewModel viewModel){}
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void Notify([CallerMemberName] string name = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
@@ -129,10 +135,12 @@ namespace DijkstraCoffeeAndCode.ViewModels
         {
             if (isAdd)
             {
+                ((NodeViewModel)dijkstraObject).UserInteraction += NodeUserInteractionHandler;
                 GraphViewObjects.Add(dijkstraObject);
             }
             else
             {
+                ((NodeViewModel)dijkstraObject).UserInteraction -= NodeUserInteractionHandler;
                 UnselectNode((NodeViewModel)dijkstraObject);
                 GraphViewObjects.Remove(dijkstraObject);
             }
@@ -237,6 +245,11 @@ namespace DijkstraCoffeeAndCode.ViewModels
         public Edge? GetEdge(Node node1, Node node2)
         {
             return _edgeViewCollection.Keys.FirstOrDefault(edge => edge.Contains(node1, node2));
+        }
+
+        public bool HasNode(Node node)
+        {
+            return _nodeViewCollection.Contains(node);
         }
 
         public NodeViewModel GetViewModel(Node node)
@@ -396,7 +409,10 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
         }
 
-
+        public virtual IGraphState GetStateSnapshot()
+        {
+            return new BaseGraphViewModelState();
+        }
 
     }
 }

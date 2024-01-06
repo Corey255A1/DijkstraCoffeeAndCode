@@ -34,9 +34,12 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
 
         private class UndoItem : BaseGraphUndoItem
         {
+            private IGraphState _graphState;
             public UndoItem(BaseGraphViewModel _viewModel, IEnumerable<Node> nodes) :
                 base(_viewModel, nodes)
-            { }
+            {
+                _graphState = _viewModel.GetStateSnapshot();
+            }
 
             public override void Undo()
             {
@@ -55,6 +58,7 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
                 }
 
                 ViewModel.SelectNodes(Nodes);
+                _graphState.RestoreState(ViewModel);
             }
 
             public override void Redo()
