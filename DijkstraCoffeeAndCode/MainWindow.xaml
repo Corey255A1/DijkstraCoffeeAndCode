@@ -10,15 +10,15 @@
         Height="800" Width="800"
         mc:Ignorable="d">
     <Window.InputBindings>
-        <KeyBinding Command="{Binding CreateEdgesCommand}" Key="E"/>
-        <KeyBinding Command="{Binding DeleteSelectedEdgesCommand}" Modifiers="Shift" Key="E"/>
-        <KeyBinding Command="{Binding DeleteSelectedNodesCommand}" Key="Delete"/>
-        <KeyBinding Command="{Binding UndoCommand}" Modifiers="Ctrl" Key="Z"/>
-        <KeyBinding Command="{Binding RedoCommand}" Modifiers="Ctrl" Key="Y"/>
+        <KeyBinding Command="{Binding Graph.CreateEdgesCommand}" Key="E"/>
+        <KeyBinding Command="{Binding Graph.DeleteSelectedEdgesCommand}" Modifiers="Shift" Key="E"/>
+        <KeyBinding Command="{Binding Graph.DeleteSelectedNodesCommand}" Key="Delete"/>
+        <KeyBinding Command="{Binding Graph.UndoCommand}" Modifiers="Ctrl" Key="Z"/>
+        <KeyBinding Command="{Binding Graph.RedoCommand}" Modifiers="Ctrl" Key="Y"/>
     </Window.InputBindings>
     <Window.Title>
         <MultiBinding StringFormat="{}{0} - WunderVision - Dijkstra Coffee and Code">
-            <Binding Path="FileManager.CurrentFileName" ElementName="window"/>
+            <Binding Path="FileManager.CurrentFileName"/>
         </MultiBinding>
     </Window.Title>
     <Window.Resources>
@@ -35,9 +35,9 @@
             <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
         <ScrollViewer Grid.RowSpan="4" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Auto">
-            <Viewbox Stretch="UniformToFill" Height="{Binding ViewHeight, ElementName=window}" Width="{Binding ViewWidth, ElementName=window}">
-                <ItemsControl Background="{DynamicResource graphFieldColorBrush}" Width="2048" Height="2048" Grid.Row="0" ItemsSource="{Binding Path=GraphViewObjects}" 
-                          MouseRightButtonDown="CanvasMouseRightButtonDown" MouseLeftButtonDown="CanvasMouseLeftButtonDown">
+            <Viewbox Stretch="UniformToFill" Height="{Binding ViewHeight}" Width="{Binding ViewWidth}">
+                <ItemsControl Background="{DynamicResource graphFieldColorBrush}" Width="2048" Height="2048" Grid.Row="0" ItemsSource="{Binding Path=Graph.GraphViewObjects}" 
+                          MouseLeftButtonDown="CanvasMouseLeftButtonDown">
                     <ItemsControl.Resources>
                         <DataTemplate DataType="{x:Type vm:NodeViewModel}">
                             <views:NodeElement DataContext="{Binding }" />
@@ -62,7 +62,7 @@
             </Viewbox>
         </ScrollViewer>
         <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,0,0,20">
-            <views:NodeProperties DataContext="{Binding SelectedNode}" Visibility="{Binding Converter={StaticResource nullToVisible}}"/>
+            <views:NodeProperties DataContext="{Binding Graph.SelectedNode}" Visibility="{Binding Converter={StaticResource nullToVisible}}"/>
         </StackPanel>
         <StackPanel Grid.RowSpan="2" VerticalAlignment="Center">
             <Button MinWidth="0" Width="40" Height="40" Click="ZoomInClick">+</Button>
@@ -71,37 +71,37 @@
         <TabControl Grid.Row="0" Grid.ColumnSpan="2" Width="600" Margin="0,0,0,0">
             <TabItem Header="File">
                 <StackPanel Orientation="Horizontal">
-                    <Button Content="New" Command="{Binding FileManager.NewGraphCommand, ElementName=window}"/>
-                    <Button Content="Save" Command="{Binding FileManager.SaveGraphCommand, ElementName=window}"/>
-                    <Button Content="Save As" Command="{Binding FileManager.SaveGraphCommand, ElementName=window}">
+                    <Button Content="New" Command="{Binding FileManager.NewGraphCommand}"/>
+                    <Button Content="Save" Command="{Binding FileManager.SaveGraphCommand}"/>
+                    <Button Content="Save As" Command="{Binding FileManager.SaveGraphCommand}">
                         <Button.CommandParameter>
                             <sys:Boolean>true</sys:Boolean>
                         </Button.CommandParameter>
                     </Button>
-                    <Button Content="Open" Command="{Binding FileManager.LoadGraphCommand, ElementName=window}"/>
-                    <Button Content="Import" Command="{Binding FileManager.ImportGraphCommand, ElementName=window}"/>
+                    <Button Content="Open" Command="{Binding FileManager.LoadGraphCommand}"/>
+                    <Button Content="Import" Command="{Binding FileManager.ImportGraphCommand}"/>
                 </StackPanel>
             </TabItem>
             <TabItem Header="Edit">
                 <StackPanel Orientation="Horizontal">
-                    <Button Content="Undo (Ctrl+Z)" Command="{Binding UndoCommand}"/>
-                    <Button Content="Redo (Ctrl+Y)" Command="{Binding RedoCommand}"/>
-                    <Button Content="{Binding NextStyleName, ElementName=window}" Click="ColorButtonClick"/>
+                    <Button Content="Undo (Ctrl+Z)" Command="{Binding Graph.UndoCommand}"/>
+                    <Button Content="Redo (Ctrl+Y)" Command="{Binding Graph.RedoCommand}"/>
+                    <Button Content="{Binding NextStyleName}" Click="DayNightModeClick"/>
                 </StackPanel>
             </TabItem>
             <TabItem Header="Build">
                 <StackPanel Orientation="Horizontal">
                     <GroupBox Header="Nodes">
                         <StackPanel Orientation="Horizontal">
-                            <Button Content="Delete Selected (Del)" Command="{Binding DeleteSelectedNodesCommand}"/>
-                            <Button Content="Delete All" Command="{Binding DeleteAllNodesCommand}"/>
+                            <Button Content="Delete Selected (Del)" Command="{Binding Graph.DeleteSelectedNodesCommand}"/>
+                            <Button Content="Delete All" Command="{Binding Graph.DeleteAllNodesCommand}"/>
                         </StackPanel>
                     </GroupBox>
                     <GroupBox Header="Edges">
                         <StackPanel Orientation="Horizontal">
-                            <Button Content="Create (E)" Command="{Binding CreateEdgesCommand}"/>
-                            <Button Content="Delete Selected (Shift+E)" Command="{Binding DeleteSelectedEdgesCommand}"/>
-                            <Button Content="Delete All" Command="{Binding DeleteAllEdgesCommand}"/>
+                            <Button Content="Create (E)" Command="{Binding Graph.CreateEdgesCommand}"/>
+                            <Button Content="Delete Selected (Shift+E)" Command="{Binding Graph.DeleteSelectedEdgesCommand}"/>
+                            <Button Content="Delete All" Command="{Binding Graph.DeleteAllEdgesCommand}"/>
                         </StackPanel>
                     </GroupBox>
                 </StackPanel>
@@ -109,14 +109,14 @@
             <TabItem Header="Execute">
                 <StackPanel Orientation="Horizontal">
                     <GroupBox Header="Solve Method" Padding="4">
-                        <ComboBox x:Name="executionModeSelection" ItemsSource="{Binding AlgorithmExecutionModes}" SelectedItem="{Binding SelectedExecutionMode, Delay=10}" VerticalContentAlignment="Center"/>
+                        <ComboBox x:Name="executionModeSelection" ItemsSource="{Binding Graph.AlgorithmExecutionModes}" SelectedItem="{Binding Graph.SelectedExecutionMode, Delay=10}" VerticalContentAlignment="Center"/>
                     </GroupBox>
-                    <Button Content="Solve Now" Command="{Binding RunDijkstraAlgorithmCommand}"/>
-                    <Button Content="Take Step" Command="{Binding RunDijkstraStepCommand}"/>
-                    <Button Content="Reset" Command="{Binding ResetGraphCommand}"/>
+                    <Button Content="Solve Now" Command="{Binding Graph.RunDijkstraAlgorithmCommand}"/>
+                    <Button Content="Take Step" Command="{Binding Graph.RunDijkstraStepCommand}"/>
+                    <Button Content="Reset" Command="{Binding Graph.ResetGraphCommand}"/>
                     <TextBlock VerticalAlignment="Center" Margin="8,0" FontSize="16">
                         <TextBlock.Text>
-                            <Binding Path="ShortestPathDistance" StringFormat="{}Shortest Path: {0}"/>
+                            <Binding Path="Graph.ShortestPathDistance" StringFormat="{}Shortest Path: {0}"/>
                         </TextBlock.Text>
                     </TextBlock>
                 </StackPanel>

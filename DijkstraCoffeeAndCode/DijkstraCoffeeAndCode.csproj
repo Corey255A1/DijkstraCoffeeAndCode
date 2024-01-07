@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Remove="Resourses\backGraphics.xaml" />
-    <Page Remove="Resourses\Graphics.xaml" />
+    <Page Remove="Resources\backGraphics.xaml" />
+    <Page Remove="Resources\Graphics.xaml" />
   </ItemGroup>
 
   <ItemGroup>
