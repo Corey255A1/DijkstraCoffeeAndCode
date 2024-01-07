@@ -6,6 +6,8 @@ A WPF GUI Example of Dijkstra's Algorithm with a demonstration of other GUI feat
 - Right Click Menu for Setting Start and End nodes and deletion
 - Saving, Loading and Importing graphs
 - Continuous Update of the shortest path indication while the graph is updated
+- Zoom able graph field
+- Node Coordinate manual editing
 
 ![djikstra_solved](https://github.com/Corey255A1/DijkstraCoffeeAndCode/assets/3460291/54f7574c-49ab-4a72-a59e-cbd425750646)
 
