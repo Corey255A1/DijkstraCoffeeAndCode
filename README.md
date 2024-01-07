@@ -14,5 +14,5 @@ A WPF GUI Example of Dijkstra's Algorithm with a demonstration of other GUI feat
 ![continuous_demo](https://github.com/Corey255A1/DijkstraCoffeeAndCode/assets/3460291/b00db786-4c01-46ba-975c-9664fabbe076)
 
 
-**Old Legacy GUI**
+**Old Legacy GUI**  
 ![](https://github.com/Corey255A1/DijkstraCoffeeAndCode/blob/master/DijkstraDemo.png)
