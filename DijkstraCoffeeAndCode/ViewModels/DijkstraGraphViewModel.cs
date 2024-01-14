@@ -302,6 +302,11 @@ namespace DijkstraCoffeeAndCode.ViewModels
                 {
                     nodeViewModel = GetViewModel(dijkstraState.LastCheckedNeighbor.Node);
                     nodeViewModel.IsHighlightedAlternate = true;
+                    var neighborEdge = GetEdge(dijkstraState.LastCheckedNeighbor.Node, dijkstraState.CurrentNode.Node);
+                    if(neighborEdge != null)
+                    {
+                        GetViewModel(neighborEdge).IsHighlightedAlternate = true;
+                    }
                 }
 
 
@@ -321,7 +326,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
                 {
                     Dijkstra.TakeStep(DijkstraStepState);
                 }
-
+                ClearSelectedNodes();
                 UpdateDijkstraView(DijkstraStepState);
             }
             catch (Exception e)

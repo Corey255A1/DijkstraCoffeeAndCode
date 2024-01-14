@@ -49,6 +49,9 @@
     <Storyboard x:Key="edgeHighlightAnimation">
         <ColorAnimation To="{StaticResource highlightColor}" Storyboard.TargetProperty="(Line.Stroke).(SolidColorBrush.Color)" Duration="0:0:0.5"/>
     </Storyboard>
+    <Storyboard x:Key="edgeHighlightAltAnimation">
+        <ColorAnimation To="{StaticResource highlightAltColor}" Storyboard.TargetProperty="(Line.Stroke).(SolidColorBrush.Color)" Duration="0:0:0.5"/>
+    </Storyboard>
 
     <Style TargetType="Line" x:Key="highlightLine">
         <Setter Property="StrokeThickness" Value="5"/>
@@ -57,6 +60,19 @@
             <DataTrigger Binding="{Binding IsHighlighted}" Value="true">
                 <DataTrigger.EnterActions>
                     <BeginStoryboard Storyboard="{StaticResource edgeHighlightAnimation}">
+                    </BeginStoryboard>
+                </DataTrigger.EnterActions>
+                <DataTrigger.ExitActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation To="{x:Null}" Storyboard.TargetProperty="(Line.Stroke).(SolidColorBrush.Color)" Duration="0:0:0.5"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </DataTrigger.ExitActions>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsHighlightedAlternate}" Value="true">
+                <DataTrigger.EnterActions>
+                    <BeginStoryboard Storyboard="{StaticResource edgeHighlightAltAnimation}">
                     </BeginStoryboard>
                 </DataTrigger.EnterActions>
                 <DataTrigger.ExitActions>
