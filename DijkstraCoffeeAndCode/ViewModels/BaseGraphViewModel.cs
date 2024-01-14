@@ -45,7 +45,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
         protected NodeViewModel? _currentDragNode;
         public bool IsNodeDragging => _currentDragNode != null;
-        private NodePositionUndoItem? _currentNodePositionUndo;
+        private GraphNodePositionsUndoItem? _currentNodePositionUndo;
 
         public ICommand CreateEdgesCommand { get; set; }
         public ICommand DeleteSelectedEdgesCommand { get; set; }
@@ -134,15 +134,22 @@ namespace DijkstraCoffeeAndCode.ViewModels
             if (isAdd)
             {
                 ((NodeViewModel)dijkstraObject).UserInteraction += NodeUserInteractionHandler;
+                ((NodeViewModel)dijkstraObject).PositionChanged += NodePositionChanged;
                 GraphViewObjects.Add(dijkstraObject);
             }
             else
             {
                 ((NodeViewModel)dijkstraObject).UserInteraction -= NodeUserInteractionHandler;
+                ((NodeViewModel)dijkstraObject).PositionChanged -= NodePositionChanged;
                 UnselectNode((NodeViewModel)dijkstraObject);
                 GraphViewObjects.Remove(dijkstraObject);
             }
             OnGraphChanged();
+        }
+
+        private void NodePositionChanged(object? sender, Vector2D e)
+        {
+            
         }
 
         protected virtual void OnGraphChanged() { }
@@ -331,7 +338,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             }
         }
 
-        protected virtual void OnNodeContinueDrag(NodeViewModel node, UserInteractionEventArgs e)
+        protected virtual void OnNodeContinueDrag(NodeViewModel node, NodeUserInteractionEventArgs e)
         {
             if (IsMultiSelectMode())
             {
@@ -380,28 +387,28 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
         }
 
-        protected virtual void NodeUserInteractionHandler(object? sender, UserInteractionEventArgs e)
+        protected virtual void NodeUserInteractionHandler(object? sender, NodeUserInteractionEventArgs e)
         {
             if (!(sender is NodeViewModel node)) { return; }
 
             switch (e.State)
             {
-                case UserInteractionState.BeginInteraction:
+                case NodeUserInteractionState.BeginInteraction:
                     OnNodeBeginInteraction(node);
                     break;
-                case UserInteractionState.BeginDrag:
+                case NodeUserInteractionState.BeginDrag:
                     OnNodeBeginDrag(node);
                     break;
-                case UserInteractionState.EndDrag:
+                case NodeUserInteractionState.EndDrag:
                     OnNodeEndDrag(node);
                     break;
-                case UserInteractionState.ContinueDrag:
+                case NodeUserInteractionState.ContinueDrag:
                     OnNodeContinueDrag(node, e);
                     break;
-                case UserInteractionState.EndInteraction:
+                case NodeUserInteractionState.EndInteraction:
                     OnNodeEndInteraction(node);
                     break;
-                case UserInteractionState.Delete:
+                case NodeUserInteractionState.Delete:
                     OnNodeDelete(node);
                     break;
             }

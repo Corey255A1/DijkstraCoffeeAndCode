@@ -7,16 +7,23 @@ using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.ViewModels
 {
-    public enum UserInteractionState { BeginInteraction, BeginDrag, ContinueDrag, EndDrag, EndInteraction, Delete, SetAsStart, SetAsEnd };
-    public class UserInteractionEventArgs : EventArgs
+    public enum NodeUserInteractionState { 
+        BeginInteraction, BeginDrag, ContinueDrag, 
+        EndDrag, EndInteraction, Delete, SetAsStart, SetAsEnd 
+    };
+
+    public class NodeUserInteractionEventArgs : EventArgs
     {
-        public UserInteractionState State { get; set; }
+        public NodeUserInteractionState State { get; set; }
         public object? Data { get; set; }
     }
 
     public class NodeViewModel : GraphObjectViewModel
     {
-        public event EventHandler<UserInteractionEventArgs>? UserInteraction;
+        public event EventHandler<NodeUserInteractionEventArgs>? UserInteraction;
+        public event EventHandler<Vector2D> PositionChanged;
+
+        private bool _settingCenterPosition = false;
 
         private Node _node;
         public Node Node => _node;
@@ -86,6 +93,10 @@ namespace DijkstraCoffeeAndCode.ViewModels
             get => Node.Point.X;
             set
             {
+                if (!_settingCenterPosition)
+                {
+                    PositionChanged?.Invoke(this, new Vector2D(value, Y));
+                }
                 Node.Point.X = value;
                 Notify();
                 Notify(nameof(Left));
@@ -97,6 +108,10 @@ namespace DijkstraCoffeeAndCode.ViewModels
             get => Node.Point.Y;
             set
             {
+                if (!_settingCenterPosition)
+                {
+                    PositionChanged?.Invoke(this, new Vector2D(X, value));
+                }
                 Node.Point.Y = value;
                 Notify();
                 Notify(nameof(Top));
@@ -161,58 +176,60 @@ namespace DijkstraCoffeeAndCode.ViewModels
             SetCenterPosition(X + dX, Y + dY);
             if (IsInteracting)
             {
-                RaiseUserInteraction(UserInteractionState.ContinueDrag, new Vector2D(dX, dY));
+                RaiseUserInteraction(NodeUserInteractionState.ContinueDrag, new Vector2D(dX, dY));
             }
         }
 
         public void SetCenterPosition(double x, double y)
         {
+            _settingCenterPosition = true;
             X = x;
             Y = y;
+            _settingCenterPosition = false;
         }
 
-        private void RaiseUserInteraction(UserInteractionState state, object? data = null)
+        private void RaiseUserInteraction(NodeUserInteractionState state, object? data = null)
         {
-            UserInteraction?.Invoke(this, new UserInteractionEventArgs() { State = state, Data = data });
+            UserInteraction?.Invoke(this, new NodeUserInteractionEventArgs() { State = state, Data = data });
         }
 
         public void BeginInteraction()
         {
             IsInteracting = true;
             WasMovedWhileInteracting = false;
-            RaiseUserInteraction(UserInteractionState.BeginInteraction);
+            RaiseUserInteraction(NodeUserInteractionState.BeginInteraction);
         }
 
         public void BeginDrag()
         {
             WasMovedWhileInteracting = true;
-            RaiseUserInteraction(UserInteractionState.BeginDrag);
+            RaiseUserInteraction(NodeUserInteractionState.BeginDrag);
         }
 
         public void EndDrag()
         {
-            RaiseUserInteraction(UserInteractionState.EndDrag);
+            RaiseUserInteraction(NodeUserInteractionState.EndDrag);
         }
 
         public void EndInteraction()
         {
             IsInteracting = false;
-            RaiseUserInteraction(UserInteractionState.EndInteraction);
+            RaiseUserInteraction(NodeUserInteractionState.EndInteraction);
         }
 
         public void UserCommandSetStart()
         {
-            RaiseUserInteraction(UserInteractionState.SetAsStart);
+            RaiseUserInteraction(NodeUserInteractionState.SetAsStart);
         }
 
         public void UserCommandSetEnd()
         {
-            RaiseUserInteraction(UserInteractionState.SetAsEnd);
+            RaiseUserInteraction(NodeUserInteractionState.SetAsEnd);
         }
 
         public void UserCommandDelete()
         {
-            RaiseUserInteraction(UserInteractionState.Delete);
+            RaiseUserInteraction(NodeUserInteractionState.Delete);
         }
     }
 }

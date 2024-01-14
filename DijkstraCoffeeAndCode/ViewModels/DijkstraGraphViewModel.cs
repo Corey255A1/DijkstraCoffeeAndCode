@@ -176,7 +176,7 @@ namespace DijkstraCoffeeAndCode.ViewModels
             base.OnNodeBeginDrag(node);
         }
 
-        protected override void NodeUserInteractionHandler(object? sender, UserInteractionEventArgs e)
+        protected override void NodeUserInteractionHandler(object? sender, NodeUserInteractionEventArgs e)
         {
             base.NodeUserInteractionHandler(sender, e);
 
@@ -184,10 +184,10 @@ namespace DijkstraCoffeeAndCode.ViewModels
 
             switch (e.State)
             {
-                case UserInteractionState.SetAsStart:
+                case NodeUserInteractionState.SetAsStart:
                     SetAsStartNode(node);
                     break;
-                case UserInteractionState.SetAsEnd:
+                case NodeUserInteractionState.SetAsEnd:
                     SetAsEndNode(node);
                     break;
             }

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace DijkstraCoffeeAndCode.ViewModels.Commands
 {
-    public class NodePositionUndoItem : IUndoItem
+    public class GraphNodePositionsUndoItem : IUndoItem
     {
         private BaseGraphViewModel _viewModel;
         public BaseGraphViewModel ViewModel => _viewModel;
@@ -14,7 +14,7 @@ namespace DijkstraCoffeeAndCode.ViewModels.Commands
         private Dictionary<uint, Vector2D> _initialPosition = new();
         private Dictionary<uint, Vector2D> _finalPosition = new();
 
-        public NodePositionUndoItem(BaseGraphViewModel viewModel)
+        public GraphNodePositionsUndoItem(BaseGraphViewModel viewModel)
         {
             _viewModel = viewModel;
             foreach (var node in _viewModel.Nodes)

@@ -2,6 +2,7 @@
 // https://www.wundervisionengineering.com/
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace DijkstraCoffeeAndCode.Views
@@ -17,11 +18,6 @@ namespace DijkstraCoffeeAndCode.Views
         {
             if (e.Key == Key.Enter && (sender is TextBox textBox))
             {
-                // An example of how to explicity update the Text binding of a text box
-                //DependencyProperty prop = TextBox.TextProperty;
-                //BindingExpression binding = BindingOperations.GetBindingExpression(textBox, prop);
-                //if (binding != null) { binding.UpdateSource(); }
-
                 // This clears the focus on the Text Box.. however, it doesn't 
                 // Clear the IsFocused property until a different control is focused.
                 Keyboard.ClearFocus();
