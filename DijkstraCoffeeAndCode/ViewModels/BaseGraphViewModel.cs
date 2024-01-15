@@ -134,22 +134,17 @@ namespace DijkstraCoffeeAndCode.ViewModels
             if (isAdd)
             {
                 ((NodeViewModel)dijkstraObject).UserInteraction += NodeUserInteractionHandler;
-                ((NodeViewModel)dijkstraObject).PositionChanged += NodePositionChanged;
+                ((NodeViewModel)dijkstraObject).PositionChanged += OnNodePositionChanged;
                 GraphViewObjects.Add(dijkstraObject);
             }
             else
             {
                 ((NodeViewModel)dijkstraObject).UserInteraction -= NodeUserInteractionHandler;
-                ((NodeViewModel)dijkstraObject).PositionChanged -= NodePositionChanged;
+                ((NodeViewModel)dijkstraObject).PositionChanged -= OnNodePositionChanged;
                 UnselectNode((NodeViewModel)dijkstraObject);
                 GraphViewObjects.Remove(dijkstraObject);
             }
             OnGraphChanged();
-        }
-
-        private void NodePositionChanged(object? sender, Vector2D e)
-        {
-            
         }
 
         protected virtual void OnGraphChanged() { }
@@ -385,6 +380,12 @@ namespace DijkstraCoffeeAndCode.ViewModels
             UndoStack.AddItem(new NodeDeleteUndoItem(this, node));
             DeleteNode(node.Node);
 
+        }
+
+        private void OnNodePositionChanged(object? sender, Vector2D nextPosition)
+        {
+            if (!(sender is NodeViewModel node)) { return; }
+            UndoStack.AddItem(new NodePositionUndoItem(node.Node, nextPosition, this));
         }
 
         protected virtual void NodeUserInteractionHandler(object? sender, NodeUserInteractionEventArgs e)
